@@ -1,3 +1,10 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* Fascinaテーマ カスタムCSS */
 
 /* 全体 */
@@ -440,7 +447,7 @@ address {
 }
 
 .coupon-title {
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
     font-weight: bold;
 }
@@ -459,7 +466,7 @@ address {
 }
 
 .coupon-price {
-    font-size: 20px;
+    font-size: 15px;
     text-align: end;
     font-weight: bold;
     padding: 0 10px;
@@ -605,8 +612,8 @@ address {
     color: #ccc;
 }
 
-/* レスポンシブ対応 タブレット横向き・小型PC*/
-@media (max-width: 1024px) {
+/* レスポンシブ対応 iPad第８世代横向き対応*/
+@media (max-width: 1080px) {
     /* ヘッダー */
     .headinfo {
         position: relative;
@@ -627,6 +634,7 @@ address {
     .phone-number {
         font-size: 30px;
         color: #e64893;
+        text-decoration: none;
     }
 
     address{
@@ -679,8 +687,8 @@ address {
     .menu-toggle {
         display: block;
         position: fixed;
-        top: 1%;
-        right: 1%;
+        top: 1.5%;
+        right: 1.5%;
         z-index: 200;
     }
 
@@ -699,7 +707,10 @@ address {
         transition: transform 0.3s ease;
         z-index: 999;
     }
+}
 
+/* レスポンシブ対応 タブレット横向き・小型PC*/
+@media (max-width: 1024px) {
     /* お知らせセクション */
     .info-item {
         flex-direction: column;
