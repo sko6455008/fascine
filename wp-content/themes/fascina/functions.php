@@ -64,7 +64,6 @@ function fascina_enable_custom_post_order() {
     // ギャラリー投稿タイプでカスタムオーダーを有効化
     add_post_type_support('gallery', 'page-attributes');
     add_post_type_support('coupon', 'page-attributes');
-    add_post_type_support('ranking', 'page-attributes');
 }
 add_action('init', 'fascina_enable_custom_post_order');
 
@@ -124,7 +123,7 @@ function fascina_register_ranking_post_type() {
             'add_new_item' => '新規ランキングを追加',
             'edit_item' => 'ランキングを編集',
         ),
-        'supports' => array('title', 'thumbnail', 'page-attributes'),
+        'supports' => array('title', 'thumbnail'),
         'menu_icon' => 'dashicons-awards',
         'has_archive' => false,
     );
@@ -740,9 +739,6 @@ function fascina_add_ranking_columns($columns) {
             $new_columns['thumbnail'] = '画像';
         }
         $new_columns[$key] = $value;
-        if ($key === 'title') {
-            $new_columns['menu_order'] = '表示順';
-        }
     }
     $new_columns['position'] = '順位';
     if (isset($new_columns['date'])) {
@@ -760,9 +756,6 @@ function fascina_ranking_column_content($column_name, $post_id) {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
         }
-    } elseif ($column_name === 'menu_order') {
-        $post = get_post($post_id);
-        echo $post->menu_order;
     } elseif ($column_name === 'position') {
         $position = get_field('ranking_position', $post_id);
         if ($position) {
@@ -827,8 +820,8 @@ add_action('admin_head', 'fascina_admin_columns_style');
 function fascina_custom_order_admin_script() {
     global $post_type;
     
-    // ギャラリー、クーポン、ランキングの一覧ページでのみ読み込み
-    if (in_array($post_type, array('gallery', 'coupon', 'ranking'))) {
+    // ギャラリー、クーポンの一覧ページでのみ読み込み
+    if (in_array($post_type, array('gallery', 'coupon'))) {
         ?>
         <script>
         jQuery(document).ready(function($) {

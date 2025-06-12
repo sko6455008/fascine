@@ -13,10 +13,8 @@
                     'post_type' => 'ranking',
                     'posts_per_page' => 10,
                     'meta_key' => 'ranking_position',
-                    'orderby' => array(
-                        'menu_order' => 'ASC',
-                        'date' => 'DESC'
-                    ),
+                    'orderby' => 'meta_value_num',
+                    'order' => 'ASC'
                 );
                 $ranking_query = new WP_Query($ranking_args);
 
