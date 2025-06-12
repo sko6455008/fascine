@@ -1356,3 +1356,39 @@ function fascina_quick_edit_style() {
     <?php
 }
 add_action('admin_head', 'fascina_quick_edit_style');
+
+// ギャラリー、クーポン登録時にmenu_orderの自動設定
+function fascina_auto_set_menu_order($data, $postarr) {
+    if (!in_array($data['post_type'], array('gallery', 'coupon'))) {
+        return $data;
+    }
+    
+    if ($data['post_status'] !== 'auto-draft' && 
+        (!isset($postarr['menu_order']) || $postarr['menu_order'] == 0)) {
+        
+        global $wpdb;
+        $max_order = $wpdb->get_var($wpdb->prepare(
+            "SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_type = %s AND post_status != 'trash'",
+            $data['post_type']
+        ));
+        
+        $data['menu_order'] = max(1, intval($max_order) + 1);
+    }
+    
+    return $data;
+}
+add_filter('wp_insert_post_data', 'fascina_auto_set_menu_order', 10, 2);
+
+// 新規登録、更新時の表示順フィールド削除
+function fascina_hide_menu_order_field() {
+    global $post_type;
+    if (in_array($post_type, array('gallery', 'coupon'))) {
+        echo '<style>
+            #pageparentdiv,
+            #pageparentdiv .inside {
+                display: none !important;
+            }
+        </style>';
+    }
+}
+add_action('admin_head', 'fascina_hide_menu_order_field');
