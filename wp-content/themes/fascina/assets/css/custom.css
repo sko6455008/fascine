@@ -357,11 +357,10 @@ address {
 /* お知らせセクション */
 .info-section {
     margin: 50px 0;
-    padding: 0px 10%;
 }
 
 .info-box {
-    max-width: 800px;
+    padding: 0px 10%;
 }
 
 .info-item {

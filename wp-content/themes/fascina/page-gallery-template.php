@@ -102,7 +102,7 @@ switch ($sub_category) {
 
     <!-- オーダーメイドボタン -->
     <div class="custom-order-button">
-        <a href="<?php echo home_url('/order-made'); ?>" class="btn btn-primary">オーダーメイドのコースはこちらから</a>
+        <a href="<?php echo home_url('/gallery_guest_nail/'); ?>" class="btn btn-primary">オーダーメイドのコースはこちらから</a>
     </div>
 
     <!-- 無料お色変更の案内 -->

@@ -194,6 +194,12 @@ function fascina_register_acf_fields() {
                         'nuance-m' => 'ニュアンスM定額コース',
                         'nuance-l' => 'ニュアンスL定額コース',
                         'nuance-xl' => 'ニュアンスXL定額コース',
+                        // GUESTギャラリー用
+                        'magnet' => 'マグネット',
+                        'one-color' => 'ワンカラー',
+                        'french' => 'フレンチ',
+                        'long' => 'ながさだし',
+                        'gradation' => 'グラデーション',
                         // アートパーツ用
                         'lame-holo-seal' => 'ラメ・ホロ・シール',
                         'stone-studs-pearl' => 'ストーン・スタッズ・パール',
@@ -381,17 +387,19 @@ function fascina_register_acf_fields() {
                 ),
                 array(
                     'key' => 'field_coupon_guidance',
-                    'label' => '案内文',
+                    'label' => '料金案内',
                     'name' => 'coupon_guidance',
                     'type' => 'textarea',
                     'required' => 1,
+                    'instructions' => '例: 初回5510円/リピ6510円',
                 ),
                 array(
                     'key' => 'field_coupon_description',
-                    'label' => '説明文',
+                    'label' => '詳細',
                     'name' => 'coupon_description',
                     'type' => 'textarea',
                     'required' => 1,
+                     'instructions' => '例: お色変更無料',
                 ),
                 array(
                     'key' => 'field_coupon_display_top',
@@ -493,6 +501,10 @@ function fascina_gallery_category_script() {
             'simple', 'popular', 'special', 'clean'
         ];
         
+        const guestCategories = [
+            'magnet', 'one-color', 'french', 'long', 'gradation', 'one-color'
+        ];
+        
         const artPartsCategories = [
             'lame-holo-seal', 'stone-studs-pearl',
             'parts', 'color'
@@ -501,6 +513,7 @@ function fascina_gallery_category_script() {
         function updateSubCategories() {
             const mainSelected = $('[name="acf[field_gallery_main_category]"]:checked').val();
             const $subCategories = $('[name="acf[field_gallery_sub_category]"]');
+            let defaultSubCategory = '';
 
             // すべてのラジオボタンを一旦無効化
             $subCategories.prop('disabled', true).closest('li').hide();
@@ -513,6 +526,7 @@ function fascina_gallery_category_script() {
                         .closest('li')
                         .show();
                 });
+                defaultSubCategory = 'simple';
             }
             else if (mainSelected === 'foot') {
                 // FOOT定額コースが選択された場合
@@ -522,6 +536,17 @@ function fascina_gallery_category_script() {
                         .closest('li')
                         .show();
                 });
+                defaultSubCategory = 'simple';
+            }
+            else if (mainSelected === 'guest') {
+                // GUESTギャラリーが選択された場合
+                guestCategories.forEach(category => {
+                    $(`[name="acf[field_gallery_sub_category]"][value="${category}"]`)
+                        .prop('disabled', false)
+                        .closest('li')
+                        .show();
+                });
+                defaultSubCategory = 'magnet';
             }
             else if (mainSelected === 'arts-parts') {
                 // アートパーツが選択された場合
@@ -531,11 +556,17 @@ function fascina_gallery_category_script() {
                         .closest('li')
                         .show();
                 });
+                defaultSubCategory = 'lame-holo-seal';
             }
 
             // 非表示のラジオボタンが選択されている場合、選択を解除
             if ($subCategories.filter(':checked').prop('disabled')) {
                 $subCategories.prop('checked', false);
+            }
+
+            // デフォルト値を設定（選択されていない場合のみ）
+            if (!$subCategories.filter(':checked').length && defaultSubCategory) {
+                $(`[name="acf[field_gallery_sub_category]"][value="${defaultSubCategory}"]`).prop('checked', true);
             }
         }
 
@@ -611,6 +642,11 @@ function fascina_gallery_column_content($column_name, $post_id) {
             'nuance-m' => 'ニュアンスM定額コース',
             'nuance-l' => 'ニュアンスL定額コース',
             'nuance-xl' => 'ニュアンスXL定額コース',
+            'magnet' => 'マグネット',
+            'one-color' => 'ワンカラー',
+            'french' => 'フレンチ',
+            'long' => 'ながさだし',
+            'gradation' => 'グラデーション',
             'lame-holo-seal' => 'ラメ・ホロ・シール',
             'stone-studs-pearl' => 'ストーン・スタッズ・パール',
             'parts' => 'パーツ',
@@ -948,13 +984,13 @@ function fascina_add_gallery_rewrite_rules() {
 
     // GUESTギャラリー
     add_rewrite_rule(
-        'gallery_guest_nail/page/([0-9]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=guest&paged=$matches[1]',
+        'gallery_guest_nail/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=gallery-template&gallery_main_category=guest&gallery_sub_category=$matches[1]&paged=$matches[2]',
         'top'
     );
     add_rewrite_rule(
-        'gallery_guest_nail/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=guest',
+        'gallery_guest_nail/([^/]+)/?$',
+        'index.php?pagename=gallery-template&gallery_main_category=guest&gallery_sub_category=$matches[1]',
         'top'
     );
 
@@ -1014,6 +1050,11 @@ function fascina_add_gallery_filters() {
             'nuance-m' => 'ニュアンスM定額コース',
             'nuance-l' => 'ニュアンスL定額コース',
             'nuance-xl' => 'ニュアンスXL定額コース',
+            'magnet' => 'マグネット',
+            'one-color' => 'ワンカラー',
+            'french' => 'フレンチ',
+            'long' => 'ながさだし',
+            'gradation' => 'グラデーション',
             'lame-holo-seal' => 'ラメ・ホロ・シール',
             'stone-studs-pearl' => 'ストーン・スタッズ・パール',
             'parts' => 'パーツ',
@@ -1169,11 +1210,20 @@ function fascina_get_gallery_page_posts($main_category = '', $sub_category = '',
         );
     }
     
-    // サブカテゴリーの条件
-    if (!empty($sub_category) && $main_category !== 'guest') {
+    // サブカテゴリーの条件（サブカテゴリーがbridalの場合はセットしない)
+    if (!empty($sub_category) && $sub_category !== 'bridal') {
         $meta_query[] = array(
             'key' => 'gallery_sub_category',
             'value' => $sub_category,
+            'compare' => '='
+        );
+    }
+
+    // ブライダルデザインの条件
+    if ($sub_category === 'bridal') {
+        $meta_query[] = array(
+            'key' => 'gallery_is_bridal',
+            'value' => '1',
             'compare' => '='
         );
     }
