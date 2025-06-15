@@ -32,7 +32,7 @@
                     <ul>
                       <li><a href="<?php echo esc_url(home_url('/gallery_hand_design/simple/')); ?>">HAND定額コース</a></li>
                       <li><a href="<?php echo esc_url(home_url('/gallery_foot_design/simple/')); ?>">FOOT定額コース</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/gallery_guest_nail/')); ?>">GUESTギャラリー</a></li>
+                      <li><a href="<?php echo esc_url(home_url('/gallery_guest_nail/simple-guest')); ?>">GUESTギャラリー</a></li>
                       <li><a href="<?php echo esc_url(home_url('/gallery_arts_parts/lame-holo-seal/')); ?>">アート・パーツ</a></li>
                       <li><a href="<?php echo esc_url(home_url('/coupon/')); ?>">月替わりクーポン</a></li>
                     </ul>

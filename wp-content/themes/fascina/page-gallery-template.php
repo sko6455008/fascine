@@ -79,6 +79,24 @@ switch ($sub_category) {
     case 'nuance-xl':
         $sub_category_name = 'ニュアンスXL定額コース';
         break;
+    case 'simple-guest':
+        $sub_category_name = 'シンプル';
+        break;
+    case 'magnet':
+        $sub_category_name = 'マグネット';
+        break;
+    case 'long':
+        $sub_category_name = '長さだし';
+        break;
+    case 'short':
+        $sub_category_name = 'ショートネイル';
+        break;
+    case 'foot':
+        $sub_category_name = 'フットネイル';
+        break;
+    case 'hand-art':
+        $sub_category_name = '手書きアート';
+        break;
     case 'lame-holo-seal':
         $sub_category_name = 'ラメ・ホロ・シール';
         break;
@@ -102,7 +120,7 @@ switch ($sub_category) {
 
     <!-- オーダーメイドボタン -->
     <div class="custom-order-button">
-        <a href="<?php echo home_url('/gallery_guest_nail/'); ?>" class="btn btn-primary">オーダーメイドのコースはこちらから</a>
+        <a href="<?php echo home_url('/gallery_guest_nail/simple-guest/'); ?>" class="btn btn-primary">オーダーメイドのコースはこちらから</a>
     </div>
 
     <!-- 無料お色変更の案内 -->
@@ -201,6 +219,41 @@ switch ($sub_category) {
             <div class="col-md-3 col-6">
                 <a href="<?php echo home_url('/gallery_' . $main_category . '_design/clean/'); ?>" class="course-nav-item <?php echo ($sub_category == 'clean') ? 'active' : ''; ?>">
                     キレイめ定額コース
+                </a>
+            </div>
+        </div>
+    </div>
+    <?php elseif ($main_category === 'guest'): ?>
+    <div class="course-navigation">
+        <div class="row">
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/simple-guest/'); ?>" class="course-nav-item <?php echo ($sub_category == 'simple-guest') ? 'active' : ''; ?>">
+                    シンプル
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/magnet/'); ?>" class="course-nav-item <?php echo ($sub_category == 'magnet') ? 'active' : ''; ?>">
+                    マグネット
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/long/'); ?>" class="course-nav-item <?php echo ($sub_category == 'long') ? 'active' : ''; ?>">
+                    長さだし
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/short/'); ?>" class="course-nav-item <?php echo ($sub_category == 'short') ? 'active' : ''; ?>">
+                    ショートネイル
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/foot/'); ?>" class="course-nav-item <?php echo ($sub_category == 'foot') ? 'active' : ''; ?>">
+                    フットネイル
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="<?php echo home_url('/gallery_guest_nail/hand-art/'); ?>" class="course-nav-item <?php echo ($sub_category == 'hand-art') ? 'active' : ''; ?>">
+                    手書きアート
                 </a>
             </div>
         </div>
@@ -307,7 +360,7 @@ switch ($sub_category) {
                     // カテゴリーに応じてベースURLを設定
                     $base_url = '';
                     if ($main_category === 'guest') {
-                        $base_url = home_url("gallery_guest_nail/page/%#%/");
+                        $base_url = home_url("gallery_guest_nail/{$sub_category}/page/%#%/");
                     } elseif ($main_category === 'arts-parts') {
                         $base_url = home_url("gallery_arts_parts/{$sub_category}/page/%#%/");
                     } else {

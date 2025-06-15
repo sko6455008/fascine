@@ -194,13 +194,12 @@ function fascina_register_acf_fields() {
                         'nuance-m' => 'ニュアンスM定額コース',
                         'nuance-l' => 'ニュアンスL定額コース',
                         'nuance-xl' => 'ニュアンスXL定額コース',
-                        // GUESTギャラリー用
+                        'simple-guest' => 'シンプル',
                         'magnet' => 'マグネット',
-                        'one-color' => 'ワンカラー',
-                        'french' => 'フレンチ',
-                        'long' => 'ながさだし',
-                        'gradation' => 'グラデーション',
-                        // アートパーツ用
+                        'long' => '長さだし',
+                        'short' => 'ショートネイル',
+                        'foot' => 'フットネイル',
+                        'hand-art' => '手書きアート',
                         'lame-holo-seal' => 'ラメ・ホロ・シール',
                         'stone-studs-pearl' => 'ストーン・スタッズ・パール',
                         'parts' => 'パーツ',
@@ -492,17 +491,17 @@ function fascina_gallery_category_script() {
     <script>
     jQuery(document).ready(function($) {
         const handCategories = [
-            'simple', 'popular', 'special', 'clean',
-            'onehon-s', 'onehon-m', 'onehon-l', 'bridal',
-            'nuance-s', 'nuance-m', 'nuance-l', 'nuance-xl'
+            'simple','popular','special','clean',
+            'onehon-s','onehon-m','onehon-l','bridal',
+            'nuance-s','nuance-m','nuance-l','nuance-xl'
         ];
         
         const footCategories = [
-            'simple', 'popular', 'special', 'clean'
+            'simple','popular','special','clean'
         ];
         
         const guestCategories = [
-            'magnet', 'one-color', 'french', 'long', 'gradation', 'one-color'
+            'simple-guest','magnet','long','short','foot', 'hand-art'
         ];
         
         const artPartsCategories = [
@@ -546,7 +545,7 @@ function fascina_gallery_category_script() {
                         .closest('li')
                         .show();
                 });
-                defaultSubCategory = 'magnet';
+                defaultSubCategory = 'simple-guest';
             }
             else if (mainSelected === 'arts-parts') {
                 // アートパーツが選択された場合
@@ -642,11 +641,12 @@ function fascina_gallery_column_content($column_name, $post_id) {
             'nuance-m' => 'ニュアンスM定額コース',
             'nuance-l' => 'ニュアンスL定額コース',
             'nuance-xl' => 'ニュアンスXL定額コース',
+            'simple-guest' => 'シンプル',
             'magnet' => 'マグネット',
-            'one-color' => 'ワンカラー',
-            'french' => 'フレンチ',
-            'long' => 'ながさだし',
-            'gradation' => 'グラデーション',
+            'long' => '長さだし',
+            'short' => 'ショートネイル',
+            'foot' => 'フットネイル',
+            'hand-art' => '手書きアート',
             'lame-holo-seal' => 'ラメ・ホロ・シール',
             'stone-studs-pearl' => 'ストーン・スタッズ・パール',
             'parts' => 'パーツ',
@@ -1045,16 +1045,16 @@ function fascina_add_gallery_filters() {
             'onehon-s' => 'ワンホンS定額コース',
             'onehon-m' => 'ワンホンM定額コース',
             'onehon-l' => 'ワンホンL定額コース',
-            'bridal' => 'ブライダルデザイン',
             'nuance-s' => 'ニュアンスS定額コース',
             'nuance-m' => 'ニュアンスM定額コース',
             'nuance-l' => 'ニュアンスL定額コース',
             'nuance-xl' => 'ニュアンスXL定額コース',
+            'simple-guest' => 'シンプル',
             'magnet' => 'マグネット',
-            'one-color' => 'ワンカラー',
-            'french' => 'フレンチ',
-            'long' => 'ながさだし',
-            'gradation' => 'グラデーション',
+            'long' => '長さだし',
+            'short' => 'ショートネイル',
+            'foot' => 'フットネイル',
+            'hand-art' => '手書きアート',
             'lame-holo-seal' => 'ラメ・ホロ・シール',
             'stone-studs-pearl' => 'ストーン・スタッズ・パール',
             'parts' => 'パーツ',
