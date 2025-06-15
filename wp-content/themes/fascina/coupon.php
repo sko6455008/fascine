@@ -51,8 +51,8 @@ $coupon_query = fascina_get_coupon_page_posts(9, $paged);
                                 $start_date = get_field('coupon_period_start_date', get_the_ID());
                                 $end_date = get_field('coupon_period_end_date', get_the_ID());
                                 if ($start_date && $end_date) : 
-                                    $start_date_formatted = date_i18n('Y年m月d日H時i分', strtotime($start_date));
-                                    $end_date_formatted = date_i18n('Y年m月d日H時i分', strtotime($end_date));
+                                    $start_date_formatted = date_i18n('Y年m月d日', strtotime($start_date));
+                                    $end_date_formatted = date_i18n('Y年m月d日', strtotime($end_date));
                                 ?>
                                     <p class="coupon-period"><?php echo esc_html($start_date_formatted); ?>～<?php echo esc_html($end_date_formatted); ?>迄</p>
                                 <?php endif; ?>
@@ -147,6 +147,7 @@ $coupon_query = fascina_get_coupon_page_posts(9, $paged);
         font-size: 16px;
         margin: 0 0 5px;
         color: #333;
+        text-align: center;
     }
     .coupon-period {
         font-size: 14px;
@@ -155,7 +156,6 @@ $coupon_query = fascina_get_coupon_page_posts(9, $paged);
     }
     .coupon-price {
         font-size: 18px;
-        color: #e75a87;
         font-weight: bold;
         margin-bottom: 10px;
     }

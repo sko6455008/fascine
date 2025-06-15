@@ -205,15 +205,16 @@
                         <div class="coupon-description"><?php echo nl2br(esc_html($coupon_description)); ?></div>   
                         <div class="coupon-price"><?php echo esc_html($coupon_price); ?></div>
                         <div class="coupon-image-box">
-                            <a href="<?php the_permalink(); ?>">
-                                <?php the_post_thumbnail('large', array('class' => 'coupon-image')); ?>
-                            </a>
+                            <?php the_post_thumbnail('large', array('class' => 'coupon-image')); ?>
                         </div>
-                        <?php if ($coupon_period) : 
-                            $start_date = date_i18n('Y年m月d日H時i分', strtotime($coupon_period['start_date']));
-                            $end_date = date_i18n('Y年m月d日H時i分', strtotime($coupon_period['end_date']));
+                        <?php 
+                        $start_date = get_field('coupon_period_start_date', get_the_ID());
+                        $end_date = get_field('coupon_period_end_date', get_the_ID());
+                        if ($start_date && $end_date) : 
+                            $start_date_formatted = date_i18n('Y年m月d日', strtotime($start_date));
+                            $end_date_formatted = date_i18n('Y年m月d日', strtotime($end_date));
                         ?>
-                            <p class="coupon-period">期間:<?php echo esc_html($start_date); ?>～<?php echo esc_html($end_date); ?>迄</p>
+                            <p class="coupon-period">期間:<?php echo esc_html($start_date_formatted); ?>～<?php echo esc_html($end_date_formatted); ?>迄</p>
                         <?php endif; ?>
                     </div>
             <?php

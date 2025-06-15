@@ -479,9 +479,9 @@ address {
 }
 
 .coupon-period {
-    font-size: 15px;
-    color: #888;
-    padding: 0 10px 10px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
 }
 
 /* 全体のセクション */
