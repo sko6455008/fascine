@@ -52,21 +52,16 @@
     <!-- ３点リーダー -->
     <button class="menu-toggle">&#9776;</button>
 
-    <nav class="sp-menu">
-        <ul>
-            <li><a href="<?php echo esc_url(home_url('/')); ?>">トップ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/first/')); ?>">初めての方へ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/menu/')); ?>">料金メニュー</a></li>
-            <li><a href="<?php echo esc_url(home_url('/qa/')); ?>">Q&A</a></li>
-            <li><a href="<?php echo esc_url(home_url('/access/')); ?>">アクセス</a></li>
-            <li><a href="<?php echo esc_url(home_url('/recruit/')); ?>">リクルート</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_hand_design/simple/')); ?>">HAND定額コース</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_foot_design/simple/')); ?>">FOOT定額コース</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_guest_nail/simple-guest')); ?>">GUESTギャラリー</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_arts_parts/lame-holo-seal/')); ?>">アート・パーツ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/coupon/')); ?>">月替わりクーポン</a></li>
-            <li><a href="<?php echo esc_url(home_url('/care/')); ?>">グリーンネイルについて</a></li>
-        </ul>
+    <nav class="sp-menu" role="navigation" aria-label="スマートフォンメニュー">
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'container' => false,
+            'menu_class' => '',
+            'fallback_cb' => false,
+            'items_wrap' => '<ul id="%1$s" class="%2$s" role="menubar">%3$s</ul>'
+        ));
+        ?>
 
         <div class="sns-icons">
             <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
@@ -78,19 +73,14 @@
     <div class="menu-overlay"></div>
 
     <!-- ナビゲーション -->
-    <nav class="global-nav">
-        <ul>
-            <li><a href="<?php echo esc_url(home_url('/')); ?>">トップ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/first/')); ?>">初めての方へ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/menu/')); ?>">料金メニュー</a></li>
-            <li><a href="<?php echo esc_url(home_url('/qa/')); ?>">Q&A</a></li>
-            <li><a href="<?php echo esc_url(home_url('/access/')); ?>">アクセス</a></li>
-            <li><a href="<?php echo esc_url(home_url('/recruit/')); ?>">リクルート</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_hand_design/simple/')); ?>">HAND定額コース</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_foot_design/simple/')); ?>">FOOT定額コース</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_guest_nail/simple-guest')); ?>">GUESTギャラリー</a></li>
-            <li><a href="<?php echo esc_url(home_url('/gallery_arts_parts/lame-holo-seal/')); ?>">アート・パーツ</a></li>
-            <li><a href="<?php echo esc_url(home_url('/coupon/')); ?>">月替わりクーポン</a></li>
-            <li><a href="<?php echo esc_url(home_url('/care/')); ?>">グリーンネイルについて</a></li>
-        </ul>
+    <nav class="global-nav" role="navigation" aria-label="メインナビゲーション">
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'container' => false,
+            'menu_class' => '',
+            'fallback_cb' => false,
+            'items_wrap' => '<ul id="%1$s" class="%2$s" role="menubar">%3$s</ul>'
+        ));
+        ?>
     </nav>

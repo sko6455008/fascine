@@ -17,25 +17,25 @@
                 <div class="footer-menu">
                   <div class="footer-menu-column">
                     <p><strong>■メニュー</strong></p>
-                    <ul>
-                      <li><a href="<?php echo esc_url(home_url('/')); ?>">トップ</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/first/')); ?>">初めての方へ</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/menu/')); ?>">料金メニュー</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/qa/')); ?>">Q&A</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/access/')); ?>">アクセス</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/recruit/')); ?>">リクルート</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/care/')); ?>">グリーンネイルについて</a></li>
-                    </ul>
+                    <?php
+                    wp_nav_menu(array(
+                        'theme_location' => 'footer_menu',
+                        'container' => false,
+                        'menu_class' => '',
+                        'fallback_cb' => false
+                    ));
+                    ?>
                   </div>
                   <div class="footer-menu-column">
                     <p><strong>■ネイル</strong></p>
-                    <ul>
-                      <li><a href="<?php echo esc_url(home_url('/gallery_hand_design/simple/')); ?>">HAND定額コース</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/gallery_foot_design/simple/')); ?>">FOOT定額コース</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/gallery_guest_nail/simple-guest')); ?>">GUESTギャラリー</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/gallery_arts_parts/lame-holo-seal/')); ?>">アート・パーツ</a></li>
-                      <li><a href="<?php echo esc_url(home_url('/coupon/')); ?>">月替わりクーポン</a></li>
-                    </ul>
+                    <?php
+                    wp_nav_menu(array(
+                        'theme_location' => 'footer_design',
+                        'container' => false,
+                        'menu_class' => '',
+                        'fallback_cb' => false
+                    ));
+                    ?>
                   </div>
                 </div>
             </article>

@@ -6,7 +6,7 @@ get_header();
 ?>
 
 <div class="container py-5">
-    <h1 class="access-section-title">アクセス</h1>
+    <h1 class="access-section-title"><?php echo esc_html(get_the_title()); ?></h1>
     
     <div class="row mb-5">
         <div class="col-lg-6 mb-4">
