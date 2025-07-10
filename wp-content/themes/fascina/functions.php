@@ -1360,17 +1360,17 @@ function fascina_auto_set_menu_order($data, $postarr) {
     if (!in_array($data['post_type'], array('gallery', 'coupon'))) {
         return $data;
     }
-    
+
     if ($data['post_status'] !== 'auto-draft' && 
         (!isset($postarr['menu_order']) || $postarr['menu_order'] == 0)) {
-        
+
         global $wpdb;
-        $max_order = $wpdb->get_var($wpdb->prepare(
-            "SELECT MAX(menu_order) FROM {$wpdb->posts} WHERE post_type = %s AND post_status != 'trash'",
+        $min_order = $wpdb->get_var($wpdb->prepare(
+            "SELECT MIN(menu_order) FROM {$wpdb->posts} WHERE post_type = %s AND post_status != 'trash'",
             $data['post_type']
         ));
-        
-        $data['menu_order'] = max(1, intval($max_order) + 1);
+
+        $data['menu_order'] = max(0, intval($min_order));
     }
     
     return $data;
