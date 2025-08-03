@@ -12,47 +12,29 @@
     <?php wp_body_open(); ?>
 
     <header>
-        <div class="backstretch">
-            <div id="sns_pc">
-                <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
-                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/instagram-icon.png" alt="Instagram">
+        <div class="row">
+            <div class="col-2">
+                <button class="menu-toggle">&#9776;</button>
+            </div>
+            <div class="col-8 logo-container">
+                <a href="<?php echo home_url(); ?>">
+                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt="Fascina">
                 </a>
             </div>
-
-            <div class="headinfo">
-                <div class="info">
-                    <div class="logo">
-                        <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt="Fascinaロゴ">
-                    </div>
-                    <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="reservation-btn" target="_blank">ご予約</a>
-                    <a href="https://lin.ee/GOjVh5W" class="contact-btn" target="_blank">お問い合わせ</a>
-                    <div class="phone-number">050-5305-3298</div>
+            <div class="col-2 right-icons">
+                <div class="right-container">
+                    <a href="https://lin.ee/GOjVh5W" target="_blank" class="inquiry-link">
+                        問い合わせ
+                    </a>
+                    <a href="https://071f0f.b-merit.jp/pJ3MHW/web" target="_blank" class="reservation-link">
+                        Web予約
+                    </a>
                 </div>
-
-                <address>東京都豊島区池袋2-40-13 VORT | 池袋ビル 3F</address>
-
-                <h2 class="open-close">
-                    <strong>■営業時間【年中無休】</strong><br>
-                    11：00 - 22：00<br>
-                    土日祝10：00 - 20：00
-                </h2>
-
-                <h2 class="contact-top">
-                    <strong>■ご予約・お問い合わせ</strong><br>
-                    9：00 - 22：00
-                </h2>
-            </div>
-
-            <div class="main-visual">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/slide.jpg" alt="Fascinaメインビジュアル">
             </div>
         </div>
     </header>
 
-    <!-- ３点リーダー -->
-    <button class="menu-toggle">&#9776;</button>
-
-    <nav class="sp-menu" role="navigation" aria-label="スマートフォンメニュー">
+    <nav class="sp-menu" role="navigation" aria-label="メニュー">
         <?php
         wp_nav_menu(array(
             'theme_location' => 'primary',
@@ -62,25 +44,7 @@
             'items_wrap' => '<ul id="%1$s" class="%2$s" role="menubar">%3$s</ul>'
         ));
         ?>
-
-        <div class="sns-icons">
-            <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/instagram-icon.png" alt="Instagram">
-            </a>
-        </div>
     </nav>
 
     <div class="menu-overlay"></div>
-
-    <!-- ナビゲーション -->
-    <nav class="global-nav" role="navigation" aria-label="メインナビゲーション">
-        <?php
-        wp_nav_menu(array(
-            'theme_location' => 'primary',
-            'container' => false,
-            'menu_class' => '',
-            'fallback_cb' => false,
-            'items_wrap' => '<ul id="%1$s" class="%2$s" role="menubar">%3$s</ul>'
-        ));
-        ?>
-    </nav>
+   
