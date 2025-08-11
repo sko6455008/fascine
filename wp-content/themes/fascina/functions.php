@@ -55,8 +55,6 @@ function fascina_change_title_placeholder($title, $post) {
         $title = 'ギャラリー名を入力';
     } elseif ($post->post_type === 'coupon') {
         $title = 'クーポン名称を入力';
-    } elseif ($post->post_type === 'ranking') {
-        $title = 'ギャラリー名を入力';
     }
     return $title;
 }
@@ -114,26 +112,6 @@ function fascina_register_coupon_post_type() {
 }
 add_action('init', 'fascina_register_coupon_post_type');
 
-// カスタム投稿タイプ: ランキング
-function fascina_register_ranking_post_type() {
-    $args = array(
-        'public' => true,
-        'label'  => 'ランキング',
-        'labels' => array(
-            'name' => 'ランキング',
-            'singular_name' => 'ランキング',
-            'add_new' => '新規追加',
-            'add_new_item' => '新規ランキングを追加',
-            'edit_item' => 'ランキングを編集',
-        ),
-        'supports' => array('title', 'thumbnail'),
-        'menu_icon' => 'dashicons-awards',
-        'has_archive' => false,
-    );
-    register_post_type('ranking', $args);
-}
-add_action('init', 'fascina_register_ranking_post_type');
-
 // カスタム投稿タイプ: お知らせ
 function fascina_register_info_post_type() {
     $args = array(
@@ -154,6 +132,48 @@ function fascina_register_info_post_type() {
     register_post_type('info', $args);
 }
 add_action('init', 'fascina_register_info_post_type');
+
+// カスタム投稿タイプ: ネイリスト
+function fascina_register_nailist_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'ネイリスト',
+        'labels' => array(
+            'name' => 'ネイリスト',
+            'singular_name' => 'ネイリスト',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規ネイリストを追加',
+            'edit_item' => 'ネイリストを編集',
+        ),
+        'supports' => array('custom-fields'),
+        'menu_icon' => 'dashicons-admin-users',
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'nailist'),
+    );
+    register_post_type('nailist', $args);
+}
+add_action('init', 'fascina_register_nailist_post_type');
+
+// ネイリストの選択肢を動的に生成する関数
+function fascina_get_nailist_choices() {
+    $choices = array();
+    
+    $nailists = get_posts(array(
+        'post_type' => 'nailist',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC'
+    ));
+    
+    foreach ($nailists as $nailist) {
+        $nailist_name = get_field('nailist_name', $nailist->ID);
+        $roman_slug = get_field('nailist_slug', $nailist->ID);
+        $choices[$roman_slug] = $nailist_name;
+    }
+    
+    return $choices;
+}
 
 // ACFフィールドの登録
 function fascina_register_acf_fields() {
@@ -316,20 +336,28 @@ function fascina_register_acf_fields() {
             'description' => '',
         ));
 
-        
-        // ランキング用フィールド
+        // ネイリスト用フィールド
         acf_add_local_field_group(array(
-            'key' => 'group_ranking',
-            'title' => 'ランキング詳細',
+            'key' => 'group_nailist',
+            'title' => 'ネイリスト設定',
             'fields' => array(
                 array(
-                    'key' => 'field_ranking_position',
-                    'label' => '順位',
-                    'name' => 'ranking_position',
-                    'type' => 'number',
+                    'key' => 'field_nailist_name',
+                    'label' => 'ネイリスト名',
+                    'name' => 'nailist_name',
+                    'type' => 'text',
+                    'instructions' => 'ネイリストの名前を入力してください',
                     'required' => 1,
-                    'min' => 1,
-                    'max' => 10,
+                    'placeholder' => '例: 田中,佐藤'
+                ),
+                array(
+                    'key' => 'field_nailist_slug',
+                    'label' => 'ローマ字スラッグ',
+                    'name' => 'nailist_slug',
+                    'type' => 'text',
+                    'instructions' => 'URLに使う半角英数字・ハイフンのみ（例: tanaka, sato）。',
+                    'required' => 1,
+                    'placeholder' => '例: tanaka'
                 ),
             ),
             'location' => array(
@@ -337,10 +365,18 @@ function fascina_register_acf_fields() {
                     array(
                         'param' => 'post_type',
                         'operator' => '==',
-                        'value' => 'ranking',
+                        'value' => 'nailist',
                     ),
                 ),
             ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
         ));
         
         // クーポン用フィールド
@@ -348,6 +384,16 @@ function fascina_register_acf_fields() {
             'key' => 'group_coupon',
             'title' => 'クーポン詳細',
             'fields' => array(
+                array(
+                    'key' => 'field_coupon_nailist',
+                    'label' => 'ネイリスト',
+                    'name' => 'coupon_nailist',
+                    'type' => 'radio',
+                    'required' => 1,
+                    'choices' => fascina_get_nailist_choices(),
+                    'return_format' => 'value',
+                    'layout' => 'vertical'
+                ),
                 array(
                     'key' => 'field_coupon_period',
                     'label' => 'クーポン表示期間',
@@ -440,6 +486,97 @@ function fascina_register_acf_fields() {
     }
 }
 
+// ACFフィールドの選択肢を動的に更新
+function fascina_load_nailist_field_choices($field) {
+    if ($field['name'] === 'coupon_nailist') {
+        $field['choices'] = fascina_get_nailist_choices();
+    }
+    return $field;
+}
+add_filter('acf/load_field/name=coupon_nailist', 'fascina_load_nailist_field_choices');
+
+// nailist_slug バリデーション（半角英字小文字のみ）
+function fascina_validate_nailist_slug($valid, $value, $field, $input) {
+    if ($valid !== true) {
+        return $valid;
+    }
+    if (!is_string($value)) {
+        return 'ローマ字小文字（a〜z）のみで入力してください。';
+    }
+    if (!preg_match('/^[a-z]+$/', $value)) {
+        return 'ローマ字小文字（a〜z）のみで入力してください。';
+    }
+    return $valid;
+}
+add_filter('acf/validate_value/key=field_nailist_slug', 'fascina_validate_nailist_slug', 10, 4);
+
+function fascina_get_nailist_display_name_by_value($value) {
+    // choices（ローマ字スラッグ or post_name キー）に存在すればその表示名を返す
+    $choices = fascina_get_nailist_choices();
+    if (isset($choices[$value])) {
+        return $choices[$value];
+    }
+    return;
+}
+
+// ネイリスト保存時にタイトルを同期
+function fascina_auto_generate_nailist_slug($post_id) {
+    if (get_post_type($post_id) !== 'nailist') {
+        return;
+    }
+    
+    // 無限ループを防ぐ
+    remove_action('save_post', 'fascina_auto_generate_nailist_slug');
+    
+    $nailist_name = get_field('nailist_name', $post_id);
+    $nailist_slug = get_field('nailist_slug', $post_id);
+    
+    if (!empty($nailist_name)) {
+        wp_update_post(array(
+            'ID' => $post_id,
+            'post_title' => $nailist_name,
+            'post_name' => $nailist_slug,
+        ));
+    }
+    
+    // アクションを再度追加
+    add_action('save_post', 'fascina_auto_generate_nailist_slug');
+}
+add_action('save_post', 'fascina_auto_generate_nailist_slug');
+
+// ネイリスト削除時、割り当て済みクーポンを削除
+function fascina_delete_coupons_on_nailist_delete($post_id) {
+    if (get_post_type($post_id) !== 'nailist') return;
+    $post = get_post($post_id);
+    $slug = $post ? $post->post_name : '';
+    $query = new WP_Query(array(
+        'post_type' => 'coupon',
+        'posts_per_page' => -1,
+        'post_status' => 'any',
+        'meta_query' => array(
+            'relation' => 'OR',
+            array(
+                'key' => 'coupon_nailist',
+                'value' => (string)$post_id,
+                'compare' => '='
+            ),
+            array(
+                'key' => 'coupon_nailist',
+                'value' => $slug,
+                'compare' => '='
+            )
+        ),
+        'fields' => 'ids'
+    ));
+    if ($query->have_posts()) {
+        foreach ($query->posts as $coupon_id) {
+            wp_delete_post($coupon_id, true);
+        }
+    }
+}
+add_action('before_delete_post', 'fascina_delete_coupons_on_nailist_delete');
+add_action('trashed_post', 'fascina_delete_coupons_on_nailist_delete');
+
 // デフォルトのクエリでカスタムオーダーを使用
 function fascina_set_default_gallery_order($query) {
     // 管理画面ではない場合のみ適用
@@ -454,11 +591,6 @@ function fascina_set_default_gallery_order($query) {
             $query->set('orderby', 'menu_order');
             $query->set('order', 'ASC');
         }
-        // ランキングの場合
-        if (is_post_type_archive('ranking') || $query->get('post_type') === 'ranking') {
-            $query->set('orderby', 'menu_order');
-            $query->set('order', 'ASC');
-        }
     }
 }
 add_action('pre_get_posts', 'fascina_set_default_gallery_order');
@@ -468,7 +600,7 @@ function fascina_admin_gallery_order($query) {
     if (is_admin() && $query->is_main_query()) {
         $post_type = $query->get('post_type');
         
-        if (in_array($post_type, array('gallery', 'coupon', 'ranking'))) {
+        if (in_array($post_type, array('gallery', 'coupon'))) {
             if (!$query->get('orderby')) {
                 $query->set('orderby', 'menu_order');
                 $query->set('order', 'ASC');
@@ -687,6 +819,7 @@ function fascina_add_coupon_columns($columns) {
         }
     }
     $new_columns['display_settings'] = '表示設定';
+    $new_columns['nailist'] = 'ネイリスト';
     $new_columns['period'] = '表示期間';
     $new_columns['price'] = 'クーポン価格';
     $new_columns['description'] = '説明文';
@@ -705,6 +838,9 @@ function fascina_coupon_column_content($column_name, $post_id) {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
         }
+    } elseif ($column_name === 'nailist') {
+        $nailist_value = get_field('coupon_nailist', $post_id);
+        echo esc_html(fascina_get_nailist_display_name_by_value($nailist_value));
     } elseif ($column_name === 'menu_order') {
         $post = get_post($post_id);
         echo $post->menu_order;
@@ -733,6 +869,31 @@ function fascina_coupon_column_content($column_name, $post_id) {
 }
 add_action('manage_coupon_posts_custom_column', 'fascina_coupon_column_content', 10, 2);
 
+// ネイリスト一覧のカラムをカスタマイズ
+function fascina_add_nailist_columns($columns) {
+    unset($columns['title']); 
+    $new_columns = array();
+    $new_columns['nailist_name'] = 'ネイリスト名';
+    $new_columns['nailist_slug'] = 'ローマ字スラッグ';
+    if (isset($columns['date'])) {
+        $date = $columns['date'];
+        unset($columns['date']);
+        $new_columns['date'] = $date;
+    }
+    return $new_columns;
+}
+add_filter('manage_nailist_posts_columns', 'fascina_add_nailist_columns');
+
+// ネイリスト一覧のカラム内容を表示
+function fascina_nailist_column_content($column_name, $post_id) {
+    if ($column_name === 'nailist_name') {
+        echo get_field('nailist_name', $post_id);
+    } else if ($column_name === 'nailist_slug') {
+        echo get_field('nailist_slug', $post_id);
+    }
+}
+add_action('manage_nailist_posts_custom_column', 'fascina_nailist_column_content', 10, 2);
+
 // お知らせ一覧のカラムをカスタマイズ
 function fascina_add_info_columns($columns) {
     unset($columns['title']); // タイトルカラムを非表示
@@ -758,47 +919,12 @@ function fascina_info_column_content($column_name, $post_id) {
 }
 add_action('manage_info_posts_custom_column', 'fascina_info_column_content', 10, 2);
 
-// ランキング一覧のカラムをカスタマイズ
-function fascina_add_ranking_columns($columns) {
-    $new_columns = array();
-    foreach ($columns as $key => $value) {
-        if ($key === 'title') {
-            $new_columns['thumbnail'] = '画像';
-        }
-        $new_columns[$key] = $value;
-    }
-    $new_columns['position'] = '順位';
-    if (isset($new_columns['date'])) {
-        $date = $new_columns['date'];
-        unset($new_columns['date']);
-        $new_columns['date'] = $date;
-    }
-    return $new_columns;
-}
-add_filter('manage_ranking_posts_columns', 'fascina_add_ranking_columns');
-
-// ランキング一覧のカラム内容を表示
-function fascina_ranking_column_content($column_name, $post_id) {
-    if ($column_name === 'thumbnail') {
-        if (has_post_thumbnail($post_id)) {
-            echo get_the_post_thumbnail($post_id, array(60, 60));
-        }
-    } elseif ($column_name === 'position') {
-        $position = get_field('ranking_position', $post_id);
-        if ($position) {
-            echo $position . '位';
-        }
-    }
-}
-add_action('manage_ranking_posts_custom_column', 'fascina_ranking_column_content', 10, 2);
-
 // 表示順列をソート可能にする
 function fascina_sortable_columns($columns) {
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-coupon_sortable_columns', 'fascina_sortable_columns');
-add_filter('manage_edit-ranking_sortable_columns', 'fascina_sortable_columns');
 
 // 管理画面の一覧のスタイル調整
 function fascina_admin_columns_style() {
@@ -813,6 +939,7 @@ function fascina_admin_columns_style() {
         .column-menu_order {
             width: 100px;
         }
+        .column-nailist,
         .column-main_category,
         .column-sub_category,
         .column-price,
@@ -894,8 +1021,36 @@ function fascina_acf_notice() {
 # -------------------------------
 # その他
 # -------------------------------
+// 動的ネイリストナビゲーションを生成する関数
+function fascina_get_nailist_navigation($current_nailist = '') {
+    $nailists = get_posts(array(
+        'post_type' => 'nailist',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC'
+    ));
+    
+    $navigation = array();
+    
+    // 登録されたネイリストを追加（ローマ字スラッグ優先）
+    foreach ($nailists as $nailist) {
+        $nailist_name = get_field('nailist_name', $nailist->ID);
+        $display_name = $nailist_name;
+        $roman_slug = get_field('nailist_slug', $nailist->ID);
+        $slug = $roman_slug !== '' ? sanitize_title($roman_slug) : $nailist->post_name;
+        $navigation[] = array(
+            'slug' => $slug,
+            'name' => $display_name,
+            'url' => home_url('/coupon/' . $slug . '/'),
+            'active' => ($current_nailist === $slug)
+        );
+    }
+    
+    return $navigation;
+}
 
-// ギャラリーページのリライトルール
+// リライトルール
 function fascina_add_gallery_rewrite_rules() {
     // HAND定額コース
     add_rewrite_rule(
@@ -944,6 +1099,18 @@ function fascina_add_gallery_rewrite_rules() {
         'index.php?pagename=gallery-template&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]',
         'top'
     );
+
+    // クーポン
+    add_rewrite_rule(
+        'coupon/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=coupon&nailist=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+    add_rewrite_rule( 
+        'coupon/([^/]+)/?$',
+        'index.php?pagename=coupon&nailist=$matches[1]',
+        'top'
+    );
 }
 add_action('init', 'fascina_add_gallery_rewrite_rules');
 
@@ -951,6 +1118,7 @@ add_action('init', 'fascina_add_gallery_rewrite_rules');
 function fascina_add_gallery_query_vars($vars) {
     $vars[] = 'gallery_main_category';
     $vars[] = 'gallery_sub_category';
+    $vars[] = 'nailist';
     $vars[] = 'paged';
     return $vars;
 }
@@ -1203,18 +1371,45 @@ function fascina_get_top_coupon_posts($limit = 9) {
 }
 
 // クーポンページのクーポン表示制御
-function fascina_get_coupon_page_posts($posts_per_page = 9, $paged = 1) {
+function fascina_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist = '') {
+    $meta_query = array('relation' => 'AND');
+    
+    // 表示設定の条件
+    $meta_query[] = array(
+        'key' => 'coupon_display_coupon',
+        'value' => '1',
+        'compare' => '='
+    );
+    
+    if (!empty($nailist)) {
+        if ($nailist === 'common') {
+            $meta_query[] = array(
+                'key' => 'coupon_nailist',
+                'value' => 'common',
+                'compare' => '='
+            );
+        } else {
+            $meta_query[] = array(
+                'relation' => 'OR',
+                array(
+                    'key' => 'coupon_nailist',
+                    'value' => 'common',
+                    'compare' => '='
+                ),
+                array(
+                    'key' => 'coupon_nailist',
+                    'value' => $nailist,
+                    'compare' => '='
+                )
+            );
+        }
+    }
+    
     $args = array(
         'post_type' => 'coupon',
         'posts_per_page' => $posts_per_page,
         'paged' => $paged,
-        'meta_query' => array(
-            array(
-                'key' => 'coupon_display_coupon',
-                'value' => '1',
-                'compare' => '='
-            )
-        ),
+        'meta_query' => $meta_query,
         'orderby' => array(
             'menu_order' => 'ASC',
             'date' => 'DESC'

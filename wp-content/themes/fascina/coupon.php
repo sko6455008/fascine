@@ -8,16 +8,41 @@ get_header();
 // 現在のページ番号を取得
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
+// 1ページあたりの表示数
+$posts_per_page = 51;
+
 // 現在時刻を取得
 $current_time = current_time('mysql');
 
+//ネイリスト情報を取得
+$nailist = get_query_var('nailist');
+
 // クーポンの投稿を取得
-$coupon_query = fascina_get_coupon_page_posts(51, $paged);
+$coupon_query = fascina_get_coupon_page_posts($posts_per_page, $paged, $nailist);
+
+$nailist_navigation = fascina_get_nailist_navigation($nailist);
 ?>
 
 <div class="coupon-container">
     <div class="coupon-header">
         <h1 class="coupon-title"><?php echo esc_html(get_the_title()); ?></h1>
+    </div>
+    
+    <div class="nailist-navigation">
+        <div class="row">
+        <script>
+            console.log('nav urls:', <?php echo wp_json_encode($nailist_navigation); ?>);
+        </script>
+            <?php 
+            foreach ($nailist_navigation as $nav_item) : 
+            ?>
+                <div class="col-md-4 col-6">
+                    <a href="<?php echo esc_url($nav_item['url']); ?>" class="nailist-nav-item <?php echo $nav_item['active'] ? 'active' : ''; ?>">
+                        <?php echo esc_html($nav_item['name']); ?>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 
     <?php if ($coupon_query->have_posts()) : ?>
@@ -111,6 +136,29 @@ $coupon_query = fascina_get_coupon_page_posts(51, $paged);
         margin-bottom: 20px;
         border-bottom: 1px solid #ddd;
         padding-bottom: 10px;
+    }
+    .nailist-navigation {
+        margin-bottom: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .nailist-nav-item {
+        display: block;
+        background-color: #f8f8f8;
+        padding: 12px;
+        margin-bottom: 10px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+        transition: all 0.3s;
+        border: 1px solid #eee;
+        font-size: 13px;
+    }
+    .nailist-nav-item:hover, .nailist-nav-item.active {
+        background-color: #e75a87;
+        color: #fff;
+        border-color: #e75a87;
     }
     .coupon-title {
         font-size: 24px;
