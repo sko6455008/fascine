@@ -357,7 +357,7 @@ function fascina_register_acf_fields() {
                     'type' => 'text',
                     'instructions' => 'URLに使う半角英数字・ハイフンのみ（例: tanaka, sato）。',
                     'required' => 1,
-                    'placeholder' => '例: tanaka'
+                    'placeholder' => '例: tanaka,sato'
                 ),
             ),
             'location' => array(
@@ -1382,27 +1382,11 @@ function fascina_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist
     );
     
     if (!empty($nailist)) {
-        if ($nailist === 'common') {
-            $meta_query[] = array(
-                'key' => 'coupon_nailist',
-                'value' => 'common',
-                'compare' => '='
-            );
-        } else {
-            $meta_query[] = array(
-                'relation' => 'OR',
-                array(
-                    'key' => 'coupon_nailist',
-                    'value' => 'common',
-                    'compare' => '='
-                ),
-                array(
-                    'key' => 'coupon_nailist',
-                    'value' => $nailist,
-                    'compare' => '='
-                )
-            );
-        }
+        $meta_query[] = array(
+            'key' => 'coupon_nailist',
+            'value' => $nailist,
+            'compare' => '='
+        );
     }
     
     $args = array(
