@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <?php wp_head(); ?>
 </head>
 
@@ -23,6 +24,11 @@
             </div>
             <div class="col-2 right-icons">
                 <div class="right-container">
+                    <div class="header-sns">
+                        <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
+                            <i class="fab fa-instagram" style="color:#e64893; font-size:35px;"></i>
+                        </a>
+                    </div>
                     <a href="https://lin.ee/GOjVh5W" target="_blank" class="inquiry-link">
                         問い合わせ
                     </a>
@@ -44,6 +50,15 @@
             'items_wrap' => '<ul id="%1$s" class="%2$s" role="menubar">%3$s</ul>'
         ));
         ?>
+
+        <div class="menu-sns">
+            <a href="https://lin.ee/GOjVh5W" target="_blank">
+                <i class="fab fa-line" style="color:#e64893; font-size:40px;"></i>
+            </a>
+            <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
+                <i class="fab fa-instagram" style="color:#e64893; font-size:40px;"></i>
+            </a>
+        </div>
     </nav>
 
     <div class="menu-overlay"></div>

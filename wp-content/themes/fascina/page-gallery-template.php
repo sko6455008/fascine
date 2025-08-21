@@ -28,16 +28,16 @@ $total_pages = ceil($total_posts / $posts_per_page);
 $main_category_name = '';
 switch ($main_category) {
     case 'hand':
-        $main_category_name = 'HAND定額コース';
+        $main_category_name = 'Hand Design';
         break;
     case 'foot':
-        $main_category_name = 'FOOT定額コース';
+        $main_category_name = 'Foot Design';
         break;
     case 'guest':
-        $main_category_name = 'GUESTギャラリー';
+        $main_category_name = 'Guest Design';
         break;
     case 'arts-parts':
-        $main_category_name = 'アート・パーツ';
+        $main_category_name = 'Arts & Parts';
         break;
 }
 
@@ -112,28 +112,14 @@ switch ($sub_category) {
 }
 ?>
 
+<div class="page-header">
+    <div class="headline-area">
+        <h1 class="headline"><?php echo esc_html($main_category_name); ?></h1>
+        <p class="title">ギャラリー</p>
+    </div>
+</div>
+
 <div class="gallery-container">
-    <!-- ヘッダータイトル -->
-    <div class="gallery-header">
-        <h1 class="gallery-title"><?php echo esc_html($main_category_name); ?></h1>
-    </div>
-
-    <!-- オーダーメイドボタン -->
-    <div class="custom-order-button-container">
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <div class="custom-order-button">
-                    <a href="<?php echo home_url('/gallery_guest_nail/simple-guest/'); ?>" class="btn btn-primary">オーダーメイドはこちらから</a>
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="custom-order-button">
-                    <a href="<?php echo home_url('/coupon/'); ?>" class="btn btn-primary">月替わりクーポンはこちらから</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- 無料お色変更の案内 -->
     <div class="color-change-notice">
         <p>※お色変更無料※</p>
@@ -321,7 +307,7 @@ switch ($sub_category) {
                         $desc = esc_html($gallery_items[$index]['desc']);
                     ?>
                         <div class="col-lg-2-4 col-md-6 col-12">
-                            <div class="gallery-item">
+                            <div class="gallery-item fade-in-section">
                                 <?php if ($img): ?>
                                     <div class="gallery-image">
                                         <img
@@ -405,41 +391,33 @@ switch ($sub_category) {
     <?php wp_reset_postdata(); ?>
 </div>
 
-<!-- ギャラリー用のスタイル -->
 <style>
+    /* ページヘッダー */
+    .page-header {
+        background: url("<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/slide.jpg") no-repeat center center;
+        background-size: cover;
+        width: 100%;
+        height: 420px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 70px;
+    }
+    .headline-area {
+        max-width: 800px;
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #fff;
+    }
+    .headline,.title {
+        text-shadow: 1px 1px 5px #735E59;
+    }
+
+    /* gelleryセクション */
     .gallery-container {
         padding: 30px 0;
-    }
-    .gallery-header {
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-    }
-    .gallery-title {
-        font-size: 24px;
-        color: #333;
-    }
-    .custom-order-button-container{
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .custom-order-button {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .custom-order-button .btn {
-        background-color: #e75a87;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-    }
-    .custom-order-button .btn:hover {
-        background-color: #d44d7a;
     }
     .color-change-notice {
         text-align: center;
@@ -565,6 +543,7 @@ switch ($sub_category) {
     .col-lg-2-4 {
         flex: 0 0 20%;
         max-width: 20%;
+        padding: 0px;
     }
 
     /* モーダル用 */
@@ -639,13 +618,7 @@ switch ($sub_category) {
         .col-lg-2-4 {
             flex: 0 0 50%;
             max-width: 50%;
-        }
-        .gallery-title {
-            font-size: 20px;
-        }
-        .custom-order-button .btn {
-            font-size: 14px;
-            padding: 8px 15px;
+            padding: 0px;
         }
         .category-title h2 {
             font-size: 18px;
@@ -656,18 +629,6 @@ switch ($sub_category) {
     }
     
     @media (max-width: 767px) {
-        .col-lg-2-4 {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-        .gallery-title {
-            font-size: 18px;
-        }
-        .custom-order-button .btn {
-            font-size: 13px;
-            padding: 10px 12px;
-            width: 210px;
-        }
         .category-title h2 {
             font-size: 16px;
         }

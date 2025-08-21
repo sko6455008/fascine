@@ -149,7 +149,7 @@ get_header(); ?>
         <?php endif; ?>
     </div>
     <div class="text-center py-4">
-        <a href="<?php echo esc_url(home_url('/gallery_guest_nail/')); ?>" class="more-button">
+        <a href="<?php echo esc_url(home_url('/gallery_guest_nail/simple-guest/')); ?>" class="more-button">
             More
         </a>
     </div>
@@ -199,7 +199,7 @@ get_header(); ?>
         <?php endif; ?>
     </div>
     <div class="text-center py-4">
-        <a href="<?php echo esc_url(home_url('/coupon/')); ?>" class="more-button">
+        <a href="<?php echo esc_url(home_url('/coupon/common/')); ?>" class="more-button">
             More
         </a>
     </div>
