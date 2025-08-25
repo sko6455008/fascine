@@ -55,6 +55,8 @@ function fascina_change_title_placeholder($title, $post) {
         $title = 'ギャラリー名を入力';
     } elseif ($post->post_type === 'coupon') {
         $title = 'クーポン名称を入力';
+    } elseif ($post->post_type === 'banner') {
+        $title = 'バナー名を入力';
     }
     return $title;
 }
@@ -174,6 +176,27 @@ function fascina_get_nailist_choices() {
     
     return $choices;
 }
+
+function fascina_register_banner_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'バナー',
+        'labels' => array(
+            'name' => 'バナー',
+            'singular_name' => 'バナー',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規バナーを追加',
+            'edit_item' => 'バナーを編集',
+        ),
+        'supports' => array('title', 'thumbnail', 'custom-fields'),
+        'menu_icon' => 'dashicons-images-alt2',
+        'has_archive' => false,
+        'rewrite' => array('slug' => 'banner'),
+        'show_in_menu' => true,
+    );
+    register_post_type('banner', $args);
+}
+add_action('init', 'fascina_register_banner_post_type');
 
 // ACFフィールドの登録
 function fascina_register_acf_fields() {
@@ -323,6 +346,39 @@ function fascina_register_acf_fields() {
                         'param' => 'post_type',
                         'operator' => '==',
                         'value' => 'info',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+        ));
+
+        // バナー用フィールド
+        acf_add_local_field_group(array(
+            'key' => 'group_banner',
+            'title' => 'バナー詳細',
+            'fields' => array(
+                array(
+                    'key' => 'field_banner_url',
+                    'label' => 'URL',
+                    'name' => 'banner_url',
+                    'type' => 'text',
+                    'required' => 1,
+                    'instructions' => '例: https://fascina.jp/coupon/tanaka/',
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'banner',
                     ),
                 ),
             ),
@@ -918,6 +974,33 @@ function fascina_info_column_content($column_name, $post_id) {
     }
 }
 add_action('manage_info_posts_custom_column', 'fascina_info_column_content', 10, 2);
+
+// バナー一覧のカラムをカスタマイズ
+function fascina_add_banner_columns($columns) {
+    $new_columns = array();
+    $new_columns['thumbnail'] = '画像';
+    $new_columns['title'] = 'バナー名';
+    $new_columns['banner_url'] = 'URL';
+    if (isset($columns['date'])) {
+        $date = $columns['date'];
+        unset($columns['date']);
+        $new_columns['date'] = $date;
+    }
+    return $new_columns;
+}
+add_filter('manage_banner_posts_columns', 'fascina_add_banner_columns');
+
+// バナー一覧のカラム内容を表示
+function fascina_banner_column_content($column_name, $post_id) {
+    if ($column_name === 'thumbnail') {
+        if (has_post_thumbnail($post_id)) {
+            echo get_the_post_thumbnail($post_id, array(60, 60));
+        }
+    } elseif ($column_name === 'banner_url') {
+        echo get_field('banner_url', $post_id);
+    }
+}
+add_action('manage_banner_posts_custom_column', 'fascina_banner_column_content', 10, 2);
 
 // 表示順列をソート可能にする
 function fascina_sortable_columns($columns) {

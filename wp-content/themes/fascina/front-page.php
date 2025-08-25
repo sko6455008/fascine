@@ -13,8 +13,6 @@ get_header(); ?>
     </div>
 </section>
 
-<!-- バナー -->
-
 <!-- お知らせセクション -->
 <section class="info-section">
     <h1 class="fascina-section-title">news</h1>
@@ -44,6 +42,36 @@ get_header(); ?>
                 <p style="text-align: center;">newsはありません。</p>
             </div>
         <?php endif; ?>
+    </div>
+</section>
+
+<!-- バナーセクション -->
+<section class="banner-section">
+    <div class="banner-box">
+        <?php
+        $banner_args = array(
+            'post_type' => 'banner',
+            'posts_per_page' => -1,
+            'orderby' => array(
+                'date' => 'DESC',
+                'menu_order' => 'ASC'
+            ),
+        );
+        $banner_query = new WP_Query($banner_args);
+        if ($banner_query->have_posts()) :
+            while ($banner_query->have_posts()) : $banner_query->the_post();
+                $banner_url = get_field('banner_url');
+        ?>
+            <div class="banner-item">
+                <a href="<?php echo esc_url($banner_url); ?>" target="_blank">
+                    <?php the_post_thumbnail('large', array('class' => 'banner-image', 'alt' => get_the_title())); ?>
+                </a>
+            </div>
+        <?php
+            endwhile;
+            wp_reset_postdata();
+        endif;
+        ?>
     </div>
 </section>
 
