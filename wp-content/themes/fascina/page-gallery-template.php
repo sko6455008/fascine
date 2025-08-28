@@ -394,7 +394,7 @@ switch ($sub_category) {
 <style>
     /* ページヘッダー */
     .page-header {
-        background: url("<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/slide.jpg") no-repeat center center;
+        background: url("<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/gallery.jpeg") no-repeat center center;
         background-size: cover;
         width: 100%;
         height: 420px;

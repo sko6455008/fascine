@@ -33,7 +33,7 @@ get_header();
                 </p>
             </div>
             <div class="concept-image">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/first1.jpg" alt="コンセプト画像1">
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/concept1.jpeg" alt="コンセプト画像1">
             </div>
         </div>
     </section>
@@ -58,7 +58,7 @@ get_header();
                 </p>
             </div>
             <div class="concept-image">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/first2.jpg" alt="コンセプト画像2">
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/concept2.jpg" alt="コンセプト画像2">
             </div>
         </div>
     </section>
@@ -85,7 +85,7 @@ get_header();
                 </p>
             </div>
             <div class="concept-image">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/first3.jpg" alt="コンセプト画像3">
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/concept3.jpeg" alt="コンセプト画像3">
             </div>
         </div>
     </section>
@@ -95,7 +95,7 @@ get_header();
 <style>
      /* ページヘッダー */
     .page-header {
-        background: url("<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/slide.jpg") no-repeat center center;
+        background: url("<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/concept.jpeg") no-repeat center center;
         background-size: cover;
         width: 100%;
         height: 420px;
