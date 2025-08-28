@@ -612,7 +612,12 @@ switch ($sub_category) {
     }
     .gallery-modal-prev { left: 10px; }
     .gallery-modal-next { right: 10px; }
-    
+
+    @media (max-width: 1024px) {
+        .course-navigation {
+            margin: 0 5%;
+        }
+    }
     /* レスポンシブ対応 */
     @media (max-width: 991px) {
         .col-lg-2-4 {

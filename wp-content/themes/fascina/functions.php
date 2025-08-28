@@ -1402,7 +1402,7 @@ function fascina_add_gallery_filters() {
 }
 add_action('restrict_manage_posts', 'fascina_add_gallery_filters');
 
-// フィルター条件を適用
+// ギャラリーのフィルター条件を適用
 function fascina_apply_gallery_filters($query) {
     global $pagenow, $typenow;
     
@@ -1433,6 +1433,47 @@ function fascina_apply_gallery_filters($query) {
     }
 }
 add_action('pre_get_posts', 'fascina_apply_gallery_filters');
+
+// 管理画面のクーポン一覧にフィルターを追加
+function fascina_add_coupon_filters() {
+    global $typenow;
+    if ($typenow === 'coupon') {
+        $choices = fascina_get_nailist_choices();
+        $current_nailist = isset($_GET['coupon_nailist_filter']) ? $_GET['coupon_nailist_filter'] : '';
+        echo '<select name="coupon_nailist_filter">';
+        echo '<option value="">ネイリストで絞り込み</option>';
+        foreach ($choices as $value => $label) {
+            printf(
+                '<option value="%s" %s>%s</option>',
+                esc_attr($value),
+                selected($current_nailist, $value, false),
+                esc_html($label)
+            );
+        }
+        echo '</select>';
+    }
+}
+add_action('restrict_manage_posts', 'fascina_add_coupon_filters');
+
+// クーポンのフィルター条件を適用
+function fascina_apply_coupon_filters($query) {
+    global $pagenow, $typenow;
+    if ($pagenow === 'edit.php' && $typenow === 'coupon' && is_admin() && $query->is_main_query()) {
+        if (!empty($_GET['coupon_nailist_filter'])) {
+            $meta_query = (array) $query->get('meta_query');
+            if (empty($meta_query)) {
+                $meta_query = array('relation' => 'AND');
+            }
+            $meta_query[] = array(
+                'key' => 'coupon_nailist',
+                'value' => $_GET['coupon_nailist_filter'],
+                'compare' => '='
+            );
+            $query->set('meta_query', $meta_query);
+        }
+    }
+}
+add_action('pre_get_posts', 'fascina_apply_coupon_filters');
 
 // フィルターのスタイルを追加
 function fascina_admin_filters_style() {
