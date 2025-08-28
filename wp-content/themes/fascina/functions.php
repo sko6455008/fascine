@@ -64,9 +64,9 @@ add_filter('enter_title_here', 'fascina_change_title_placeholder', 10, 2);
 
 // Intuitive Custom Post Order プラグインのサポート
 function fascina_enable_custom_post_order() {
-    // ギャラリー投稿タイプでカスタムオーダーを有効化
     add_post_type_support('gallery', 'page-attributes');
     add_post_type_support('coupon', 'page-attributes');
+    add_post_type_support('qa', 'page-attributes');
 }
 add_action('init', 'fascina_enable_custom_post_order');
 
@@ -929,13 +929,6 @@ function fascina_gallery_column_content($column_name, $post_id) {
 }
 add_action('manage_gallery_posts_custom_column', 'fascina_gallery_column_content', 10, 2);
 
-// 表示順列をソート可能にする
-function fascina_sortable_gallery_columns($columns) {
-    $columns['menu_order'] = 'menu_order';
-    return $columns;
-}
-add_filter('manage_edit-gallery_sortable_columns', 'fascina_sortable_gallery_columns');
-
 // クーポン一覧のカラムをカスタマイズ
 function fascina_add_coupon_columns($columns) {
     $new_columns = array();
@@ -1094,7 +1087,10 @@ add_filter('manage_qa_posts_columns', 'fascina_add_qa_columns');
 
 // Q&A一覧のカラム内容を表示
 function fascina_qa_column_content($column_name, $post_id) {
-    if ($column_name === 'type') {
+    if ($column_name === 'menu_order') {
+        $post = get_post($post_id);
+        echo $post->menu_order;
+    } elseif ($column_name === 'type') {
         $type_key = get_field('qa_type', $post_id);
         $types = array(
             'service' => '施術について',
@@ -1110,12 +1106,26 @@ function fascina_qa_column_content($column_name, $post_id) {
 }
 add_action('manage_qa_posts_custom_column', 'fascina_qa_column_content', 10, 2);
 
-// 表示順列をソート可能にする
+// Q&Aの表示順列をソート可能にする
+function fascina_sortable_qa_columns($columns) {
+    $columns['menu_order'] = 'menu_order';
+    return $columns;
+}
+add_filter('manage_edit-qa_sortable_columns', 'fascina_sortable_qa_columns');
+
+// クーポンの表示順列をソート可能にする
 function fascina_sortable_columns($columns) {
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-coupon_sortable_columns', 'fascina_sortable_columns');
+
+// ギャラリーの表示順列をソート可能にする
+function fascina_sortable_gallery_columns($columns) {
+    $columns['menu_order'] = 'menu_order';
+    return $columns;
+}
+add_filter('manage_edit-gallery_sortable_columns', 'fascina_sortable_gallery_columns');
 
 // 管理画面の一覧のスタイル調整
 function fascina_admin_columns_style() {
