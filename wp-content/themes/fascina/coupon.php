@@ -37,9 +37,6 @@ $total_pages = ceil($total_posts / $posts_per_page);
 <div class="coupon-container">
     <div class="nailist-navigation">
         <div class="row">
-        <script>
-            console.log('nav urls:', <?php echo wp_json_encode($nailist_navigation); ?>);
-        </script>
             <?php 
             foreach ($nailist_navigation as $nav_item) : 
             ?>

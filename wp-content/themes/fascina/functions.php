@@ -177,6 +177,7 @@ function fascina_get_nailist_choices() {
     return $choices;
 }
 
+// カスタム投稿タイプ: バナー
 function fascina_register_banner_post_type() {
     $args = array(
         'public' => true,
@@ -197,6 +198,28 @@ function fascina_register_banner_post_type() {
     register_post_type('banner', $args);
 }
 add_action('init', 'fascina_register_banner_post_type');
+
+// カスタム投稿タイプ: Q&A
+function fascina_register_qa_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'Q&A',
+        'labels' => array(
+            'name' => 'Q&A',
+            'singular_name' => 'Q&A',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規Q&Aを追加',
+            'edit_item' => 'Q&Aを編集',
+        ),
+        'supports' => array('custom-fields'),
+        'menu_icon' => 'dashicons-editor-help',
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'qa'),
+        'show_in_menu' => true,
+    );
+    register_post_type('qa', $args);
+}
+add_action('init', 'fascina_register_qa_post_type');
 
 // ACFフィールドの登録
 function fascina_register_acf_fields() {
@@ -422,6 +445,57 @@ function fascina_register_acf_fields() {
                         'param' => 'post_type',
                         'operator' => '==',
                         'value' => 'nailist',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+        ));
+
+        acf_add_local_field_group(array(
+            'key' => 'group_qa',
+            'title' => 'Q&A詳細',
+            'fields' => array(
+                array(
+                    'key' => 'field_qa_type',
+                    'label' => '種別',
+                    'name' => 'qa_type',
+                    'type' => 'radio',
+                    'choices' => array(
+                        'service' => '施術について',
+                        'reservation' => '予約について',
+                        'other' => 'その他',
+                    ),
+                    'layout' => 'horizontal',
+                    'required' => 1,
+                ),
+                array(
+                    'key' => 'field_qa_question',
+                    'label' => '質問',
+                    'name' => 'qa_question',
+                    'type' => 'textarea',
+                    'required' => 1,
+                ),
+                array(
+                    'key' => 'field_qa_answer',
+                    'label' => '答え',
+                    'name' => 'qa_answer',
+                    'type' => 'textarea',
+                    'required' => 1,
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'qa',
                     ),
                 ),
             ),
@@ -1001,6 +1075,40 @@ function fascina_banner_column_content($column_name, $post_id) {
     }
 }
 add_action('manage_banner_posts_custom_column', 'fascina_banner_column_content', 10, 2);
+
+// Q&A一覧のカラムをカスタマイズ
+function fascina_add_qa_columns($columns) {
+    unset($columns['title']); // タイトルカラムを非表示
+    $new_columns = array();
+    $new_columns['type'] = '種別';
+    $new_columns['question'] = '質問';
+    $new_columns['answer'] = '答え';
+    if (isset($columns['date'])) {
+        $date = $columns['date'];
+        unset($columns['date']);
+        $new_columns['date'] = $date;
+    }
+    return $new_columns;
+}
+add_filter('manage_qa_posts_columns', 'fascina_add_qa_columns');
+
+// Q&A一覧のカラム内容を表示
+function fascina_qa_column_content($column_name, $post_id) {
+    if ($column_name === 'type') {
+        $type_key = get_field('qa_type', $post_id);
+        $types = array(
+            'service' => '施術について',
+            'reservation' => '予約について',
+            'other' => 'その他',
+        );
+        echo isset($types[$type_key]) ? $types[$type_key] : '';
+    } elseif ($column_name === 'question') {
+        echo get_field('qa_question', $post_id);
+    } elseif ($column_name === 'answer') {
+        echo get_field('qa_answer', $post_id);
+    }
+}
+add_action('manage_qa_posts_custom_column', 'fascina_qa_column_content', 10, 2);
 
 // 表示順列をソート可能にする
 function fascina_sortable_columns($columns) {
