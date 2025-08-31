@@ -57,6 +57,8 @@ function fascina_change_title_placeholder($title, $post) {
         $title = 'クーポン名称を入力';
     } elseif ($post->post_type === 'banner') {
         $title = 'バナー名を入力';
+    } elseif ($post->post_type === 'home') {
+        $title = 'SEOに適した画像タイトル入力(例：パラジェル専門店 Fascina)';
     }
     return $title;
 }
@@ -220,6 +222,68 @@ function fascina_register_qa_post_type() {
     register_post_type('qa', $args);
 }
 add_action('init', 'fascina_register_qa_post_type');
+
+// カスタム投稿タイプ: ホーム画像
+function fascina_register_home_image_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'ホーム画像',
+        'labels' => array(
+            'name' => 'ホーム画像',
+            'singular_name' => 'ホーム画像',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規ホーム画像を追加',
+            'edit_item' => 'ホーム画像を編集',
+        ),
+        'supports' => array('title', 'thumbnail'),
+        'menu_icon' => 'dashicons-admin-home',
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'home'),
+        'show_in_menu' => true,
+        'publicly_queryable' => false,
+        'exclude_from_search' => true,
+    );
+    register_post_type('home', $args);
+}
+add_action('init', 'fascina_register_home_image_post_type');
+
+// ホーム画像の登録を1つに制限
+function fascina_limit_home_image_posts() {
+    global $typenow, $pagenow;
+
+    if($typenow === 'home' && $pagenow === 'post-new.php') {
+        $existing_posts = get_posts(array(
+            'post_type' => 'home',
+            'posts_per_page' => 1,
+            'post_status' => array('publish', 'draft', 'pending'),
+        ));
+        
+        if(!empty($existing_posts)) {
+           wp_die(
+                'ホーム画像は既に登録されています。新しい画像を登録するには、既存のホーム画像を編集または削除してください。',
+                'ホーム画像の制限',
+                array('back_link' => true)
+           );
+        }
+    }
+}
+add_action('admin_init', 'fascina_limit_home_image_posts');
+
+// ホーム画像を取得する関数
+function fascina_get_home_image() {
+    $home_images = get_posts(array(
+        'post_type' => 'home',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ));
+    
+    if (!empty($home_images)) {
+        return $home_images[0];
+    }
+    return null;
+}
 
 // ACFフィールドの登録
 function fascina_register_acf_fields() {
@@ -1105,6 +1169,30 @@ function fascina_qa_column_content($column_name, $post_id) {
     }
 }
 add_action('manage_qa_posts_custom_column', 'fascina_qa_column_content', 10, 2);
+
+// ホーム画像のカラムをカスタマイズ
+function fascina_add_home_columns($columns) {
+    $new_columns = array();
+    $new_columns['thumbnail'] = 'ホーム画像';
+    $new_columns['title'] = '画像名';
+    if (isset($columns['date'])) {
+        $date = $columns['date'];
+        unset($columns['date']);
+        $new_columns['date'] = $date;
+    }
+    return $new_columns;
+}
+add_filter('manage_home_posts_columns', 'fascina_add_home_columns');
+
+// ホーム画像のカラム内容を表示
+function fascina_home_column_content($column_name, $post_id) {
+    if ($column_name === 'thumbnail') {
+        if (has_post_thumbnail($post_id)) {
+            echo get_the_post_thumbnail($post_id, array(60, 60));
+        }
+    }
+}
+add_action('manage_home_posts_custom_column', 'fascina_home_column_content', 10, 2);
 
 // Q&Aの表示順列をソート可能にする
 function fascina_sortable_qa_columns($columns) {

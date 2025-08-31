@@ -9,8 +9,17 @@ get_header(); ?>
 <!-- ヒーローセクション -->
 <section>
     <div>
-        <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/slide.jpg" alt="パラジェル専門店 Fascina" class="hero-image">
-    </div>
+        <?php
+        $home_image = fascina_get_home_image();
+        if ($home_image && has_post_thumbnail($home_image->ID)) {
+            echo get_the_post_thumbnail($home_image->ID, 'full', array(
+                'class' => 'hero-image', 
+                'alt' => get_the_title($home_image->ID)
+            ));
+        } else {
+            echo '<img src="' . esc_url(get_template_directory_uri() . '/assets/images/slide.jpg') . '" class="hero-image" alt="パラジェル専門店 Fascina">';
+        }
+        ?>
 </section>
 
 <!-- お知らせセクション -->
