@@ -24,92 +24,9 @@ $gallery_query = fascina_get_gallery_page_posts($main_category, $sub_category, $
 $total_posts = $gallery_query->found_posts;
 $total_pages = ceil($total_posts / $posts_per_page);
 
-// カテゴリー名を取得
-$main_category_name = '';
-switch ($main_category) {
-    case 'hand':
-        $main_category_name = 'Hand Design';
-        break;
-    case 'foot':
-        $main_category_name = 'Foot Design';
-        break;
-    case 'guest':
-        $main_category_name = 'Guest Design';
-        break;
-    case 'arts-parts':
-        $main_category_name = 'Arts & Parts';
-        break;
-}
-
-$sub_category_name = '';
-switch ($sub_category) {
-    case 'simple':
-        $sub_category_name = 'シンプル定額コース';
-        break;
-    case 'popular':
-        $sub_category_name = '一番人気定額コース';
-        break;
-    case 'special':
-        $sub_category_name = 'こだわり定額コース';
-        break;
-    case 'clean':
-        $sub_category_name = 'キレイめ定額コース';
-        break;
-    case 'onehon-s':
-        $sub_category_name = 'ワンホンS定額コース';
-        break;
-    case 'onehon-m':
-        $sub_category_name = 'ワンホンM定額コース';
-        break;
-    case 'onehon-l':
-        $sub_category_name = 'ワンホンL定額コース';
-        break;
-    case 'bridal':
-        $sub_category_name = 'ブライダルデザイン';
-        break;
-    case 'nuance-s':
-        $sub_category_name = 'ニュアンスS定額コース';
-        break;
-    case 'nuance-m':
-        $sub_category_name = 'ニュアンスM定額コース';
-        break;
-    case 'nuance-l':
-        $sub_category_name = 'ニュアンスL定額コース';
-        break;
-    case 'nuance-xl':
-        $sub_category_name = 'ニュアンスXL定額コース';
-        break;
-    case 'simple-guest':
-        $sub_category_name = 'シンプル';
-        break;
-    case 'magnet':
-        $sub_category_name = 'マグネット';
-        break;
-    case 'long':
-        $sub_category_name = '長さだし';
-        break;
-    case 'short':
-        $sub_category_name = 'ショートネイル';
-        break;
-    case 'foot':
-        $sub_category_name = 'フットネイル';
-        break;
-    case 'hand-art':
-        $sub_category_name = '手書きアート';
-        break;
-    case 'lame-holo-seal':
-        $sub_category_name = 'ラメ・ホロ・シール';
-        break;
-    case 'stone-studs-pearl':
-        $sub_category_name = 'ストーン・スタッズ・パール';
-        break;
-    case 'parts':
-        $sub_category_name = 'パーツ';
-        break;
-    case 'color':
-        $sub_category_name = 'カラー';
-        break;
-}
+// カテゴリー名を動的に取得
+$main_category_name = fascina_get_main_category_name($main_category);
+$sub_category_name = fascina_get_sub_category_name($main_category, $sub_category);
 ?>
 
 <div class="page-header">
@@ -128,152 +45,71 @@ switch ($sub_category) {
     <!-- コースカテゴリーナビゲーション -->
     <?php if ($main_category === 'hand'): ?>
     <div class="course-navigation">
+        <?php
+        $sub_categories = fascina_get_course_choices($main_category);
+        $chunks = array_chunk($sub_categories, 4, true);
+        foreach ($chunks as $chunk): ?>
         <div class="row">
+            <?php foreach ($chunk as $slug => $name): ?>
             <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/simple/'); ?>" class="course-nav-item <?php echo ($sub_category == 'simple') ? 'active' : ''; ?>">
-                    シンプル 定額
+                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/' . $slug . '/'); ?>" class="course-nav-item <?php echo ($sub_category == $slug) ? 'active' : ''; ?>">
+                    <?php echo esc_html($name); ?>
                 </a>
             </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/popular/'); ?>" class="course-nav-item <?php echo ($sub_category == 'popular') ? 'active' : ''; ?>">
-                    一番人気 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/special/'); ?>" class="course-nav-item <?php echo ($sub_category == 'special') ? 'active' : ''; ?>">
-                    こだわり 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/clean/'); ?>" class="course-nav-item <?php echo ($sub_category == 'clean') ? 'active' : ''; ?>">
-                    キレイめ 定額
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
-        <div class="row">
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/onehon-s/'); ?>" class="course-nav-item <?php echo ($sub_category == 'onehon-s') ? 'active' : ''; ?>">
-                    ワンホンS 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/onehon-m/'); ?>" class="course-nav-item <?php echo ($sub_category == 'onehon-m') ? 'active' : ''; ?>">
-                    ワンホンM 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/onehon-l/'); ?>" class="course-nav-item <?php echo ($sub_category == 'onehon-l') ? 'active' : ''; ?>">
-                    ワンホンL 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/bridal/'); ?>" class="course-nav-item <?php echo ($sub_category == 'bridal') ? 'active' : ''; ?>">
-                    ブライダルデザイン
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/nuance-s/'); ?>" class="course-nav-item <?php echo ($sub_category == 'nuance-s') ? 'active' : ''; ?>">
-                    ニュアンスS 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/nuance-m/'); ?>" class="course-nav-item <?php echo ($sub_category == 'nuance-m') ? 'active' : ''; ?>">
-                    ニュアンスM 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/nuance-l/'); ?>" class="course-nav-item <?php echo ($sub_category == 'nuance-l') ? 'active' : ''; ?>">
-                    ニュアンスL 定額
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/nuance-xl/'); ?>" class="course-nav-item <?php echo ($sub_category == 'nuance-xl') ? 'active' : ''; ?>">
-                    ニュアンスXL 定額
-                </a>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
     <?php elseif ($main_category === 'foot'): ?>
     <div class="course-navigation">
+        <?php
+        $sub_categories = fascina_get_course_choices($main_category);
+        $chunks = array_chunk($sub_categories, 3, true);
+        foreach ($chunks as $chunk): ?>
         <div class="row">
+            <?php foreach ($chunk as $slug => $name): ?>
             <div class="col-md-4 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/simple/'); ?>" class="course-nav-item <?php echo ($sub_category == 'simple') ? 'active' : ''; ?>">
-                    シンプル 定額
+                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/' . $slug . '/'); ?>" class="course-nav-item <?php echo ($sub_category == $slug) ? 'active' : ''; ?>">
+                    <?php echo esc_html($name); ?>
                 </a>
             </div>
-            <div class="col-md-4 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/popular/'); ?>" class="course-nav-item <?php echo ($sub_category == 'popular') ? 'active' : ''; ?>">
-                    一番人気 定額
-                </a>
-            </div>
-            <div class="col-md-4 col-6">
-                <a href="<?php echo home_url('/gallery_' . $main_category . '_design/special/'); ?>" class="course-nav-item <?php echo ($sub_category == 'special') ? 'active' : ''; ?>">
-                    こだわり 定額
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
+        <?php endforeach; ?>
     </div>
     <?php elseif ($main_category === 'guest'): ?>
     <div class="course-navigation">
+        <?php
+        $sub_categories = fascina_get_course_choices($main_category);
+        $chunks = array_chunk($sub_categories, 4, true);
+        foreach ($chunks as $chunk): ?>
         <div class="row">
+            <?php foreach ($chunk as $slug => $name): ?>
             <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/simple-guest/'); ?>" class="course-nav-item <?php echo ($sub_category == 'simple-guest') ? 'active' : ''; ?>">
-                    シンプル
+                <a href="<?php echo home_url('/gallery_guest_nail/' . $slug . '/'); ?>" class="course-nav-item <?php echo ($sub_category == $slug) ? 'active' : ''; ?>">
+                    <?php echo esc_html($name); ?>
                 </a>
             </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/magnet/'); ?>" class="course-nav-item <?php echo ($sub_category == 'magnet') ? 'active' : ''; ?>">
-                    マグネット
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/long/'); ?>" class="course-nav-item <?php echo ($sub_category == 'long') ? 'active' : ''; ?>">
-                    長さだし
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/short/'); ?>" class="course-nav-item <?php echo ($sub_category == 'short') ? 'active' : ''; ?>">
-                    ショートネイル
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/foot/'); ?>" class="course-nav-item <?php echo ($sub_category == 'foot') ? 'active' : ''; ?>">
-                    フットネイル
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_guest_nail/hand-art/'); ?>" class="course-nav-item <?php echo ($sub_category == 'hand-art') ? 'active' : ''; ?>">
-                    手書きアート
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
+        <?php endforeach; ?>
     </div>
     <?php elseif ($main_category === 'arts-parts'): ?>
     <div class="course-navigation">
+        <?php
+        $sub_categories = fascina_get_course_choices($main_category);
+        $chunks = array_chunk($sub_categories, 4, true);
+        foreach ($chunks as $chunk): ?>
         <div class="row">
+            <?php foreach ($chunk as $slug => $name): ?>
             <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_arts_parts/lame-holo-seal/'); ?>" class="course-nav-item <?php echo ($sub_category == 'lame-holo-seal') ? 'active' : ''; ?>">
-                    ラメ・ホロ・シール
+                <a href="<?php echo home_url('/gallery_arts_parts/' . $slug . '/'); ?>" class="course-nav-item <?php echo ($sub_category == $slug) ? 'active' : ''; ?>">
+                    <?php echo esc_html($name); ?>
                 </a>
             </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_arts_parts/stone-studs-pearl/'); ?>" class="course-nav-item <?php echo ($sub_category == 'stone-studs-pearl') ? 'active' : ''; ?>">
-                    ストーン・スタッズ・パール
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_arts_parts/parts/'); ?>" class="course-nav-item <?php echo ($sub_category == 'parts') ? 'active' : ''; ?>">
-                    パーツ
-                </a>
-            </div>
-            <div class="col-md-3 col-6">
-                <a href="<?php echo home_url('/gallery_arts_parts/color/'); ?>" class="course-nav-item <?php echo ($sub_category == 'color') ? 'active' : ''; ?>">
-                    カラー
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
+        <?php endforeach; ?>
     </div>
     <?php endif; ?>
 
