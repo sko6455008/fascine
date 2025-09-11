@@ -61,10 +61,8 @@ get_header(); ?>
         $banner_args = array(
             'post_type' => 'banner',
             'posts_per_page' => -1,
-            'orderby' => array(
-                'date' => 'DESC',
-                'menu_order' => 'ASC'
-            ),
+            'orderby' => 'menu_order',
+            'order' => 'ASC',
         );
         $banner_query = new WP_Query($banner_args);
         if ($banner_query->have_posts()) :
