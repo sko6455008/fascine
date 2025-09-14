@@ -30,22 +30,8 @@ get_header();
                     </tr>
                     <tr>
                         <td>
-                            <span class="fw-bold">ファイリング</span>
-                            <p class="description small mb-0 mt-1">爪の形を整えます</p>
-                        </td>
-                        <td class="price">¥550</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="fw-bold">バッフィング</span>
-                            <p class="description small mb-0 mt-1">所要時間30分,爪の表面の凸凹を滑らかにします（+￥110でシャイニング）</p>
-                        </td>
-                        <td class="price">¥550</td>
-                    </tr>
-                    <tr>
-                        <td>
                             <span class="fw-bold">パラフィンパック</span>
-                            <p class="description small mb-0 mt-1">高濃度保湿パックで、肌を柔らかくすべすべにしてくれます</p>
+                            <p class="description small mb-0 mt-1">高濃度保湿パックで、肌を柔らかくすべすべにしてくれます。こちらのメニューは、単体のみでのご利用はお受けできません。</p>
                         </td>
                         <td class="price">¥1,650</td>
                     </tr>
@@ -68,13 +54,6 @@ get_header();
                             <p class="description small mb-0 mt-1">所要時間60分,フットバス＋整爪＋甘皮処理＋角質除去</p>
                         </td>
                         <td class="price">¥7,400</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="fw-bold">フットバス</span>
-                            <p class="description small mb-0 mt-1">所要時間30分</p>
-                        </td>
-                        <td class="price">¥1,100</td>
                     </tr>
                 </tbody>
             </table>
@@ -464,7 +443,7 @@ get_header();
                 <tbody>
                     <tr>
                         <td>
-                            <span class="fw-bold">メンズケア</span>
+                            <span class="fw-bold">メンズハンドケア</span>
                             <p class="description small mb-0 mt-1">所要時間30分,フィンガーバス、甘皮処理、ファイリング、バフィング or トップコート</p>
                         </td>
                         <td class="price">¥5,780</td>
