@@ -1,7 +1,4 @@
 <?php
-/**
- * Template Name: Q&A
- */
 get_header();
 ?>
 <div class="page-header">
