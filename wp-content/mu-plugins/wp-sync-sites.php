@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // 同期対象のカスタム投稿タイプ
-define('WPS_SYNC_POST_TYPES', array('gallery', 'course', 'coupon', 'nailist', 'banner', 'qa', 'home'));
+define('WPS_SYNC_POST_TYPES', array('gallery', 'course', 'coupon', 'nailist', 'banner', 'qa', 'home',, 'process_chart'));
 
 /**
  * プラグインの初期化
