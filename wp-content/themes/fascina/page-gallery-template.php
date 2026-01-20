@@ -344,6 +344,7 @@ $sub_category_name = fascina_get_sub_category_name($main_category, $sub_category
         width: 100%;
         height: auto;
         object-fit: cover;
+        aspect-ratio: 4 / 3;
     }
     .gallery-image:hover img {
         transform: scale(1.05);
