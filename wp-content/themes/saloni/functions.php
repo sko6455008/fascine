@@ -57,7 +57,6 @@ function saloni_scripts()
     wp_enqueue_style('loader', $theme_uri . '/css/loader.min.css', array(), '1.0.0');
     wp_enqueue_style('saloni-main', $theme_uri . '/css/style.css', array(), '1.0.0');
     wp_enqueue_style('saloni-custom', $theme_uri . '/css/custom.css', array('saloni-main'), '1.0.0');
-    wp_enqueue_style('saloni-custom-header', $theme_uri . '/css/custom-header.css', array('saloni-main'), '1.0.0');
 
     // Revolution Slider CSS
     wp_enqueue_style('revolution-settings', $theme_uri . '/plugins/revolution/revolution/css/settings.css', array(), '5.4.0');

@@ -84,7 +84,7 @@
                     </div>
 
                     <!-- MOBILE NAV DRAWER -->
-                    <div class="nav-animation header-nav navbar-collapse collapse">
+                    <div class="nav-animation header-nav collapse">
 
                         <!-- Close Button -->
                         <button class="nav-close-btn" type="button">
