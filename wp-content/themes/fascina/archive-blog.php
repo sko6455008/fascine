@@ -355,7 +355,6 @@
     @media (max-width: 991px) {
         .page-header {
             height: 320px;
-            margin-top: 60px;
         }
 
         .headline {
@@ -411,7 +410,6 @@
     @media (max-width: 640px) {
         .page-header {
             height: 220px;
-            margin-top: 50px;
         }
 
         .headline {
@@ -510,7 +508,7 @@
         transform: scale(0.98);
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
         .pagination-link {
             min-width: 50px;
             height: 50px;
