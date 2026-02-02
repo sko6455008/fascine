@@ -7,37 +7,40 @@
 
 $theme_uri = get_template_directory_uri();
 
-// Get recent posts
+// Get recent blog posts
 $recent_posts = new WP_Query(array(
+    'post_type' => 'blog',
     'posts_per_page' => 3,
     'post_status' => 'publish',
+    'orderby' => 'date',
+    'order' => 'DESC',
 ));
 ?>
 
-<!-- OUR BLOG START -->
-<div class="section-full p-t80 p-b40 bg-white blog-post-outer-3">
-    <div class="container">
+<?php if ($recent_posts->have_posts()): ?>
+    <!-- OUR BLOG START -->
+    <div class="section-full p-t80 p-b40 bg-white blog-post-outer-3">
+        <div class="container">
 
-        <!-- TITLE START-->
-        <div class="center wt-small-separator-outer section-head">
-            <div class="wt-small-separator">
-                <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
-                <div>
-                    <?php esc_html_e('Update The New Trend', 'saloni'); ?>
+            <!-- TITLE START-->
+            <div class="center wt-small-separator-outer section-head">
+                <div class="wt-small-separator">
+                    <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
+                    <div>
+                        <?php esc_html_e('Update The New Trend', 'saloni'); ?>
+                    </div>
+                    <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                 </div>
-                <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
+                <h2 data-title="<?php esc_attr_e('Blog', 'saloni'); ?>">
+                    <?php esc_html_e('Latest Articles', 'saloni'); ?>
+                </h2>
             </div>
-            <h2 data-title="<?php esc_attr_e('Blog', 'saloni'); ?>">
-                <?php esc_html_e('Latest Articles', 'saloni'); ?>
-            </h2>
-        </div>
-        <!-- TITLE END-->
+            <!-- TITLE END-->
 
-        <!-- BLOG SECTION START -->
-        <div class="section-content">
-            <div class="row d-flex justify-content-center">
-                <?php
-                if ($recent_posts->have_posts()):
+            <!-- BLOG SECTION START -->
+            <div class="section-content">
+                <div class="row d-flex justify-content-center">
+                    <?php
                     while ($recent_posts->have_posts()):
                         $recent_posts->the_post();
                         ?>
@@ -58,18 +61,15 @@ $recent_posts = new WP_Query(array(
                                     <div class="wt-post-meta">
                                         <ul>
                                             <li class="post-date"><span>
-                                                    <?php echo get_the_date('d M Y'); ?>
+                                                    <?php echo get_the_date('Y-m-d'); ?>
                                                 </span></li>
-                                            <li class="post-user"><a
-                                                    href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>">
-                                                    <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">
-                                                        <?php the_author(); ?>
-                                                    </span>
+                                            <li class="post-user"><a href="#">
+                                                    <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Sophia
+                                                        Varner</span>
                                                 </a></li>
-                                            <li class="post-comment"><a href="<?php comments_link(); ?>">
-                                                    <?php esc_html_e('Comment', 'saloni'); ?> <span class="site-text-primary">
-                                                        <?php echo get_comments_number(); ?>
-                                                    </span>
+                                            <li class="post-comment"><a href="#">
+                                                    <?php esc_html_e('Comment', 'saloni'); ?> <span
+                                                        class="site-text-primary">24</span>
                                                 </a></li>
                                         </ul>
                                     </div>
@@ -86,116 +86,11 @@ $recent_posts = new WP_Query(array(
                                 </div>
                             </div>
                         </div>
-                        <?php
-                    endwhile;
-                    wp_reset_postdata();
-                else:
-                    // Fallback static content if no posts
-                    ?>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="blog-post date-style-2">
-                            <div class="wt-post-media wt-img-effect zoom-slow">
-                                <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>"><img
-                                        src="<?php echo $theme_uri; ?>/images/blog/default/thum1.jpg" alt=""></a>
-                            </div>
-                            <div class="wt-post-info bg-white p-a20 p-b0 text-center">
-                                <div class="wt-post-meta">
-                                    <ul>
-                                        <li class="post-date"><span>20 Jan 2025</span></li>
-                                        <li class="post-user"><a href="#">
-                                                <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Sophia
-                                                    Varner</span>
-                                            </a></li>
-                                        <li class="post-comment"><a href="#">
-                                                <?php esc_html_e('Comment', 'saloni'); ?> <span
-                                                    class="site-text-primary">24</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <div class="wt-post-title">
-                                    <h3 class="post-title"><a href="#" class="site-text-primary">
-                                            <?php esc_html_e('How to keep your makeup in place all day', 'saloni'); ?>
-                                        </a></h3>
-                                </div>
-                                <div class="wt-post-readmore">
-                                    <a href="#" class="site-button-link black">
-                                        <?php esc_html_e('Read More', 'saloni'); ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="blog-post date-style-2">
-                            <div class="wt-post-media wt-img-effect zoom-slow">
-                                <a href="#"><img src="<?php echo $theme_uri; ?>/images/blog/default/thum2.jpg" alt=""></a>
-                            </div>
-                            <div class="wt-post-info bg-white p-a20 p-b0 text-center">
-                                <div class="wt-post-meta">
-                                    <ul>
-                                        <li class="post-date"><span>25 Jan 2025</span></li>
-                                        <li class="post-user"><a href="#">
-                                                <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Sophia
-                                                    Varner</span>
-                                            </a></li>
-                                        <li class="post-comment"><a href="#">
-                                                <?php esc_html_e('Comment', 'saloni'); ?> <span
-                                                    class="site-text-primary">24</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <div class="wt-post-title">
-                                    <h3 class="post-title"><a href="#" class="site-text-primary">
-                                            <?php esc_html_e("Everything's Coming Up Rose Gold", 'saloni'); ?>
-                                        </a></h3>
-                                </div>
-                                <div class="wt-post-readmore">
-                                    <a href="#" class="site-button-link black">
-                                        <?php esc_html_e('Read More', 'saloni'); ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="blog-post date-style-2">
-                            <div class="wt-post-media wt-img-effect zoom-slow">
-                                <a href="#"><img src="<?php echo $theme_uri; ?>/images/blog/default/thum3.jpg" alt=""></a>
-                            </div>
-                            <div class="wt-post-info bg-white p-a20 p-b0 text-center">
-                                <div class="wt-post-meta">
-                                    <ul>
-                                        <li class="post-date"><span>31 Jan 2025</span></li>
-                                        <li class="post-user"><a href="#">
-                                                <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Sophia
-                                                    Varner</span>
-                                            </a></li>
-                                        <li class="post-comment"><a href="#">
-                                                <?php esc_html_e('Comment', 'saloni'); ?> <span
-                                                    class="site-text-primary">24</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                                <div class="wt-post-title">
-                                    <h3 class="post-title"><a href="#" class="site-text-primary">
-                                            <?php esc_html_e('How to return your hair to normal after the Winter', 'saloni'); ?>
-                                        </a></h3>
-                                </div>
-                                <div class="wt-post-readmore">
-                                    <a href="#" class="site-button-link black">
-                                        <?php esc_html_e('Read More', 'saloni'); ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+                </div>
             </div>
         </div>
     </div>
-
-</div>
-<!-- OUR BLOG END -->
+    <!-- OUR BLOG END -->
+<?php endif; ?>
