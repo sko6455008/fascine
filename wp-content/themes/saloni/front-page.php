@@ -29,35 +29,7 @@ $theme_uri = get_template_directory_uri();
                         data-lazyload="<?php echo $theme_uri; ?>/images/main-slider/slider3/slide1.jpg"
                         data-bgposition="center center" data-bgfit="cover" data-bgparallax="4" class="rev-slidebg"
                         data-no-retina>
-                    <!-- LAYERS -->
 
-                    <!-- LAYER NR. 1 [ for overlay ] -->
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-901-layer-0"
-                        data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap" data-type="shape"
-                        data-basealign="slide" data-responsive_offset="off" data-responsive="off" data-frames='[
-                    {"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},
-                    {"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}
-                    ]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
-                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
-                        style="z-index: 1;background-color:rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                    </div>
-
-                    <div class="tp-caption rev-btn  tp-resizeme slider-block" id="slide-901-layer-2"
-                        data-x="['left','left','left','left']" data-hoffset="['100','100','10','10']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-70','0','0','0']"
-                        data-width="none" data-height="none" data-whitespace="nowrap" data-type="button"
-                        data-responsive_offset="on"
-                        data-frames='[{"from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","speed":1500,"to":"o:1;","delay":1000,"ease":"Power3.easeInOut"},
-                        {"delay":"wait","speed":500,"to":"y:[-100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power1.easeIn"}]'
-                        data-textAlign="['left','left','left','left']" data-paddingtop="[200,200,200,150]"
-                        data-paddingright="[150,150,150,100]" data-paddingbottom="[200,200,200,150]"
-                        data-paddingleft="[150,150,150,100]" style="z-index: 8;">
-                        <div class="rs-wave" data-speed="1" data-angle="0" data-radius="2px"></div>
-                    </div>
-
-                    <!-- LAYER NR. 3 [ Black Box ] -->
                     <div class="tp-caption   tp-resizeme" id="slide-901-layer-3" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
                         data-voffset="['200','200','200','220']" data-fontsize="['48','48','48','34']"
@@ -71,11 +43,8 @@ $theme_uri = get_template_directory_uri();
                         data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 13; 
                     white-space: normal; 
                     color:#111;
-                    border-width:0px; font-family: 'Caveat', cursive;">Vivid Colors</div>
+                    border-width:0px; font-family: 'Caveat', cursive;">Concept</div>
 
-
-
-                    <!-- LAYER NR. 4 [ for title ] -->
                     <div class="tp-caption   tp-resizeme" id="slide-901-layer-4" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
                         data-voffset="['260','260','260','270']" data-fontsize="['72','72','72','38']"
@@ -92,34 +61,30 @@ $theme_uri = get_template_directory_uri();
                     color:#fff;
                     border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">The New Style</span>
+                            <span class="site-text-primary">指先から心を満たす特別なひとときを</span>
                         </div>
 
                     </div>
 
-                    <!-- LAYER NR. 5 [ for paragraph] -->
                     <div class="tp-caption  tp-resizeme" id="slide-901-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['350','350','350','330']" data-fontsize="['20','20','20','16']"
+                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
                         data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
-                        data-responsive_offset="on" data-frames='[
-                    {"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1500,"ease":"Power4.easeOut"},
-                    {"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}
-                    ]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
-                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 13; 
-                    font-weight: 500; 
-                    color:#111;
-                    border-width:0px;">
-                        <span style="font-family: 'Poppins', sans-serif;">You dream about sleek, healthy looking hair
-                            that looks picture perfect, ready to rock on any occasion?</span>
+                        data-responsive_offset="on"
+                        data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
+                        data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
+                        style="z-index: 13; font-weight: 500; color:#111; border-width:0px;">
+                        <span style="font-family: 'Poppins', sans-serif;">
+                            経験豊富なネイリストが、あなたのライフスタイルやファッションに合わせた、品のある洗練されたデザインをご提案します。
+                        </span>
                     </div>
 
-                    <!-- LAYER NR. 6 [ for see all service botton ] -->
                     <div class="tp-caption tp-resizeme" id="slide-901-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['450','450','450','440']" data-lineheight="['none','none','none','none']"
+                        data-voffset="['530','530','530','500']" data-lineheight="['none','none','none','none']"
                         data-width="['300','300','300','300']" data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on" data-frames='[ 
@@ -128,23 +93,10 @@ $theme_uri = get_template_directory_uri();
                     ]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
                         data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
                         style="z-index:13; text-transform:uppercase;">
-                        <a href="<?php echo esc_url(home_url('/concept/')); ?>" class="site-button site-btn-effect">Book
-                            Now</a>
+                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect">
+                            予約する
+                        </a>
                     </div>
-
-                    <!-- Border Part -->
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-901-layer-8"
-                        data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap"
-                        data-visibility="['on','on','off','off']" data-type="shape" data-basealign="slide"
-                        data-responsive_offset="off" data-responsive="off"
-                        data-frames='[{"delay":50,"speed":100,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"opacity:0;","ease":"Power3.easeIn"}]'
-                        data-textAlign="['inherit','inherit','inherit','inherit']" data-paddingtop="[0,0,0,0]"
-                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
-                        style="z-index: 10;background-color:rgba(0, 0, 0, 0);border-color:rgb(255,255,255);border-style:solid;border-width:0px 50px 50px 50px;">
-                    </div>
-
                 </li>
 
                 <!-- SLIDE 2 -->
@@ -159,27 +111,6 @@ $theme_uri = get_template_directory_uri();
                         data-bgposition="center center" data-bgfit="cover" data-bgparallax="4" class="rev-slidebg"
                         data-no-retina>
 
-                    <!-- Similar layers as Slide 1 -->
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-902-layer-0"
-                        data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap" data-type="shape"
-                        data-basealign="slide" data-responsive_offset="off" data-responsive="off"
-                        data-frames='[{"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}]'
-                        style="z-index: 1;background-color:rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                    </div>
-
-                    <div class="tp-caption rev-btn tp-resizeme slider-block" id="slide-902-layer-2"
-                        data-x="['left','left','left','left']" data-hoffset="['100','100','10','10']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-70','0','0','0']"
-                        data-width="none" data-height="none" data-whitespace="nowrap" data-type="button"
-                        data-responsive_offset="on"
-                        data-frames='[{"from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","speed":1500,"to":"o:1;","delay":1000,"ease":"Power3.easeInOut"},{"delay":"wait","speed":500,"to":"y:[-100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power1.easeIn"}]'
-                        data-paddingtop="[200,200,200,150]" data-paddingright="[150,150,150,100]"
-                        data-paddingbottom="[200,200,200,150]" data-paddingleft="[150,150,150,100]" style="z-index: 8;">
-                        <div class="rs-wave" data-speed="1" data-angle="0" data-radius="2px"></div>
-                    </div>
-
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-3" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
                         data-voffset="['200','200','200','220']" data-fontsize="['48','48','48','34']"
@@ -187,7 +118,7 @@ $theme_uri = get_template_directory_uri();
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; color:#111; border-width:0px; font-family: 'Caveat', cursive;">
-                        Vivid Colors</div>
+                        Concept</div>
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-4" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
@@ -197,41 +128,36 @@ $theme_uri = get_template_directory_uri();
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; font-weight: 400; color:#fff; border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">The New Style</span>
+                            <span class="site-text-primary">豊富なカラーとメニュー</span>
                         </div>
                     </div>
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['350','350','350','330']" data-fontsize="['20','20','20','16']"
-                        data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']" data-type="text"
+                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
+                        data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']"
+                        data-height="['none','none','none','none']"
+                        data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
+                        data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
                         style="z-index: 13; font-weight: 500; color:#111; border-width:0px;">
-                        <span style="font-family: 'Poppins', sans-serif;">You dream about sleek, healthy looking hair
-                            that looks picture perfect, ready to rock on any occasion?</span>
+                        <span style="font-family: 'Poppins', sans-serif;">
+                            豊富なカラーバリエーションと、トレンドから定番まで幅広く揃えています。
+                        </span>
                     </div>
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['450','450','450','440']" data-width="['300','300','300','300']" data-type="text"
+                        data-voffset="['530','530','530','500']" data-width="['300','300','300','300']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":2000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index:13; text-transform:uppercase;">
-                        <a href="<?php echo esc_url(home_url('/concept/')); ?>" class="site-button site-btn-effect">Book
-                            Now</a>
+                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect">
+                            予約する
+                        </a>
                     </div>
-
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-902-layer-8"
-                        data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap"
-                        data-visibility="['on','on','off','off']" data-type="shape" data-basealign="slide"
-                        data-responsive_offset="off" data-responsive="off"
-                        data-frames='[{"delay":50,"speed":100,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"opacity:0;","ease":"Power3.easeIn"}]'
-                        style="z-index: 10;background-color:rgba(0, 0, 0, 0);border-color:rgb(255,255,255);border-style:solid;border-width:0px 50px 50px 50px;">
-                    </div>
-
                 </li>
 
                 <!-- SLIDE 3 -->
@@ -246,26 +172,6 @@ $theme_uri = get_template_directory_uri();
                         data-bgposition="center center" data-bgfit="cover" data-bgparallax="4" class="rev-slidebg"
                         data-no-retina>
 
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-903-layer-0"
-                        data-x="['center','center','center','center']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap" data-type="shape"
-                        data-basealign="slide" data-responsive_offset="off" data-responsive="off"
-                        data-frames='[{"from":"opacity:0;","speed":1000,"to":"o:1;","delay":0,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"opacity:0;","ease":"Power4.easeOut"}]'
-                        style="z-index: 1;background-color:rgba(0, 0, 0, 0);border-color:rgba(0, 0, 0, 0);border-width:0px;">
-                    </div>
-
-                    <div class="tp-caption rev-btn tp-resizeme slider-block" id="slide-903-layer-2"
-                        data-x="['left','left','left','left']" data-hoffset="['100','100','10','10']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['-70','0','0','0']"
-                        data-width="none" data-height="none" data-whitespace="nowrap" data-type="button"
-                        data-responsive_offset="on"
-                        data-frames='[{"from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","speed":1500,"to":"o:1;","delay":1000,"ease":"Power3.easeInOut"},{"delay":"wait","speed":500,"to":"y:[-100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power1.easeIn"}]'
-                        data-paddingtop="[200,200,200,150]" data-paddingright="[150,150,150,100]"
-                        data-paddingbottom="[200,200,200,150]" data-paddingleft="[150,150,150,100]" style="z-index: 8;">
-                        <div class="rs-wave" data-speed="1" data-angle="0" data-radius="2px"></div>
-                    </div>
-
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-3" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
                         data-voffset="['200','200','200','220']" data-fontsize="['48','48','48','34']"
@@ -273,7 +179,7 @@ $theme_uri = get_template_directory_uri();
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; color:#111; border-width:0px; font-family: 'Caveat', cursive;">
-                        Vivid Colors</div>
+                        Concept</div>
 
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-4" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
@@ -283,41 +189,36 @@ $theme_uri = get_template_directory_uri();
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; font-weight: 400; color:#fff; border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">The New Style</span>
+                            <span class="site-text-primary">安心を守る、徹底した衛生管理</span>
                         </div>
                     </div>
 
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['350','350','350','330']" data-fontsize="['20','20','20','16']"
+                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
                         data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']" data-type="text"
+                        data-height="['none','none','none','none']"
+                        data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1500,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
+                        data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                        data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
                         style="z-index: 13; font-weight: 500; color:#111; border-width:0px;">
-                        <span style="font-family: 'Poppins', sans-serif;">You dream about sleek, healthy looking hair
-                            that looks picture perfect, ready to rock on any occasion?</span>
+                        <span style="font-family: 'Poppins', sans-serif;">
+                            当店では、お客様にリラックスしていただくために、徹底した衛生管理に取り組んでいます。
+                        </span>
                     </div>
 
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['450','450','450','440']" data-width="['300','300','300','300']" data-type="text"
+                        data-voffset="['530','530','530','500']" data-width="['300','300','300','300']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":2000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index:13; text-transform:uppercase;">
-                        <a href="<?php echo esc_url(home_url('/concept/')); ?>" class="site-button site-btn-effect">Book
-                            Now</a>
+                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect">
+                            予約する
+                        </a>
                     </div>
-
-                    <div class="tp-caption tp-shape tp-shapewrapper " id="slide-903-layer-8"
-                        data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']"
-                        data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"
-                        data-width="full" data-height="full" data-whitespace="nowrap"
-                        data-visibility="['on','on','off','off']" data-type="shape" data-basealign="slide"
-                        data-responsive_offset="off" data-responsive="off"
-                        data-frames='[{"delay":50,"speed":100,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"opacity:0;","ease":"Power3.easeIn"}]'
-                        style="z-index: 10;background-color:rgba(0, 0, 0, 0);border-color:rgb(255,255,255);border-style:solid;border-width:0px 50px 50px 50px;">
-                    </div>
-
                 </li>
 
             </ul>
@@ -329,7 +230,7 @@ $theme_uri = get_template_directory_uri();
 
 <?php get_template_part('template-parts/home/welcome-section'); ?>
 <?php get_template_part('template-parts/home/pricing-section'); ?>
-<?php get_template_part('template-parts/home/team-section'); ?>
+<?php get_template_part('template-parts/home/gallery-section'); ?>
 <?php get_template_part('template-parts/home/blog-section'); ?>
 <?php get_template_part('template-parts/home/instagram-section'); ?>
 
