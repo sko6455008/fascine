@@ -294,3 +294,411 @@ function saloni_excerpt_more($more)
     return '...';
 }
 add_filter('excerpt_more', 'saloni_excerpt_more');
+
+/**
+ * ========================================
+ * ギャラリー関連機能
+ * ========================================
+ */
+
+/**
+ * カスタム投稿タイプ: ギャラリー
+ */
+function saloni_register_gallery_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'ギャラリー',
+        'labels' => array(
+            'name' => 'ギャラリー',
+            'singular_name' => 'ギャラリー',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規ギャラリーを追加',
+            'edit_item' => 'ギャラリーを編集',
+        ),
+        'supports' => array('title', 'thumbnail', 'page-attributes'),
+        'menu_icon' => 'dashicons-format-gallery',
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'gallery'),
+    );
+    register_post_type('gallery', $args);
+}
+add_action('init', 'saloni_register_gallery_post_type');
+
+/**
+ * カスタム投稿タイプ: コース（サブカテゴリー管理用）
+ */
+function saloni_register_course_post_type() {
+    $args = array(
+        'public' => true,
+        'label'  => 'コース',
+        'labels' => array(
+            'name' => 'コース',
+            'singular_name' => 'コース',
+            'add_new' => '新規追加',
+            'add_new_item' => '新規コースを追加',
+            'edit_item' => 'コースを編集',
+        ),
+        'supports' => array('title', 'page-attributes'),
+        'menu_icon' => 'dashicons-category',
+        'has_archive' => false,
+        'publicly_queryable' => false,
+    );
+    register_post_type('course', $args);
+}
+add_action('init', 'saloni_register_course_post_type');
+
+/**
+ * コース選択肢を取得する関数
+ */
+function fascina_get_course_choices($main_category) {
+    $choices = array();
+    
+    $courses = get_posts(array(
+        'post_type' => 'course',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'meta_query' => array(
+            array(
+                'key' => 'course_main_category',
+                'value' => $main_category,
+                'compare' => '='
+            )
+        ),
+        'orderby' => 'menu_order',
+        'order' => 'ASC'
+    ));
+   
+    foreach ($courses as $course) {
+        $course_name = get_field('course_name', $course->ID);
+        $course_slug = get_field('course_slug', $course->ID);
+        $choices[$course_slug] = $course_name;
+    }
+   
+    return $choices;
+}
+
+/**
+ * サブカテゴリー名を取得する関数
+ */
+function fascina_get_sub_category_name($main_category, $sub_category) {
+    $choices = fascina_get_course_choices($main_category);
+    return isset($choices[$sub_category]) ? $choices[$sub_category] : $sub_category;
+}
+
+/**
+ * メインカテゴリー名を取得する関数
+ */
+function fascina_get_main_category_name($main_category) {
+    $categories = array(
+        'hand' => 'Hand Design',
+        'foot' => 'Foot Design',
+        'guest' => 'Guest Gallery',
+        'arts-parts' => 'Arts & Parts'
+    );
+    return isset($categories[$main_category]) ? $categories[$main_category] : $main_category;
+}
+
+/**
+ * ギャラリーページ用の投稿取得
+ */
+function fascina_get_gallery_page_posts($main_category, $sub_category = '', $posts_per_page = 50, $paged = 1) {
+    $meta_query = array(
+        array(
+            'key' => 'gallery_main_category',
+            'value' => $main_category,
+            'compare' => '='
+        )
+    );
+    
+    if (!empty($sub_category) && $sub_category !== 'list') {
+        $meta_query[] = array(
+            'key' => 'gallery_sub_category',
+            'value' => $sub_category,
+            'compare' => '='
+        );
+    }
+    
+    $args = array(
+        'post_type' => 'gallery',
+        'posts_per_page' => $posts_per_page,
+        'paged' => $paged,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'meta_query' => $meta_query
+    );
+    
+    return new WP_Query($args);
+}
+
+/**
+ * NEWタグを表示するかどうかを判定
+ */
+function fascina_should_show_new_tag($post_id) {
+    $post_date = get_the_date('Y-m-d', $post_id);
+    $days_ago = strtotime('-14 days');
+    return strtotime($post_date) >= $days_ago;
+}
+
+/**
+ * NEWタグのHTMLを取得
+ */
+function fascina_get_new_tag_html() {
+    return '<div class="new-tag-wrapper"><span class="new-tag">NEW</span></div>';
+}
+
+/**
+ * カスタムリライトルールを追加
+ */
+function saloni_gallery_rewrite_rules() {
+    // Hand Design
+    add_rewrite_rule(
+        '^gallery_hand_design/?$',
+        'index.php?pagename=gallery&gallery_main_category=hand',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_hand_design/([^/]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=hand&gallery_sub_category=$matches[1]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_hand_design/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=hand&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+    
+    // Foot Design
+    add_rewrite_rule(
+        '^gallery_foot_design/?$',
+        'index.php?pagename=gallery&gallery_main_category=foot',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_foot_design/([^/]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=foot&gallery_sub_category=$matches[1]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_foot_design/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=foot&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+    
+    // Guest Gallery
+    add_rewrite_rule(
+        '^gallery_guest_nail/?$',
+        'index.php?pagename=gallery&gallery_main_category=guest',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_guest_nail/([^/]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=guest&gallery_sub_category=$matches[1]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_guest_nail/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=guest&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+    
+    // Arts & Parts
+    add_rewrite_rule(
+        '^gallery_arts_parts/?$',
+        'index.php?pagename=gallery&gallery_main_category=arts-parts',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_arts_parts/([^/]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]',
+        'top'
+    );
+    add_rewrite_rule(
+        '^gallery_arts_parts/([^/]+)/page/([0-9]+)/?$',
+        'index.php?pagename=gallery&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'top'
+    );
+}
+add_action('init', 'saloni_gallery_rewrite_rules');
+
+/**
+ * カスタムクエリ変数を登録
+ */
+function saloni_gallery_query_vars($vars) {
+    $vars[] = 'gallery_main_category';
+    $vars[] = 'gallery_sub_category';
+    return $vars;
+}
+add_filter('query_vars', 'saloni_gallery_query_vars');
+
+/**
+ * テーマ有効化時にリライトルールをフラッシュ
+ */
+function saloni_flush_rewrite_rules() {
+    saloni_gallery_rewrite_rules();
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'saloni_flush_rewrite_rules');
+
+/**
+ * ACFフィールドの登録
+ */
+function saloni_register_acf_fields() {
+    if (function_exists('acf_add_local_field_group')) {
+        // ギャラリー用フィールド
+        acf_add_local_field_group(array(
+            'key' => 'group_gallery_saloni',
+            'title' => 'ギャラリー設定',
+            'fields' => array(
+                array(
+                    'key' => 'field_gallery_main_category_saloni',
+                    'label' => 'メインカテゴリー',
+                    'name' => 'gallery_main_category',
+                    'type' => 'radio',
+                    'required' => 1,
+                    'choices' => array(
+                        'hand' => 'Handデザイン',
+                        'foot' => 'Footデザイン',
+                        'guest' => 'Guestデザイン',
+                    ),
+                    'return_format' => 'value',
+                    'layout' => 'vertical'
+                ),
+                array(
+                    'key' => 'field_gallery_sub_category_saloni',
+                    'label' => 'サブカテゴリー',
+                    'name' => 'gallery_sub_category',
+                    'type' => 'radio',
+                    'instructions' => '※ギャラリーに紐づいているサブカテゴリーを削除した場合、ギャラリーページの「一覧」にだけ表示されます。',
+                    'required' => 1,
+                    'choices' => array(),
+                    'return_format' => 'value',
+                    'layout' => 'vertical'
+                ),
+                array(
+                    'key' => 'field_gallery_is_bridal_saloni',
+                    'label' => 'ブライダルデザイン',
+                    'name' => 'gallery_is_bridal',
+                    'type' => 'true_false',
+                    'instructions' => 'ブライダルデザインとしても登録する場合はチェックしてください',
+                    'required' => 0,
+                    'default_value' => 0,
+                    'ui' => 1,
+                    'ui_on_text' => 'はい',
+                    'ui_off_text' => 'いいえ',
+                    'conditional_logic' => array(
+                        array(
+                            array(
+                                'field' => 'field_gallery_main_category_saloni',
+                                'operator' => '==',
+                                'value' => 'hand',
+                            ),
+                        ),
+                    ),
+                ),
+                array(
+                    'key' => 'field_gallery_description_saloni',
+                    'label' => '説明',
+                    'name' => 'gallery_description',
+                    'type' => 'textarea',
+                    'instructions' => 'ギャラリーの説明を入力してください',
+                    'required' => 1,
+                ),
+                array(
+                    'key' => 'field_gallery_display_top_saloni',
+                    'label' => 'トップページに表示',
+                    'name' => 'gallery_display_top',
+                    'type' => 'true_false',
+                    'instructions' => 'トップページに表示する場合はチェックしてください',
+                    'required' => 0,
+                    'default_value' => 1,
+                    'ui' => 1,
+                    'ui_on_text' => '表示する',
+                    'ui_off_text' => '表示しない'
+                ),
+                array(
+                    'key' => 'field_gallery_display_gallery_saloni',
+                    'label' => 'ギャラリーページに表示',
+                    'name' => 'gallery_display_gallery',
+                    'type' => 'true_false',
+                    'instructions' => 'ギャラリーページに表示する場合はチェックしてください',
+                    'required' => 0,
+                    'default_value' => 1,
+                    'ui' => 1,
+                    'ui_on_text' => '表示する',
+                    'ui_off_text' => '表示しない'
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'gallery',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'active' => true,
+        ));
+
+        // コース（サブカテゴリー）用フィールド
+        acf_add_local_field_group(array(
+            'key' => 'group_course_saloni',
+            'title' => 'コース詳細',
+            'fields' => array(
+                array(
+                    'key' => 'field_course_main_category_saloni',
+                    'label' => 'メインカテゴリー',
+                    'name' => 'course_main_category',
+                    'type' => 'radio',
+                    'required' => 1,
+                    'choices' => array(
+                        'hand' => 'Handデザイン',
+                        'foot' => 'Footデザイン',
+                        'guest' => 'Guestデザイン',
+                    ),
+                    'return_format' => 'value',
+                    'layout' => 'vertical'
+                ),
+                array(
+                    'key' => 'field_course_name_saloni',
+                    'label' => 'コース名',
+                    'name' => 'course_name',
+                    'type' => 'text',
+                    'instructions' => 'コース名を入力してください',
+                    'required' => 1,
+                    'placeholder' => '例: シンプル定額, ニュアンスM定額'
+                ),
+                array(
+                    'key' => 'field_course_slug_saloni',
+                    'label' => 'スラッグ',
+                    'name' => 'course_slug',
+                    'type' => 'text',
+                    'required' => 1,
+                    'instructions' => 'URLに使う半角英数字・ハイフンのみ',
+                    'placeholder' => '例: simple, popular'
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'course',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'active' => true,
+        ));
+    }
+}
+add_action('acf/init', 'saloni_register_acf_fields');
