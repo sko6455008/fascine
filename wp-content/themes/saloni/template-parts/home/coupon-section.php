@@ -1,6 +1,8 @@
 <?php
 /**
  * Coupon Section Template Part
+ * 
+ * Redesigned to match a premium luxury card aesthetic.
  *
  * @package Saloni
  */
@@ -44,50 +46,53 @@ if (!$coupon_query->have_posts())
         <!-- TITLE END-->
 
         <div class="section-content">
-            <div class="row d-flex justify-content-center">
+            <div class="row luxury-coupon-row">
                 <?php while ($coupon_query->have_posts()):
                     $coupon_query->the_post();
                     $img_url = get_the_post_thumbnail_url(get_the_ID(), 'large');
                     $coupon_title = get_the_title();
-                    $coupon_price = get_field('coupon_price');
+                    $coupon_price_raw = get_field('coupon_price');
                     $coupon_description = get_field('coupon_description');
+                    
+                    // 価格のパース (例: "7,980/8,980" または "7,980")
+                    $prices = explode('/', $coupon_price_raw);
+                    $new_price = trim($prices[0]);
+                    $repeat_price = isset($prices[1]) ? trim($prices[1]) : '';
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-12 m-b40">
-                        <div class="coupon-premium-card">
-                            <div class="card-inner">
+                        <div class="luxury-coupon-card">
+                            <div class="card-inner-dotted">
+                                
+                                <div class="card-header-brand">
+                                    <div class="brand-id"> <?php echo esc_html($coupon_title); ?></div>
+                                    <div class="brand-tagline"><?php echo esc_html($coupon_description); ?></div>
+                                </div>
+
                                 <div class="card-media">
                                     <?php if ($img_url): ?>
-                                        <img src="<?php echo esc_url($img_url); ?>"
-                                            alt="<?php echo esc_attr($coupon_title); ?>">
+                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($coupon_title); ?>">
                                     <?php else: ?>
                                         <img src="<?php echo $theme_uri; ?>/images/gallery/default.jpg" alt="">
                                     <?php endif; ?>
-
-                                    <div class="card-overlay"></div>
-
-                                    <?php if (function_exists('saloni_should_show_new_tag') && saloni_should_show_new_tag(get_the_ID())): ?>
-                                        <span class="premium-new-tag">New Arrival</span>
-                                    <?php endif; ?>
-
-                                    <?php if ($coupon_price): ?>
-                                        <div class="price-badge">
-                                            <span class="price-val"><?php echo esc_html($coupon_price); ?></span>
-                                        </div>
-                                    <?php endif; ?>
                                 </div>
 
-                                <div class="card-info">
-                                    <h3 class="card-title"><?php echo esc_html($coupon_title); ?></h3>
-                                    <?php if ($coupon_description): ?>
-                                        <div class="card-desc">
-                                            <p><?php echo nl2br(esc_html($coupon_description)); ?></p>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="card-footer">
-                                        <span class="footer-line"></span>
-                                        <span class="footer-dot"></span>
+                                <div class="card-price-container">
+                                    <div class="price-col new-customer">
+                                        <div class="price-label">新規</div>
+                                        <div class="price-amount"><?php echo esc_html($new_price); ?></div>
                                     </div>
+                                    
+                                    <?php if ($repeat_price): ?>
+                                    <div class="price-divider"></div>
+                                    <div class="price-col repeat-customer">
+                                        <div class="price-label">再来</div>
+                                        <div class="price-amount"><?php echo esc_html($repeat_price); ?></div>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
+
+                                <?php if ($coupon_description): ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -95,10 +100,9 @@ if (!$coupon_query->have_posts())
                 wp_reset_postdata(); ?>
             </div>
 
-            <div class="text-center p-t20">
-                <a href="<?php echo esc_url(home_url('/coupons/')); ?>" class="premium-more-btn">
-                    <span><?php esc_html_e('View All Coupons', 'saloni'); ?></span>
-                    <i class="fa fa-chevron-right"></i>
+            <div class="text-center p-t40">
+                <a href="<?php echo esc_url(home_url('/coupons/')); ?>" class="luxury-all-btn">
+                    VIEW ALL COUPONS
                 </a>
             </div>
         </div>
@@ -107,269 +111,133 @@ if (!$coupon_query->have_posts())
 </div>
 
 <style>
-    /* Premium Coupon Section Root */
-    .coupon-premium-section {
-        background-color: #fcfafc;
-        position: relative;
-        overflow: hidden;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Cormorant+Garamond:wght@400;600;700&display=swap');
 
-    .coupon-premium-section::before {
-        content: '';
-        position: absolute;
-        top: -10%;
-        right: -5%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(84, 31, 92, 0.03) 0%, rgba(255, 255, 255, 0) 70%);
-        z-index: 0;
-    }
-
-    .container-wide {
-        max-width: 1430px;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Section Header Enhancement */
-    .premium-title {
-        font-family: 'Yeseva One', cursive;
-        color: #541f5c;
-        font-size: 42px;
-        margin-top: 10px;
-    }
-
-    .title-label {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: #888;
-        font-size: 13px;
-    }
-
-    /* Coupon Card Design */
-    .coupon-premium-card {
+    .luxury-coupon-card {
+        padding: 5px;
         height: 100%;
-        perspective: 1000px;
     }
 
-    .card-inner {
+    .card-inner-dotted {
+        border: 1px dashed #ccc;
         background: #fff;
-        overflow: hidden;
-        box-shadow: 0 15px 35px rgba(84, 31, 92, 0.05);
-        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        padding: 40px 30px;
+        text-align: center;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        height: 100%;
-        border: 1px solid rgba(84, 31, 92, 0.05);
+        transition: all 0.3s ease;
     }
 
-    .coupon-premium-card:hover .card-inner {
-        transform: translateY(-15px);
-        box-shadow: 0 30px 60px rgba(84, 31, 92, 0.12);
+    .luxury-coupon-card:hover .card-inner-dotted {
+        border-color: #111;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
     }
 
-    /* Media Area */
+    .card-header-brand {
+        margin-bottom: 30px;
+    }
+
+    .brand-id {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #111;
+        letter-spacing: -1px;
+    }
+
+    .brand-tagline {
+        font-family: 'Poppins', sans-serif;
+        font-size: 10px;
+        letter-spacing: 5px;
+        color: #999;
+        margin-top: 5px;
+        text-transform: uppercase;
+    }
+
     .card-media {
-        position: relative;
+        width: 100%;
         overflow: hidden;
-        height: 260px;
     }
 
     .card-media img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.8s ease;
+        height: auto;
+        display: block;
+        transition: transform 0.6s ease;
     }
 
-    .coupon-premium-card:hover .card-media img {
-        transform: scale(1.1);
-    }
-
-    .card-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(84, 31, 92, 0) 0%, rgba(84, 31, 92, 0.2) 100%);
-        opacity: 0;
-        transition: opacity 0.5s ease;
-    }
-
-    .coupon-premium-card:hover .card-overlay {
-        opacity: 1;
-    }
-
-    /* New Tag */
-    .premium-new-tag {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: linear-gradient(135deg, #d4af37 0%, #f9e29c 50%, #d4af37 100%);
-        color: #fff;
-        padding: 6px 16px;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        border-radius: 50px;
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-        z-index: 2;
-        letter-spacing: 1px;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Price Badge */
-    .price-badge {
-        position: absolute;
-        bottom: -15px;
-        right: 25px;
-        background: #541f5c;
-        color: #fff;
-        padding: 12px 25px;
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(84, 31, 92, 0.2);
-        z-index: 3;
-        transition: all 0.3s ease;
-    }
-
-    .coupon-premium-card:hover .price-badge {
-        background: #111;
+    .luxury-coupon-card:hover .card-media img {
         transform: scale(1.05);
     }
 
-    .price-val {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        font-size: 18px;
-        letter-spacing: -0.5px;
-    }
-
-    /* Info Area */
-    .card-info {
-        padding: 40px 30px 30px;
-        flex-grow: 1;
+    .card-price-container {
         display: flex;
-        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid #f5f5f5;
+        padding-top: 30px;
     }
 
-    .card-title {
-        font-family: 'Yeseva One', cursive;
-        font-size: 22px;
+    .price-col {
+        flex: 1;
+    }
+
+    .price-label {
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .new-customer .price-label {
+        color: #c4a066;
+    }
+
+    .repeat-customer .price-label {
+        color: #999;
+    }
+
+    .price-amount {
+        font-family: 'Playfair Display', serif;
+        font-size: 35px;
+        font-weight: 700;
         color: #111;
-        margin-bottom: 15px;
-        line-height: 1.3;
-        transition: color 0.3s ease;
+        line-height: 1;
     }
 
-    .coupon-premium-card:hover .card-title {
-        color: #541f5c;
+    .price-divider {
+        width: 1px;
+        height: 80px;
+        background: #eee;
+        margin: 0 10px;
     }
 
-    .card-desc {
+    .luxury-all-btn {
+        display: inline-block;
         font-family: 'Poppins', sans-serif;
         font-size: 14px;
-        color: #666;
-        line-height: 1.8;
-        margin-bottom: 25px;
-        flex-grow: 1;
-    }
-
-    .card-footer {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-top: auto;
-    }
-
-    .footer-line {
-        height: 2px;
-        background: rgba(84, 31, 92, 0.1);
-        flex-grow: 1;
-        border-radius: 2px;
-    }
-
-    .footer-dot {
-        width: 8px;
-        height: 8px;
-        background: #541f5c;
-        border-radius: 50%;
-        opacity: 0.3;
-        transition: opacity 0.3s ease;
-    }
-
-    .coupon-premium-card:hover .footer-dot {
-        opacity: 1;
-        box-shadow: 0 0 10px rgba(84, 31, 92, 0.5);
-    }
-
-    /* More Button */
-    .premium-more-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        padding: 18px 45px;
-        background: transparent;
-        border: 2px solid #541f5c;
-        color: #541f5c;
-        font-family: 'Poppins', sans-serif;
         font-weight: 600;
-        font-size: 15px;
-        border-radius: 50px;
-        transition: all 0.4s ease;
+        letter-spacing: 3px;
+        color: #111;
         text-decoration: none;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
+        border: 2px solid #111;
+        padding: 15px 40px;
+        transition: all 0.3s ease;
     }
 
-    .premium-more-btn i {
-        font-size: 12px;
-        transition: transform 0.3s ease;
-    }
-
-    .premium-more-btn:hover {
+    .luxury-all-btn:hover {
+        background: #111;
         color: #fff;
-        background: #541f5c;
-    }
-
-    .premium-more-btn:hover i {
-        transform: translateX(5px);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 991px) {
-        .card-media {
-            height: 220px;
-        }
-
-        .card-title {
-            font-size: 20px;
-        }
-
-        .premium-title {
-            font-size: 34px;
-        }
     }
 
     @media (max-width: 767px) {
-        .card-info {
-            padding: 35px 25px 25px;
+        .brand-id {
+            font-size: 36px;
         }
 
-        .premium-title {
-            font-size: 28px;
-        }
-
-        .price-badge {
-            padding: 10px 20px;
-            right: 20px;
-        }
-
-        .price-val {
-            font-size: 16px;
+        .price-amount {
+            font-size: 32px;
         }
     }
 </style>
