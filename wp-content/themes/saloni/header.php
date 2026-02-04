@@ -92,28 +92,17 @@
                         </button>
 
                         <?php
-                        if (has_nav_menu('primary')) {
-                            wp_nav_menu(array(
-                                'theme_location' => 'primary',
-                                'menu_class' => 'nav navbar-nav',
-                                'container' => false,
-                                'walker' => new Saloni_Walker_Nav_Menu(),
-                            ));
-                        } else {
-                            // Fallback menu based on header.html
-                            ?>
-                            <ul class="nav navbar-nav">
-                                <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
-                                <li><a href="<?php echo esc_url(home_url('/concept/')); ?>">Concept</a></li>
-                                <li><a href="<?php echo esc_url(home_url('/gallery/')); ?>">Gallery</a></li>
-                                <li><a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>">Blog</a>
-                                </li>
-                                <li><a href="<?php echo esc_url(home_url('/menu/')); ?>">Menu</a></li>
-                                <li><a href="<?php echo esc_url(home_url('/qa/')); ?>">Q&A</a></li>
-                                <li><a href="<?php echo esc_url(home_url('/access/')); ?>">Access</a></li>
-                            </ul>
-                            <?php
-                        }
+                        wp_nav_menu(array(
+                            'theme_location' => 'primary',
+                            'menu_class' => 'nav navbar-nav',
+                            'container' => false,
+                            'walker' => new Saloni_Walker_Nav_Menu(),
+                            'fallback_cb' => function() {
+                                echo '<ul class="nav navbar-nav">';
+                                echo '<li><a href="' . esc_url(admin_url('nav-menus.php')) . '">メニューを設定してください</a></li>';
+                                echo '</ul>';
+                            }
+                        ));
                         ?>
                     </div>
 

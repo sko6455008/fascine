@@ -32,21 +32,17 @@
                         <div class="widget widget_services">
                             <h4 class="widget-title"><?php esc_html_e('Useful links', 'saloni'); ?></h4>
                             <?php
-                            if (has_nav_menu('footer')) {
-                                wp_nav_menu(array(
-                                    'theme_location' => 'footer',
-                                    'container'      => false,
-                                    'menu_class'     => '',
-                                    'fallback_cb'    => false,
-                                ));
-                            } else {
+                            wp_nav_menu(array(
+                                'theme_location' => 'footer',
+                                'container' => false,
+                                'menu_class' => '',
+                                'fallback_cb' => function() {
+                                    echo '<ul>';
+                                    echo '<li><a href="' . esc_url(admin_url('nav-menus.php')) . '">メニューを設定してください</a></li>';
+                                    echo '</ul>';
+                                }
+                            ));
                             ?>
-                            <ul>
-                                <li><a href="<?php echo esc_url(home_url('/concept/')); ?>"><?php esc_html_e('Concept', 'saloni'); ?></a><a href="<?php echo esc_url(home_url('/gallery/')); ?>"><?php esc_html_e('Gallery', 'saloni'); ?></a></li>
-                                <li><a href="<?php echo esc_url(home_url('/menu/')); ?>"><?php esc_html_e('Menu', 'saloni'); ?></a><a href="<?php echo esc_url(home_url('/access/')); ?>"><?php esc_html_e('Access', 'saloni'); ?></a></li>
-                                <li><a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>"><?php esc_html_e('Blog', 'saloni'); ?></a><a href="<?php echo esc_url(home_url('/qa/')); ?>"><?php esc_html_e("Q&A's", 'saloni'); ?></a></li>
-                            </ul>
-                            <?php } ?>
                         </div>
                                             
                     </div> 
