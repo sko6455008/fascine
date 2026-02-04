@@ -1009,7 +1009,7 @@ function saloni_register_acf_fields() {
                     'name' => 'coupon_price',
                     'type' => 'text',
                     'required' => 1,
-                    'instructions' => '例: 初回5510円/リピ6510円'
+                    'instructions' => '例: ¥5510/¥6510'
                 ),
                 array(
                     'key' => 'field_coupon_description',

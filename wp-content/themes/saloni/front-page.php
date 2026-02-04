@@ -61,7 +61,7 @@ $theme_uri = get_template_directory_uri();
                     color:#fff;
                     border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">指先から心を満たす特別なひとときを</span>
+                            <span class="site-text-primary">特別なひとときを</span>
                         </div>
 
                     </div>
@@ -128,7 +128,7 @@ $theme_uri = get_template_directory_uri();
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; font-weight: 400; color:#fff; border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">豊富なカラーとメニュー</span>
+                            <span class="site-text-primary">豊富なメニュー</span>
                         </div>
                     </div>
 
@@ -189,7 +189,7 @@ $theme_uri = get_template_directory_uri();
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; font-weight: 400; color:#fff; border-width:0px;">
                         <div style="font-family: 'Yeseva One', cursive; text-transform:uppercase;">
-                            <span class="site-text-primary">安心を守る、徹底した衛生管理</span>
+                            <span class="site-text-primary">徹底した衛生管理</span>
                         </div>
                     </div>
 

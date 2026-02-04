@@ -29,8 +29,8 @@ if (!$coupon_query->have_posts())
 ?>
 
 <!-- OUR COUPON START -->
-<div class="section-full p-t80 p-b80 coupon-premium-section">
-    <div class="container container-wide">
+<div class="section-full p-t80 p-b40 coupon-premium-section">
+    <div class="container">
 
         <!-- TITLE START-->
         <div class="center wt-small-separator-outer section-head">
@@ -78,14 +78,14 @@ if (!$coupon_query->have_posts())
 
                                 <div class="card-price-container">
                                     <div class="price-col new-customer">
-                                        <div class="price-label">新規</div>
+                                        <div class="price-label">初来店</div>
                                         <div class="price-amount"><?php echo esc_html($new_price); ?></div>
                                     </div>
                                     
                                     <?php if ($repeat_price): ?>
                                     <div class="price-divider"></div>
                                     <div class="price-col repeat-customer">
-                                        <div class="price-label">再来</div>
+                                        <div class="price-label">2回目以降</div>
                                         <div class="price-amount"><?php echo esc_html($repeat_price); ?></div>
                                     </div>
                                     <?php endif; ?>
@@ -100,11 +100,11 @@ if (!$coupon_query->have_posts())
                 wp_reset_postdata(); ?>
             </div>
 
-            <div class="text-center p-t40">
-                <a href="<?php echo esc_url(home_url('/coupons/')); ?>" class="luxury-all-btn">
-                    VIEW ALL COUPONS
-                </a>
-            </div>
+            <div class="wt-post-readmore">
+            <a href="#" class="site-button-link black">
+                <?php esc_html_e('Read More', 'saloni'); ?>
+            </a>
+        </div>
         </div>
 
     </div>
@@ -112,6 +112,10 @@ if (!$coupon_query->have_posts())
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Cormorant+Garamond:wght@400;600;700&display=swap');
+
+    .coupon-premium-section .container {
+        max-width: 1430px;
+    }
 
     .luxury-coupon-card {
         padding: 5px;
@@ -213,27 +217,14 @@ if (!$coupon_query->have_posts())
         margin: 0 10px;
     }
 
-    .luxury-all-btn {
-        display: inline-block;
-        font-family: 'Poppins', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 3px;
-        color: #111;
-        text-decoration: none;
-        border: 2px solid #111;
-        padding: 15px 40px;
-        transition: all 0.3s ease;
-    }
-
-    .luxury-all-btn:hover {
-        background: #111;
-        color: #fff;
+    .wt-post-readmore {
+        text-align: center;
+        margin-top: 20px;
     }
 
     @media (max-width: 767px) {
         .brand-id {
-            font-size: 36px;
+            font-size: 25px;
         }
 
         .price-amount {

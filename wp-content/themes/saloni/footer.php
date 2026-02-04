@@ -23,7 +23,7 @@
                                     <img src="<?php echo get_template_directory_uri(); ?>/images/logo-light.png" alt="<?php bloginfo('name'); ?>">
                                 </a>
                             </div>
-                            <p><?php echo esc_html(saloni_get_option('saloni_footer_description', 'Lorem ipsum dolor sit amet, consectetur adip iscing elit, sed do eiusmod temporin cididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.eiusmod tempo.')); ?></p>            
+                            <p><?php echo esc_html(saloni_get_option('saloni_footer_description', '池袋駅徒歩3分の技術×トレンドを兼ね備えた人気店。丁寧なフィルインとケアにより驚きのモチを実現。韓国ネイルやワンホン、ニュアンスなど旬のデザインやパーツも豊富です。持ち込み大歓迎＆10日間保証付。')); ?></p>            
                         </div>
                         
                     </div> 
@@ -55,8 +55,8 @@
                         <div class="widget recent-posts-entry">
                             <h4 class="widget-title"><?php esc_html_e('Access', 'saloni'); ?></h4>
                             <ul class="widget_address"> 
-                                <li><i class="fa-solid fa-location-dot"></i><?php echo esc_html(saloni_get_option('saloni_address', 'San Francisco City Hall, San Francisco, CA')); ?></li>
-                                <li><i class="fa fa-phone"></i><?php echo esc_html(saloni_get_option('saloni_phone', '(654) 321-7654')); ?></li>
+                                <li><i class="fa-solid fa-location-dot"></i><?php echo esc_html(saloni_get_option('saloni_address', '東京都豊島区池袋2-40-13VORT池袋ビル3F')); ?></li>
+                                <li><i class="fa fa-phone"></i><?php echo esc_html(saloni_get_option('saloni_phone', '050-5305-3298')); ?></li>
                             </ul>  
                         </div>           
                     </div>

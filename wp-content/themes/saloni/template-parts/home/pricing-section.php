@@ -129,8 +129,7 @@ $total_categories = count($menu_categories);
                             <h3 class="pricing-category-title"><?php echo esc_html($category['title']); ?></h3>
                             <p class="pricing-category-subtitle"><?php echo esc_html($category['subtitle']); ?></p>
                         </div>
-                        <div class="pricing-list-img p-b10"><img
-                                src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
+
                         <ul>
                             <?php foreach ($category['items'] as $item) : ?>
                             <li>
@@ -193,11 +192,6 @@ $total_categories = count($menu_categories);
     font-size: 12px;
     color: #888;
     margin: 0;
-}
-
-/* 装飾画像 */
-.pricing-list-img.p-b10 {
-    padding-bottom: 5px !important;
 }
 
 /* リストアイテム */
