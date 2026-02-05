@@ -8,6 +8,15 @@
 
 get_header();
 $theme_uri = get_template_directory_uri();
+
+// Q&Aを取得
+$qa_query = new WP_Query(array(
+    'post_type' => 'qa',
+    'posts_per_page' => -1,
+    'orderby' => 'menu_order',
+    'order' => 'ASC',
+    'post_status' => 'publish'
+));
 ?>
 
 <!-- INNER PAGE BANNER -->
@@ -43,98 +52,54 @@ $theme_uri = get_template_directory_uri();
 
                 <div class="col-lg-10 col-md-12 col-sm-12">
 
-                    <!-- Accordian -->
-                    <div class="wt-accordion acc-bg-white" id="accordion5">
+                    <?php if ($qa_query->have_posts()) : ?>
+                        <!-- Accordian -->
+                        <div class="wt-accordion acc-bg-white" id="accordion5">
 
-                        <div class="panel wt-panel">
-                            <div class="acod-head acc-actives">
-                                <h4 class="acod-title">
-                                    <a data-toggle="collapse" href="#collapseOne5" data-parent="#accordion5">
-                                        What is your cancellation policy?
-                                        <span class="indicator"><i class="fa fa-plus"></i></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne5" class="acod-body collapse show">
-                                <div class="acod-content p-a20 bg-white">Providing outstanding service is the core of
-                                    our business. Because spa services are reserved especially for you, we ask that you
-                                    notify us 24 hours in advance to change or cancel appointments without penalty.
-                                    Without 24 hour notice, we will charge a fee of 50% of the price of the cancelled
-                                    service, and 100% of the service in the event of a "no-show." We thank you in
-                                    advance for your cooperation and understanding. Spa packages and groups must give a
-                                    minimum 48 hour cancellation notice.</div>
-                            </div>
-                        </div>
+                            <?php 
+                            $index = 1;
+                            while ($qa_query->have_posts()) : 
+                                $qa_query->the_post();
+                                $question = get_field('qa_question');
+                                $answer = get_field('qa_answer');
+                                $collapse_id = 'collapse' . $index;
+                                $is_first = ($index === 1);
+                            ?>
 
-                        <div class="panel wt-panel">
-                            <div class="acod-head">
-                                <h4 class="acod-title">
-                                    <a data-toggle="collapse" href="#collapseTwo5" class="collapsed"
-                                        data-parent="#accordion5">
-                                        What are your hours?
-                                        <span class="indicator"><i class="fa fa-plus"></i></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo5" class="acod-body collapse">
-                                <div class="acod-content p-a20 bg-white">
-                                    Monday – Friday: 9 to 7pm Saturday: 8 to 6pm Sunday: Closed
+                                <div class="panel wt-panel">
+                                    <div class="acod-head <?php echo $is_first ? 'acc-actives' : ''; ?>">
+                                        <h4 class="acod-title">
+                                            <a data-toggle="collapse" href="#<?php echo $collapse_id; ?>" 
+                                               <?php echo !$is_first ? 'class="collapsed"' : ''; ?>
+                                               data-parent="#accordion5">
+                                                <?php echo esc_html($question); ?>
+                                                <span class="indicator"><i class="fa fa-plus"></i></span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="<?php echo $collapse_id; ?>" class="acod-body collapse <?php echo $is_first ? 'show' : ''; ?>">
+                                        <div class="acod-content p-a20 bg-white">
+                                            <?php echo wp_kses_post($answer); ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="panel wt-panel">
-                            <div class="acod-head">
-                                <h4 class="acod-title">
-                                    <a data-toggle="collapse" href="#collapseThree5" class="collapsed"
-                                        data-parent="#accordion5">
-                                        How do I schedule an appointment?
-                                        <span class="indicator"><i class="fa fa-plus"></i></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseThree5" class="acod-body collapse">
-                                <div class="acod-content p-a20 bg-white">You can schedule your appointment by phone, in
-                                    person or online. Reservations for your appointment are held with a credit card or
-                                    gift certificate.</div>
-                            </div>
-                        </div>
+                            <?php 
+                                $index++;
+                            endwhile; 
+                            wp_reset_postdata();
+                            ?>
 
-                        <div class="panel wt-panel">
-                            <div class="acod-head">
-                                <h4 class="acod-title">
-                                    <a data-toggle="collapse" href="#collapseFour5" class="collapsed"
-                                        data-parent="#accordion5">
-                                        What should I wear for a spa or salon treatment?
-                                        <span class="indicator"><i class="fa fa-plus"></i></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFour5" class="acod-body collapse">
-                                <div class="acod-content p-a20 bg-white">No special clothing is required; come as you
-                                    are! If you are enjoying several services, you will be provided with a robe and
-                                    slippers. Towels for the eucalyptus steam shower are available. Your personal
-                                    comfort is always most important to us!</div>
-                            </div>
                         </div>
-
-                        <div class="panel wt-panel">
-                            <div class="acod-head">
-                                <h4 class="acod-title">
-                                    <a data-toggle="collapse" href="#collapseFive5" class="collapsed"
-                                        data-parent="#accordion5">
-                                        What if I have lost my gift certificate?
-                                        <span class="indicator"><i class="fa fa-plus"></i></span>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseFive5" class="acod-body collapse">
-                                <div class="acod-content p-a20 bg-white">Your certificate is considered the same as
-                                    cash. It is necessary to keep track of this valuable property.</div>
-                            </div>
+                    <?php else : ?>
+                        <div class="alert alert-info">
+                            <p>現在、Q&Aは登録されていません。</p>
+                            <?php if (current_user_can('edit_posts')) : ?>
+                                <p><a href="<?php echo admin_url('post-new.php?post_type=qa'); ?>">Q&Aを追加する</a></p>
+                            <?php endif; ?>
                         </div>
+                    <?php endif; ?>
 
-                    </div>
                 </div>
             </div>
 
@@ -144,6 +109,6 @@ $theme_uri = get_template_directory_uri();
 <!-- Q&A SECTION END -->
 
 <!-- BUTTON TOP START -->
-<button class="scroltop"><span class="fa fa-angle-up relative" id="btn-vibrate"></span></button>
+<button class="scroltop"><span class="fa fa-angle-up  relative" id="btn-vibrate"></span></button>
 
 <?php get_footer(); ?>

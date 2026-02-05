@@ -15042,7 +15042,7 @@ textarea.form-control2 {
 }
 
 .project-img-effect-1 img {
-	width: calc(120%);
+	width: 100%;
 	backface-visibility: hidden;
 	vertical-align: top;
 	max-width: none;

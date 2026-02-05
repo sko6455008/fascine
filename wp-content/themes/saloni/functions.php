@@ -2040,48 +2040,48 @@ function saloni_add_gallery_rewrite_rules() {
     // HAND定額コース
     add_rewrite_rule(
         'gallery_hand_design/([^/]+)/page/([0-9]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=hand&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'index.php?pagename=page-gallery&gallery_main_category=hand&gallery_sub_category=$matches[1]&paged=$matches[2]',
         'top'
     );
     add_rewrite_rule(
         'gallery_hand_design/([^/]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=hand&gallery_sub_category=$matches[1]',
+        'index.php?pagename=page-gallery&gallery_main_category=hand&gallery_sub_category=$matches[1]',
         'top'
     );
 
     // FOOT定額コース
     add_rewrite_rule(
         'gallery_foot_design/([^/]+)/page/([0-9]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=foot&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'index.php?pagename=page-gallery&gallery_main_category=foot&gallery_sub_category=$matches[1]&paged=$matches[2]',
         'top'
     );
     add_rewrite_rule(
         'gallery_foot_design/([^/]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=foot&gallery_sub_category=$matches[1]',
+        'index.php?pagename=page-gallery&gallery_main_category=foot&gallery_sub_category=$matches[1]',
         'top'
     );
 
     // GUESTギャラリー
     add_rewrite_rule(
         'gallery_guest_nail/([^/]+)/page/([0-9]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=guest&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'index.php?pagename=page-gallery&gallery_main_category=guest&gallery_sub_category=$matches[1]&paged=$matches[2]',
         'top'
     );
     add_rewrite_rule(
         'gallery_guest_nail/([^/]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=guest&gallery_sub_category=$matches[1]',
+        'index.php?pagename=page-gallery&gallery_main_category=guest&gallery_sub_category=$matches[1]',
         'top'
     );
 
     // アート・パーツ
     add_rewrite_rule(
         'gallery_arts_parts/([^/]+)/page/([0-9]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]&paged=$matches[2]',
+        'index.php?pagename=page-gallery&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]&paged=$matches[2]',
         'top'
     );
     add_rewrite_rule(
         'gallery_arts_parts/([^/]+)/?$',
-        'index.php?pagename=gallery-template&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]',
+        'index.php?pagename=page-gallery&gallery_main_category=arts-parts&gallery_sub_category=$matches[1]',
         'top'
     );
 
