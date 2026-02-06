@@ -41,7 +41,7 @@ $theme_uri = get_template_directory_uri();
     <div class="section-content">
         <div class="gmap-outline">
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6309.495304446196!2d-122.43885472228101!3d37.74906395235639!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e12a1d66d03%3A0xb8c905ae4e81369b!2sQ-Architecture!5e0!3m2!1sen!2sin!4v1623689156327!5m2!1sen!2sin"
+                src="https://maps.google.com/maps?q=%E3%83%95%E3%82%A1%E3%83%83%E3%82%B7%E3%83%BC%E3%83%8A%E6%B1%A0%E8%A2%8B%E3%83%8D%E3%82%A4%E3%83%AB%E3%82%B5%E3%83%AD%E3%83%B3%E3%83%BB%E3%83%91%E3%83%A9%E3%82%B8%E3%82%A7%E3%83%AB%E5%B0%82%E9%96%80%E5%BA%97&t=m&z=16&output=embed&iwloc=near"
                 style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>
@@ -63,11 +63,11 @@ $theme_uri = get_template_directory_uri();
                             <div class="wt-small-separator">
                                 <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png"
                                         alt=""></div>
-                                <div>Contact info</div>
+                                <div>Info</div>
                                 <div class="sep-leaf-right"><img
                                         src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                             </div>
-                            <h2 data-title="Info">Our Full Info</h2>
+                            <h2 data-title="Info">アクセス</h2>
                         </div>
                         <!-- TITLE END-->
 
@@ -79,20 +79,18 @@ $theme_uri = get_template_directory_uri();
                                     <div class="wt-icon-box-wraper left m-b30">
 
                                         <div class="icon-content">
-                                            <h4 class="m-t0">Phone number</h4>
-                                            <p>(+291) 0987 654 321</p>
-                                            <p>(+291) 0987 654 123</p>
+                                            <h4 class="m-t0">電話番号</h4>
+                                            <p>050-5305-3298</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-3 col-md-6">
+                                 <div class="col-lg-3 col-md-6">
                                     <div class="wt-icon-box-wraper left m-b30">
 
                                         <div class="icon-content">
-                                            <h4 class="m-t0">Email address</h4>
+                                            <h4 class="m-t0">Email</h4>
                                             <p>thewebmax@gmail.com</p>
-                                            <p>thewebmaxhelp@gmail.com</p>
                                         </div>
                                     </div>
                                 </div>
@@ -101,8 +99,8 @@ $theme_uri = get_template_directory_uri();
                                     <div class="wt-icon-box-wraper left m-b30">
 
                                         <div class="icon-content">
-                                            <h4 class="m-t0">Address info</h4>
-                                            <p>1363-1385 Sunset Blvd Los Angeles, CA 90026, USA</p>
+                                            <h4 class="m-t0">住所</h4>
+                                            <p>東京都豊島区池袋2-40-13 VORT池袋ビル 3F</p>
                                         </div>
                                     </div>
                                 </div>
@@ -111,11 +109,10 @@ $theme_uri = get_template_directory_uri();
                                     <div class="wt-icon-box-wraper left">
 
                                         <div class="icon-content">
-                                            <h4 class="m-t0">Opening Hours</h4>
+                                            <h4 class="m-t0">営業時間</h4>
                                             <ul class="list-unstyled m-b0">
-                                                <li>Mon-Fri: 9 am – 6 pm</li>
-                                                <li>Saturday: 9 am – 4 pm</li>
-                                                <li>Sunday: Closed</li>
+                                                <li>平日：11：00 〜 21:00</li>
+                                                <li>土日祝：10：00 〜 20:00</li>
                                             </ul>
                                         </div>
                                     </div>
