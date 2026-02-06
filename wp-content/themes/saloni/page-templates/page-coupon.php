@@ -16,7 +16,7 @@ $current_page = get_query_var('paged') ? get_query_var('paged') : 1;
 $current_nailist = get_query_var('nailist');
 
 // 1ページあたりの表示数
-$posts_per_page = 2;
+$posts_per_page = 30;
 
 // クーポンを取得するクエリ
 $coupon_args = array(

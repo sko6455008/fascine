@@ -36,11 +36,11 @@ if (!$coupon_query->have_posts())
         <div class="center wt-small-separator-outer section-head">
             <div class="wt-small-separator">
                 <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
-                <div class="title-label"><?php esc_html_e('Special Offers', 'saloni'); ?></div>
+                <div class="title-label"><?php esc_html_e('Coupon', 'saloni'); ?></div>
                 <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
             </div>
             <h2 class="premium-title" data-title="<?php esc_attr_e('Coupon', 'saloni'); ?>">
-                <?php esc_html_e('Campaign & Coupon', 'saloni'); ?>
+                <?php esc_html_e('Coupon', 'saloni'); ?>
             </h2>
         </div>
         <!-- TITLE END-->

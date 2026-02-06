@@ -63,11 +63,11 @@ $theme_uri = get_template_directory_uri();
                             <div class="wt-small-separator">
                                 <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png"
                                         alt=""></div>
-                                <div>Info</div>
+                                <div>Infomation</div>
                                 <div class="sep-leaf-right"><img
                                         src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                             </div>
-                            <h2 data-title="Info">アクセス</h2>
+                            <h2 data-title="Access">Access</h2>
                         </div>
                         <!-- TITLE END-->
 

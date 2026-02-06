@@ -27,12 +27,12 @@ $recent_posts = new WP_Query(array(
                 <div class="wt-small-separator">
                     <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
                     <div>
-                        <?php esc_html_e('Update The New Trend', 'saloni'); ?>
+                        <?php esc_html_e('Staff Blog', 'saloni'); ?>
                     </div>
                     <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                 </div>
                 <h2 data-title="<?php esc_attr_e('Blog', 'saloni'); ?>">
-                    <?php esc_html_e('Latest Articles', 'saloni'); ?>
+                    <?php esc_html_e('Blog', 'saloni'); ?>
                 </h2>
             </div>
             <!-- TITLE END-->

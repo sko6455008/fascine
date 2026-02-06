@@ -23,7 +23,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                             <div class="left wt-small-separator-outer">
                                 <div class="wt-small-separator">
                                     <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt=""></div>
-                                    <div><?php esc_html_e('Follow Us On', 'saloni'); ?></div>
+                                    <div><?php esc_html_e('Follow Us', 'saloni'); ?></div>
                                     <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Hair Color', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a>
                                         </div>
                                     </div>
@@ -66,7 +66,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Makeup', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Hair Style', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a> 
                                         </div>
                                     </div>
@@ -90,7 +90,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Makeup', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a> 
                                         </div>
                                     </div>
@@ -102,7 +102,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Makeup', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a> 
                                         </div>
                                     </div>
@@ -114,7 +114,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Hair Wash', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a>
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                         <div class="instagram-box-info text-center">
                                             <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
                                                 <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Makeup', 'saloni'); ?></span>
+                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
                                             </a>
                                         </div>
                                     </div>

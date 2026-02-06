@@ -119,10 +119,10 @@ function fascina_render_gallery_section($query, $title, $subtitle, $link_url, $t
 
         <div class="section-content">
             <!-- HANDデザイン -->
-            <?php fascina_render_gallery_section($hand_gallery, 'HAND Design', 'ハンドデザイン', home_url('/gallery_hand_design/'), $theme_uri); ?>
+            <?php fascina_render_gallery_section($hand_gallery, 'Hand Design', 'ハンドデザイン', home_url('/gallery_hand_design/'), $theme_uri); ?>
 
             <!-- GUESTギャラリー -->
-            <?php fascina_render_gallery_section($guest_gallery, 'GUEST Gallery', 'ゲストギャラリー', home_url('/gallery_guest_nail/'), $theme_uri); ?>
+            <?php fascina_render_gallery_section($guest_gallery, 'Guest Gallery', 'ゲストギャラリー', home_url('/gallery_guest_nail/'), $theme_uri); ?>
         </div>
 
     </div>

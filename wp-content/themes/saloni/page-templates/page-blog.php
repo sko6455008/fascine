@@ -13,7 +13,7 @@ $theme_uri = get_template_directory_uri();
 $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
 // 1ページあたりの表示数
-$posts_per_page = 9;
+$posts_per_page = 30;
 
 // 投稿を取得
 $blog_query = new WP_Query(array(
@@ -37,14 +37,14 @@ $total_pages = $blog_query->max_num_pages;
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
                 <div class="banner-title-name">
-                    <h2 class="site-text-primary">Blog Grid</h2>
+                    <h2 class="site-text-primary">Blog</h2>
                 </div>
             </div>
             <!-- BREADCRUMB ROW -->
             <div>
                 <ul class="wt-breadcrumb breadcrumb-style-2">
                     <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
-                    <li>Blog Grid</li>
+                    <li>Blog</li>
                 </ul>
             </div>
             <!-- BREADCRUMB ROW END -->

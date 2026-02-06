@@ -27,14 +27,14 @@ $qa_query = new WP_Query(array(
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
                 <div class="banner-title-name">
-                    <h2 class="site-text-primary">Q&A'S</h2>
+                    <h2 class="site-text-primary">Q&A</h2>
                 </div>
             </div>
             <!-- BREADCRUMB ROW -->
             <div>
                 <ul class="wt-breadcrumb breadcrumb-style-2">
                     <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
-                    <li>Q&A'S</li>
+                    <li>Q&A</li>
                 </ul>
             </div>
             <!-- BREADCRUMB ROW END -->

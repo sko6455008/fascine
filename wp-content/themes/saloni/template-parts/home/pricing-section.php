@@ -108,13 +108,13 @@ $total_categories = count($menu_categories);
                     <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png" alt="">
                     </div>
                     <div>
-                        <?php esc_html_e('Nail Menu', 'saloni'); ?>
+                        <?php esc_html_e('Pricing Menu', 'saloni'); ?>
                     </div>
                     <div class="sep-leaf-right"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt="">
                     </div>
                 </div>
-                <h2 data-title="<?php esc_attr_e('Pricing', 'saloni'); ?>">
-                    <?php esc_html_e('料金メニュー', 'saloni'); ?>
+                <h2 data-title="<?php esc_attr_e('Menu', 'saloni'); ?>">
+                    <?php esc_html_e('Menu', 'saloni'); ?>
                 </h2>
             </div>
             <!-- TITLE END-->
