@@ -93,8 +93,10 @@ $menu_categories = array(
     ),
 );
 
-// 2列に分割するためにカテゴリを配列に分ける
-$total_categories = count($menu_categories);
+// 左カラム用カテゴリ: Care, Hand Gel, Nail Art
+$left_column = array($menu_categories[0], $menu_categories[2], $menu_categories[4]);
+// 右カラム用カテゴリ: Repair, Foot Gel, Off Only
+$right_column = array($menu_categories[1], $menu_categories[3], $menu_categories[5]);
 ?>
 
 <!-- PRICING SECTION START -->
@@ -119,27 +121,21 @@ $total_categories = count($menu_categories);
             </div>
             <!-- TITLE END-->
 
-            <div class="row justify-content-center">
-
-                <?php foreach ($menu_categories as $index => $category) : ?>
-                <div class="col-lg-6 col-md-12 col-sm-12 m-b30">
-
-                    <div class="pricing-list-block bg-white p-a20">
+            <div class="row">
+                <!-- 左カラム -->
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <?php foreach ($left_column as $category) : ?>
+                    <div class="pricing-list-block bg-white p-a20 m-b30">
                         <div class="pricing-list-header">
                             <h3 class="pricing-category-title"><?php echo esc_html($category['title']); ?></h3>
                             <p class="pricing-category-subtitle"><?php echo esc_html($category['subtitle']); ?></p>
                         </div>
-
                         <ul>
                             <?php foreach ($category['items'] as $item) : ?>
                             <li>
                                 <div class="price-list-info">
-                                    <h3>
-                                        <?php echo esc_html($item['name']); ?>
-                                    </h3>
-                                    <p>
-                                        <?php echo esc_html($item['desc']); ?>
-                                    </p>
+                                    <h3><?php echo esc_html($item['name']); ?></h3>
+                                    <p><?php echo esc_html($item['desc']); ?></p>
                                 </div>
                                 <div class="price-list-amount">
                                     <h3 class="text-black"><span class="amount-price"><?php echo esc_html($item['price']); ?></span></h3>
@@ -148,10 +144,33 @@ $total_categories = count($menu_categories);
                             <?php endforeach; ?>
                         </ul>
                     </div>
-
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
 
+                <!-- 右カラム -->
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <?php foreach ($right_column as $category) : ?>
+                    <div class="pricing-list-block bg-white p-a20 m-b30">
+                        <div class="pricing-list-header">
+                            <h3 class="pricing-category-title"><?php echo esc_html($category['title']); ?></h3>
+                            <p class="pricing-category-subtitle"><?php echo esc_html($category['subtitle']); ?></p>
+                        </div>
+                        <ul>
+                            <?php foreach ($category['items'] as $item) : ?>
+                            <li>
+                                <div class="price-list-info">
+                                    <h3><?php echo esc_html($item['name']); ?></h3>
+                                    <p><?php echo esc_html($item['desc']); ?></p>
+                                </div>
+                                <div class="price-list-amount">
+                                    <h3 class="text-black"><span class="amount-price"><?php echo esc_html($item['price']); ?></span></h3>
+                                </div>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
         </div>

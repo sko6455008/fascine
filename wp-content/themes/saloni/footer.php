@@ -76,26 +76,6 @@
 </div>
 <!-- page-wraper END -->
 
-<!-- LOADING AREA  START ===== -->
-<div class="loading-area">
-    <div class="loading-box"></div>
-    <div class="loading-pic">
-        <div class="cssload-loader">
-            <div class="cssload-dots">
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-                <div class="cssload-dot"></div>
-            </div>
-        </div>  
-    </div>
-</div>
-<!-- LOADING AREA  END ====== -->
 
 <?php wp_footer(); ?>
 

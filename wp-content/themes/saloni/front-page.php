@@ -68,7 +68,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption  tp-resizeme" id="slide-901-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
+                        data-voffset="['380','380','380','350']" data-fontsize="['20','20','20','16']"
                         data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
@@ -84,7 +84,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-901-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['530','530','530','500']" data-lineheight="['none','none','none','none']"
+                        data-voffset="['500','500','500','470']" data-lineheight="['none','none','none','none']"
                         data-width="['300','300','300','300']" data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on" data-frames='[ 
@@ -134,7 +134,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
+                        data-voffset="['380','380','380','350']" data-fontsize="['20','20','20','16']"
                         data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
@@ -150,7 +150,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['530','530','530','500']" data-width="['300','300','300','300']" data-type="text"
+                        data-voffset="['500','500','500','470']" data-width="['300','300','300','300']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":2000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index:13; text-transform:uppercase;">
@@ -195,7 +195,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['430','430','430','400']" data-fontsize="['20','20','20','16']"
+                        data-voffset="['380','380','380','350']" data-fontsize="['20','20','20','16']"
                         data-lineheight="['30','30','30','22']" data-width="['600','600','90%','90%']" data-type="text"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
@@ -211,7 +211,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-903-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['530','530','530','500']" data-width="['300','300','300','300']" data-type="text"
+                        data-voffset="['500','500','500','470']" data-width="['300','300','300','300']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":2000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index:13; text-transform:uppercase;">
