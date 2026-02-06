@@ -45,7 +45,7 @@ $theme_uri = get_template_directory_uri();
 <div class="section-full p-t80 p-b50 bg-white">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-12">
+            <div class="col-lg-8 col-md-12 blog-content">
                 <?php while (have_posts()):
                     the_post(); ?>
                     <div class="blog-post blog-lg date-style-2">
@@ -58,7 +58,7 @@ $theme_uri = get_template_directory_uri();
                             <div class="wt-post-meta">
                                 <ul>
                                     <li class="post-date"><span>
-                                            <?php echo get_the_date('d M Y'); ?>
+                                            <?php echo get_the_date('Y-m-d'); ?>
                                         </span></li>
                                     <li class="post-user"><a
                                             href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>">
@@ -129,18 +129,11 @@ $theme_uri = get_template_directory_uri();
                             </div>
 
                         </div>
-
-                        <!-- Comments -->
-                        <?php
-                        if (comments_open() || get_comments_number()):
-                            comments_template();
-                        endif;
-                        ?>
                     </div>
                 <?php endwhile; ?>
             </div>
 
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-4 col-md-12 sidebar">
                 <?php get_sidebar(); ?>
             </div>
         </div>
@@ -152,3 +145,19 @@ $theme_uri = get_template_directory_uri();
 <button class="scroltop"><span class="fa fa-angle-up relative" id="btn-vibrate"></span></button>
 
 <?php get_footer(); ?>
+
+<style>
+.blog-content{
+    padding: 0 30px;
+}
+.sidebar {
+    background-color: #feede7;
+    padding: 15px;
+    height: 100%;
+}
+.wt-post-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+</style>

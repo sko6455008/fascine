@@ -17,7 +17,7 @@ $main_category = get_query_var('gallery_main_category');
 $sub_category = get_query_var('gallery_sub_category');
 
 // 1ページあたりの表示数
-$posts_per_page = 30;
+$posts_per_page = 2;
 
 // ギャラリー投稿を取得
 $gallery_query = saloni_get_gallery_page_posts($main_category, $sub_category, $posts_per_page, $current_page);

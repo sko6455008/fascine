@@ -9,7 +9,7 @@ $theme_uri = get_template_directory_uri();
 
 // Get recent blog posts
 $recent_posts = new WP_Query(array(
-    'post_type' => 'blog',
+    'post_type' => 'post',
     'posts_per_page' => 3,
     'post_status' => 'publish',
     'orderby' => 'date',

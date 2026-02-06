@@ -13,16 +13,9 @@ $theme_uri = get_template_directory_uri();
         <?php dynamic_sidebar('sidebar-1'); ?>
     <?php else: ?>
         <!-- Default sidebar content if no widgets -->
-        <div class="widget widget_search">
-            <h4 class="widget-title">
-                <?php esc_html_e('Search', 'saloni'); ?>
-            </h4>
-            <?php get_search_form(); ?>
-        </div>
-
         <div class="widget recent-posts-entry">
             <h4 class="widget-title">
-                <?php esc_html_e('Recent Posts', 'saloni'); ?>
+                <?php esc_html_e('最新記事', 'saloni'); ?>
             </h4>
             <div class="widget-post-bx">
                 <?php
@@ -48,7 +41,7 @@ $theme_uri = get_template_directory_uri();
                             <div class="wt-post-meta">
                                 <ul>
                                     <li class="post-date">
-                                        <?php echo get_the_date('d M Y', $post['ID']); ?>
+                                        <?php echo get_the_date('Y-m-d', $post['ID']); ?>
                                     </li>
                                 </ul>
                             </div>
@@ -61,7 +54,7 @@ $theme_uri = get_template_directory_uri();
 
         <div class="widget widget_categories">
             <h4 class="widget-title">
-                <?php esc_html_e('Categories', 'saloni'); ?>
+                <?php esc_html_e('カテゴリー', 'saloni'); ?>
             </h4>
             <ul>
                 <?php
@@ -74,20 +67,14 @@ $theme_uri = get_template_directory_uri();
             </ul>
         </div>
 
-        <div class="widget widget_tag_cloud">
-            <h4 class="widget-title">
-                <?php esc_html_e('Tags', 'saloni'); ?>
-            </h4>
-            <div class="tagcloud">
-                <?php
-                wp_tag_cloud(array(
-                    'smallest' => 12,
-                    'largest' => 12,
-                    'unit' => 'px',
-                    'format' => 'flat',
-                ));
-                ?>
-            </div>
-        </div>
     <?php endif; ?>
 </aside>
+
+<style>
+.widget_categories ul {
+    list-style: none;
+}
+.recent-posts-entry{
+    margin-bottom: 40px !important;
+}
+</style>

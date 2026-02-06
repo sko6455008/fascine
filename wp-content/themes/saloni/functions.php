@@ -602,9 +602,11 @@ function saloni_register_qa_post_type() {
         ),
         'supports' => array('custom-fields'),
         'menu_icon' => 'dashicons-editor-help',
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'qa'),
+        'has_archive' => false,
+        'rewrite' => false,
         'show_in_menu' => true,
+        'publicly_queryable' => false,
+        'exclude_from_search' => true,
     );
     register_post_type('qa', $args);
 }
@@ -2863,3 +2865,14 @@ function saloni_ajax_get_course_choices() {
     wp_send_json_success($sub_categories);
 }
 add_action('wp_ajax_get_course_choices', 'saloni_ajax_get_course_choices');
+
+// パーマリンク構造を強制的に /blog/%postname%/ に変更
+function saloni_update_permalink_structure() {
+    if (get_option('permalink_structure') !== '/blog/%postname%/') {
+        global $wp_rewrite;
+        $wp_rewrite->set_permalink_structure('/blog/%postname%/');
+        update_option('permalink_structure', '/blog/%postname%/');
+        flush_rewrite_rules();
+    }
+}
+add_action('init', 'saloni_update_permalink_structure');
