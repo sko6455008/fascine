@@ -31,8 +31,8 @@ $total_pages = $blog_query->max_num_pages;
 
 <!-- INNER PAGE BANNER -->
 <div class="wt-bnr-inr overlay-wraper bg-center"
-    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/9.jpg);">
-    <div class="overlay-main site-bg-secondry opacity-07"></div>
+    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/blog.webp);">
+    <div class="overlay-main site-bg-secondary opacity-07"></div>
     <div class="container">
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
@@ -70,7 +70,7 @@ $total_pages = $blog_query->max_num_pages;
                                         <?php if (has_post_thumbnail()) : ?>
                                             <?php the_post_thumbnail('medium_large'); ?>
                                         <?php else : ?>
-                                            <img src="<?php echo $theme_uri; ?>/images/blog/default/thum1.jpg" alt="<?php the_title_attribute(); ?>">
+                                            <img src="<?php echo $theme_uri; ?>/images/blog/thum1.jpg" alt="<?php the_title_attribute(); ?>">
                                         <?php endif; ?>
                                     </a>
                                     <div class="blog-grid-date">

@@ -12,8 +12,8 @@ $theme_uri = get_template_directory_uri();
 
 <!-- INNER PAGE BANNER -->
 <div class="wt-bnr-inr overlay-wraper bg-center"
-    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/5.jpg);">
-    <div class="overlay-main site-bg-secondry opacity-07"></div>
+    style="background-image:url(<?php echo $theme_uri; ?>/images/access.webp);">
+    <div class="overlay-main site-bg-secondary opacity-07"></div>
     <div class="container">
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
@@ -35,7 +35,18 @@ $theme_uri = get_template_directory_uri();
 <!-- INNER PAGE BANNER END -->
 
 <!-- SECTION CONTENT START -->
-<div class="section-full p-t80">
+<div class="section-full p-t80 p-b80">
+
+    <div class="center wt-small-separator-outer section-head">
+        <div class="wt-small-separator">
+            <div class="sep-leaf-left"><img src="<?php echo $theme_uri; ?>/images/sep-leaf-left.png"
+                    alt=""></div>
+            <div>Location</div>
+            <div class="sep-leaf-right"><img
+                    src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
+            </div>
+        <h2 data-title="Access">Access</h2>
+    </div>
 
     <!-- LOCATION BLOCK-->
     <div class="section-content">
@@ -45,7 +56,6 @@ $theme_uri = get_template_directory_uri();
                 style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>
-
 
 </div>
 
@@ -67,7 +77,7 @@ $theme_uri = get_template_directory_uri();
                                 <div class="sep-leaf-right"><img
                                         src="<?php echo $theme_uri; ?>/images/sep-leaf-right.png" alt=""></div>
                             </div>
-                            <h2 data-title="Access">Access</h2>
+                            <h2 data-title="Info">Info</h2>
                         </div>
                         <!-- TITLE END-->
 

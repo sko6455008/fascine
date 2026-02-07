@@ -52,7 +52,7 @@ $recent_posts = new WP_Query(array(
                                         <?php if (has_post_thumbnail()): ?>
                                             <?php the_post_thumbnail('medium_large'); ?>
                                         <?php else: ?>
-                                            <img src="<?php echo $theme_uri; ?>/images/blog/default/thum1.jpg"
+                                            <img src="<?php echo $theme_uri; ?>/images/blog/thum1.jpg"
                                                 alt="<?php the_title_attribute(); ?>">
                                         <?php endif; ?>
                                     </a>
@@ -64,8 +64,7 @@ $recent_posts = new WP_Query(array(
                                                     <?php echo get_the_date('Y-m-d'); ?>
                                                 </span></li>
                                             <li class="post-user"><a href="#">
-                                                    <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Sophia
-                                                        Varner</span>
+                                                    <?php esc_html_e('By', 'saloni'); ?> <span class="site-text-primary">Staff</span>
                                                 </a></li>
                                             <li class="post-comment"><a href="#">
                                                     <?php esc_html_e('Comment', 'saloni'); ?> <span

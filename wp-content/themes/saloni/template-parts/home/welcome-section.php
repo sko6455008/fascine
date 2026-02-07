@@ -53,7 +53,7 @@ $theme_uri = get_template_directory_uri();
                 </div>
                 <div class="col-lg-5 col-md-12">
                     <div class="img-colarge-single">
-                        <img src="<?php echo $theme_uri; ?>/images/colarge/s1.jpg" alt="" class="img-fluid w-100">
+                        <img src="<?php echo $theme_uri; ?>/images/access.webp" alt="" class="img-fluid w-100">
                     </div>
                 </div>
             </div>

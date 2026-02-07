@@ -12,8 +12,8 @@ $theme_uri = get_template_directory_uri();
 
 <!-- INNER PAGE BANNER -->
 <div class="wt-bnr-inr overlay-wraper bg-center"
-    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/2.jpg);">
-    <div class="overlay-main site-bg-secondry opacity-07"></div>
+    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/menu.webp);">
+    <div class="overlay-main site-bg-secondary opacity-07"></div>
     <div class="container">
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
@@ -34,7 +34,7 @@ $theme_uri = get_template_directory_uri();
 </div>
 <!-- INNER PAGE BANNER END -->
 
-<?php get_template_part('template-parts/home/pricing-section'); ?>
+<?php get_template_part('template-parts/home/menu-section'); ?>
 
 <!-- BUTTON TOP START -->
 <button class="scroltop"><span class="fa fa-angle-up  relative" id="btn-vibrate"></span></button>

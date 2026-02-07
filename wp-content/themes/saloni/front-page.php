@@ -229,7 +229,7 @@ $theme_uri = get_template_directory_uri();
 <!-- SLIDER END -->
 
 <?php get_template_part('template-parts/home/welcome-section'); ?>
-<?php get_template_part('template-parts/home/pricing-section'); ?>
+<?php get_template_part('template-parts/home/menu-section'); ?>
 <?php get_template_part('template-parts/home/gallery-section'); ?>
 <?php get_template_part('template-parts/home/coupon-section'); ?>
 <?php get_template_part('template-parts/home/blog-section'); ?>

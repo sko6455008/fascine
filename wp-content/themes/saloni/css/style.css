@@ -713,7 +713,7 @@ ul.primary li:before {
 	color: #0f1221;
 }
 
-ul.secondry li:before {
+ul.secondary li:before {
 	color: #253641;
 }
 
@@ -2020,7 +2020,7 @@ ol.list-num-count.list-outline-none>li:before {
 	color: #541f5c;
 }
 
-.site-text-secondry {
+.site-text-secondary {
 	color: #111111;
 }
 
@@ -2073,7 +2073,7 @@ ol.list-num-count.list-outline-none>li:before {
 	background-color: #541f5c;
 }
 
-.site-bg-secondry {
+.site-bg-secondary {
 	background-color: #dfba9f;
 }
 
@@ -3127,21 +3127,21 @@ ol.list-num-count.list-outline-none>li:before {
 	color: #fff;
 }
 
-.site-button-secondry {
+.site-button-secondary {
 	color: #fff;
 	outline: none;
 	background-color: #dfba9f;
 }
 
-.site-button-secondry:active,
-.site-button-secondry:hover,
-.site-button-secondry:focus,
-.active>.site-button-secondry {
+.site-button-secondary:active,
+.site-button-secondary:hover,
+.site-button-secondary:focus,
+.active>.site-button-secondary {
 	background-color: #dfba9f;
 	color: #111;
 }
 
-.site-button-secondry:hover.site-btn-effect {
+.site-button-secondary:hover.site-btn-effect {
 	text-shadow: -400px 0 0 #111111, 0 0 0 #111111;
 }
 
@@ -3160,7 +3160,7 @@ ol.list-num-count.list-outline-none>li:before {
 	font-weight: 500;
 }
 
-.site-button-secondry {
+.site-button-secondary {
 	color: #fff;
 	padding: 15px 40px;
 	letter-spacing: 1px;
@@ -4466,7 +4466,7 @@ ol.list-num-count.list-outline-none>li:before {
 .acod-head a {
 	display: block;
 	padding: 15px 60px 15px 15px;
-	font-size: 22px;
+	font-size: 18px;
 	font-weight: 500;
 }
 
@@ -12204,7 +12204,7 @@ Spin circle
 	height: 600px;
 }
 
-.map-apsolute-search .site-button-secondry {
+.map-apsolute-search .site-button-secondary {
 	width: 100%;
 }
 
@@ -12366,7 +12366,7 @@ Spin circle
 	padding-top: 80px
 }
 
-.slider-apsolute-search .site-button-secondry {
+.slider-apsolute-search .site-button-secondary {
 	width: 100%;
 }
 
@@ -14536,11 +14536,7 @@ textarea.form-control2 {
 }
 
 .welcome-section-top {
-	max-width: 1400px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 30px;
-	margin-bottom: 80px;
+	margin: 80px auto;
 }
 
 .welcome-section-bottom {

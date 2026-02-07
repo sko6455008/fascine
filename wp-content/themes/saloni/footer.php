@@ -30,7 +30,7 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="widget widget_services">
-                            <h4 class="widget-title"><?php esc_html_e('Useful links', 'saloni'); ?></h4>
+                            <h4 class="widget-title"><?php esc_html_e('Links', 'saloni'); ?></h4>
                             <?php
                             wp_nav_menu(array(
                                 'theme_location' => 'footer',
@@ -49,10 +49,11 @@
 
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="widget recent-posts-entry">
-                            <h4 class="widget-title"><?php esc_html_e('Access', 'saloni'); ?></h4>
+                            <h4 class="widget-title"><?php esc_html_e('Infomation', 'saloni'); ?></h4>
                             <ul class="widget_address"> 
                                 <li><i class="fa-solid fa-location-dot"></i><?php echo esc_html(saloni_get_option('saloni_address', '東京都豊島区池袋2-40-13VORT池袋ビル3F')); ?></li>
                                 <li><i class="fa fa-phone"></i><?php echo esc_html(saloni_get_option('saloni_phone', '050-5305-3298')); ?></li>
+                                <li><i class="fa fa-clock"></i><?php echo wp_kses_post(saloni_get_option('saloni_business_hours', '平日:11:00～21:00<br>土日祝:10:00～20:00')); ?></li>
                             </ul>  
                         </div>           
                     </div>
@@ -65,7 +66,7 @@
         <div class="footer-bottom">
             <div class="container">
                 <div class="wt-footer-bot-left d-flex justify-content-center">
-                    <span class="copyrights-text"><?php echo esc_html(saloni_get_option('saloni_copyright', 'Copyright © ' . date('Y') . 'Fascina')); ?></span>   
+                    <span class="copyrights-text"><?php echo esc_html(saloni_get_option('saloni_copyright', 'Copyright © ' . date('Y') . ' Fascina')); ?></span>   
                 </div>
             </div>   
         </div>   
@@ -74,8 +75,15 @@
     <!-- FOOTER END -->
 
 </div>
-<!-- page-wraper END -->
 
+<!-- LOADING AREA START ===== -->
+<div class="loading-area">
+    <div class="loader-container">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Fascina</div>
+    </div>
+</div>
+<!-- LOADING AREA  END ====== -->
 
 <?php wp_footer(); ?>
 

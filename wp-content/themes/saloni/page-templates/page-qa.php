@@ -21,8 +21,8 @@ $qa_query = new WP_Query(array(
 
 <!-- INNER PAGE BANNER -->
 <div class="wt-bnr-inr overlay-wraper bg-center"
-    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/9.jpg);">
-    <div class="overlay-main site-bg-secondry opacity-07"></div>
+    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/qa.webp);">
+    <div class="overlay-main site-bg-secondary opacity-07"></div>
     <div class="container">
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
@@ -52,45 +52,71 @@ $qa_query = new WP_Query(array(
 
                 <div class="col-lg-10 col-md-12 col-sm-12">
 
-                    <?php if ($qa_query->have_posts()) : ?>
-                        <!-- Accordian -->
-                        <div class="wt-accordion acc-bg-white" id="accordion5">
+                    <?php if ($qa_query->have_posts()) : 
+                        $qa_groups = array(
+                            'service' => array(),
+                            'reservation' => array(),
+                            'other' => array(),
+                        );
+                        
+                        $qa_labels = array(
+                            'service' => '施術について',
+                            'reservation' => '予約について',
+                            'other' => 'その他',
+                        );
 
-                            <?php 
-                            $index = 1;
-                            while ($qa_query->have_posts()) : 
-                                $qa_query->the_post();
-                                $question = get_field('qa_question');
-                                $answer = get_field('qa_answer');
-                                $collapse_id = 'collapse' . $index;
-                                $is_first = ($index === 1);
+                        while ($qa_query->have_posts()) {
+                            $qa_query->the_post();
+                            $type = get_field('qa_type');
+                            if (array_key_exists($type, $qa_groups)) {
+                                $qa_groups[$type][] = get_post();
+                            } else {
+                                $qa_groups['other'][] = get_post();
+                            }
+                        }
+                        wp_reset_postdata();
+                        
+                        $global_index = 0;
+                        foreach ($qa_groups as $type => $posts) :
+                            if (empty($posts)) continue;
                             ?>
+                            
+                            <div class="qa-section-header p-a15 m-b20 bg-gray-light">
+                                <h4 class="m-b0 font-weight-600"><?php echo esc_html($qa_labels[$type]); ?></h4>
+                            </div>
 
-                                <div class="panel wt-panel">
-                                    <div class="acod-head <?php echo $is_first ? 'acc-actives' : ''; ?>">
-                                        <h4 class="acod-title">
-                                            <a data-toggle="collapse" href="#<?php echo $collapse_id; ?>" 
-                                               <?php echo !$is_first ? 'class="collapsed"' : ''; ?>
-                                               data-parent="#accordion5">
-                                                <?php echo esc_html($question); ?>
-                                                <span class="indicator"><i class="fa fa-plus"></i></span>
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="<?php echo $collapse_id; ?>" class="acod-body collapse <?php echo $is_first ? 'show' : ''; ?>">
-                                        <div class="acod-content p-a20 bg-white">
-                                            <?php echo wp_kses_post($answer); ?>
+                            <div class="wt-accordion acc-bg-white m-b40" id="accordion-<?php echo esc_attr($type); ?>">
+                                <?php 
+                                foreach ($posts as $post) : 
+                                    setup_postdata($post);
+                                    $question = get_field('qa_question');
+                                    $answer = get_field('qa_answer');
+                                    $global_index++;
+                                    $collapse_id = 'collapse-' . $global_index;
+                                    $heading_id = 'heading-' . $global_index;
+                                ?>
+                                    <div class="panel wt-panel">
+                                        <div class="acod-head" id="<?php echo esc_attr($heading_id); ?>">
+                                            <h4 class="acod-title">
+                                                <a data-toggle="collapse" href="#<?php echo esc_attr($collapse_id); ?>" class="collapsed" data-parent="#accordion-<?php echo esc_attr($type); ?>">
+                                                    <?php echo esc_html($question); ?>
+                                                    <span class="indicator"><i class="fa fa-plus"></i></span>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="<?php echo esc_attr($collapse_id); ?>" class="acod-body collapse" aria-labelledby="<?php echo esc_attr($heading_id); ?>" data-parent="#accordion-<?php echo esc_attr($type); ?>">
+                                            <div class="acod-content p-a20 bg-white">
+                                                <?php echo wp_kses_post($answer); ?>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php 
+                                endforeach; 
+                                wp_reset_postdata();
+                                ?>
+                            </div>
+                        <?php endforeach; ?>
 
-                            <?php 
-                                $index++;
-                            endwhile; 
-                            wp_reset_postdata();
-                            ?>
-
-                        </div>
                     <?php else : ?>
                         <div class="alert alert-info">
                             <p>現在、Q&Aは登録されていません。</p>

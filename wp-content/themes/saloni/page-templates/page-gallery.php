@@ -33,8 +33,8 @@ $sub_category_name = saloni_get_sub_category_name($main_category, $sub_category)
 
 <!-- INNER PAGE BANNER -->
 <div class="wt-bnr-inr overlay-wraper bg-center"
-    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/9.jpg);">
-    <div class="overlay-main site-bg-secondry opacity-07"></div>
+    style="background-image:url(<?php echo $theme_uri; ?>/images/banner/gallery.webp);">
+    <div class="overlay-main site-bg-secondary opacity-07"></div>
     <div class="container">
         <div class="wt-bnr-inr-entry">
             <div class="banner-title-outer">
