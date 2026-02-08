@@ -76,3 +76,54 @@ body.loading {
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
 }
+
+/* Slider Reserve Button Styles */
+.slider-reserve-btn {
+    font-size: 18px !important;
+    padding: 18px 50px !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px !important;
+}
+
+@media (max-width: 767px) {
+    .slider-reserve-btn {
+        font-size: 16px !important;
+        padding: 16px 40px !important;
+    }
+}
+
+/* Fix Revolution Slider mobile background image display */
+@media (max-width: 778px) {
+    .rev_slider_wrapper.fullscreen-container,
+    .rev_slider.fullscreenbanner {
+        min-height: 100vh !important;
+        height: 100vh !important;
+    }
+    
+    .rev_slider .rev-slidebg,
+    .rev_slider li .rev-slidebg {
+        background-size: cover !important;
+        background-position: center center !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    
+    .rev_slider li {
+        background-size: cover !important;
+    }
+    
+    #welcome_wrapper .tp-bgimg {
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+}
+
+/* Footer Copyright Center */
+.footer-copyright-center {
+    width: 100% !important;
+    text-align: center !important;
+    float: none !important;
+    display: flex !important;
+    justify-content: center !important;
+}

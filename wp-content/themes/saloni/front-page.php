@@ -47,8 +47,8 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption   tp-resizeme" id="slide-901-layer-4" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['260','260','260','270']" data-fontsize="['60','60','60','34']"
-                        data-lineheight="['56','56','48','34']" data-width="['700','700','96%','96%']"
+                        data-voffset="['260','260','260','270']" data-fontsize="['60','60','60','42']"
+                        data-lineheight="['56','56','48','44']" data-width="['700','700','96%','96%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on" data-frames='[
@@ -69,8 +69,8 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption  tp-resizeme" id="slide-901-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['380','380','380','350']" data-fontsize="['24','24','24','20']"
-                        data-lineheight="['36','36','36','28']" data-width="['600','600','90%','90%']"
+                        data-voffset="['380','380','380','370']" data-fontsize="['24','24','24','22']"
+                        data-lineheight="['36','36','36','32']" data-width="['600','600','90%','90%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on"
@@ -86,7 +86,7 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-901-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['500','500','500','470']" data-lineheight="['none','none','none','none']"
+                        data-voffset="['500','500','500','500']" data-lineheight="['none','none','none','none']"
                         data-width="['300','300','300','300']" data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on" data-frames='[ 
@@ -95,7 +95,7 @@ $theme_uri = get_template_directory_uri();
                     ]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
                         data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]"
                         style="z-index:13;">
-                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect"
+                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect slider-reserve-btn"
                             style="background-color: #541f5c; border-radius: 30px;">
                             予約する
                         </a>
@@ -126,8 +126,8 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-4" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['260','260','260','270']" data-fontsize="['60','60','60','34']"
-                        data-lineheight="['56','56','48','34']" data-width="['700','700','96%','96%']" data-type="text"
+                        data-voffset="['260','260','260','270']" data-fontsize="['60','60','60','42']"
+                        data-lineheight="['56','56','48','44']" data-width="['700','700','96%','96%']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":1000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index: 13; white-space: normal; font-weight: 500; color:#F5F5F5; border-width:0px;">
@@ -139,8 +139,8 @@ $theme_uri = get_template_directory_uri();
 
                     <div class=" tp-caption tp-resizeme" id="slide-902-layer-5" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['380','380','380','350']" data-fontsize="['24','24','24','20']"
-                        data-lineheight="['36','36','36','28']" data-width="['600','600','90%','90%']"
+                        data-voffset="['380','380','380','370']" data-fontsize="['24','24','24','22']"
+                        data-lineheight="['36','36','36','32']" data-width="['600','600','90%','90%']"
                         data-height="['none','none','none','none']"
                         data-whitespace="['normal','normal','normal','normal']" data-type="text"
                         data-responsive_offset="on"
@@ -156,11 +156,11 @@ $theme_uri = get_template_directory_uri();
 
                     <div class="tp-caption tp-resizeme" id="slide-902-layer-6" data-x="['left','left','left','left']"
                         data-hoffset="['150','150','30','30']" data-y="['top','top','top','top']"
-                        data-voffset="['500','500','500','470']" data-width="['300','300','300','300']" data-type="text"
+                        data-voffset="['500','500','500','500']" data-width="['300','300','300','300']" data-type="text"
                         data-responsive_offset="on"
                         data-frames='[{"from":"y:100px(R);opacity:0;","speed":2000,"to":"o:1;","delay":2000,"ease":"Power4.easeOut"},{"delay":"wait","speed":1000,"to":"y:-50px;opacity:0;","ease":"Power2.easeInOut"}]'
                         style="z-index:13;">
-                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect"
+                        <a href="https://071f0f.b-merit.jp/pJ3MHW/web" class="site-button site-btn-effect slider-reserve-btn"
                             style="background-color: #541f5c; border-radius: 30px;">
                             予約する
                         </a>

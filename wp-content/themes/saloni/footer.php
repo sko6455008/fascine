@@ -65,7 +65,7 @@
         
         <div class="footer-bottom">
             <div class="container">
-                <div class="wt-footer-bot-left d-flex justify-content-center">
+                <div class="wt-footer-bot-left d-flex justify-content-center footer-copyright-center">
                     <span class="copyrights-text"><?php echo esc_html(saloni_get_option('saloni_copyright', 'Copyright © ' . date('Y') . ' Fascina')); ?></span>   
                 </div>
             </div>   
