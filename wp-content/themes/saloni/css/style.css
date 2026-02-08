@@ -9811,6 +9811,7 @@ ol.comment-list li.comment .comment-respond .comment-form p {
 
 .owl-carousel .owl-item img {
 	transform-style: inherit;
+	aspect-ratio: 1/1;
 }
 
 
@@ -15150,10 +15151,10 @@ textarea.form-control2 {
 	height: 100%;
 	width: 100%;
 	z-index: -1;
-	background-image: url(../images/background/brush-left.png);
+	background-image: url(../images/background/nail.png);
 	background-size: auto;
 	background-repeat: no-repeat;
-	background-position: left top;
+	background-position: top left;
 }
 
 @media only screen and (max-width:991px) {

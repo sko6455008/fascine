@@ -53,7 +53,7 @@ if (!$coupon_query->have_posts())
                     $coupon_title = get_the_title();
                     $coupon_price_raw = get_field('coupon_price');
                     $coupon_description = get_field('coupon_description');
-                    
+
                     // 価格のパース (例: "7,980/8,980" または "7,980")
                     $prices = explode('/', $coupon_price_raw);
                     $new_price = trim($prices[0]);
@@ -62,7 +62,7 @@ if (!$coupon_query->have_posts())
                     <div class="col-lg-4 col-md-6 col-sm-12 m-b40">
                         <div class="luxury-coupon-card">
                             <div class="card-inner-dotted">
-                                
+
                                 <div class="card-header-brand">
                                     <div class="brand-id"> <?php echo esc_html($coupon_title); ?></div>
                                     <div class="brand-tagline"><?php echo esc_html($coupon_description); ?></div>
@@ -70,7 +70,8 @@ if (!$coupon_query->have_posts())
 
                                 <div class="card-media">
                                     <?php if ($img_url): ?>
-                                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($coupon_title); ?>">
+                                        <img src="<?php echo esc_url($img_url); ?>"
+                                            alt="<?php echo esc_attr($coupon_title); ?>">
                                     <?php else: ?>
                                         <img src="<?php echo $theme_uri; ?>/images/gallery/default.jpg" alt="">
                                     <?php endif; ?>
@@ -81,13 +82,13 @@ if (!$coupon_query->have_posts())
                                         <div class="price-label">初来店</div>
                                         <div class="price-amount"><?php echo esc_html($new_price); ?></div>
                                     </div>
-                                    
+
                                     <?php if ($repeat_price): ?>
-                                    <div class="price-divider"></div>
-                                    <div class="price-col repeat-customer">
-                                        <div class="price-label">2回目以降</div>
-                                        <div class="price-amount"><?php echo esc_html($repeat_price); ?></div>
-                                    </div>
+                                        <div class="price-divider"></div>
+                                        <div class="price-col repeat-customer">
+                                            <div class="price-label">2回目以降</div>
+                                            <div class="price-amount"><?php echo esc_html($repeat_price); ?></div>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
 
@@ -101,10 +102,10 @@ if (!$coupon_query->have_posts())
             </div>
 
             <div class="wt-post-readmore">
-            <a href="#" class="site-button-link black">
-                <?php esc_html_e('Read More', 'saloni'); ?>
-            </a>
-        </div>
+                <a href="#" class="site-button-link black">
+                    <?php esc_html_e('Read More', 'saloni'); ?>
+                </a>
+            </div>
         </div>
 
     </div>
@@ -135,7 +136,7 @@ if (!$coupon_query->have_posts())
 
     .luxury-coupon-card:hover .card-inner-dotted {
         border-color: #111;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     }
 
     .card-header-brand {
@@ -169,6 +170,7 @@ if (!$coupon_query->have_posts())
         width: 100%;
         height: auto;
         display: block;
+        aspect-ratio: 4/3;
         transition: transform 0.6s ease;
     }
 

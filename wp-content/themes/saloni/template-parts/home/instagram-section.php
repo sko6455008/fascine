@@ -82,55 +82,7 @@ $instagram_url = saloni_get_option('saloni_instagram', 'https://www.instagram.co
                                             </a> 
                                         </div>
                                     </div>
-                                </div> 
-                                
-                                <div class="item">
-                                    <div class="wt-box instagram-box-1">
-                                        <div class="instagram-box-media"><img src="<?php echo $theme_uri; ?>/images/instagram/5.jpg" alt=""></div>
-                                        <div class="instagram-box-info text-center">
-                                            <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
-                                                <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
-                                            </a> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="item">
-                                    <div class="wt-box instagram-box-1">
-                                        <div class="instagram-box-media"><img src="<?php echo $theme_uri; ?>/images/instagram/6.jpg" alt=""></div>
-                                        <div class="instagram-box-info text-center">
-                                            <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
-                                                <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
-                                            </a> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="item">
-                                    <div class="wt-box instagram-box-1">
-                                        <div class="instagram-box-media"><img src="<?php echo $theme_uri; ?>/images/instagram/7.jpg" alt=""></div>
-                                        <div class="instagram-box-info text-center">
-                                            <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
-                                                <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>  
-                                
-                                <div class="item">
-                                    <div class="wt-box instagram-box-1">
-                                        <div class="instagram-box-media"><img src="<?php echo $theme_uri; ?>/images/instagram/8.jpg" alt=""></div>
-                                        <div class="instagram-box-info text-center">
-                                            <a href="<?php echo esc_url($instagram_url); ?>" class="text-white">
-                                                <i class="fa-brands fa-instagram"></i>      
-                                                <span class="title-style-2"><?php esc_html_e('Gallery', 'saloni'); ?></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>                                                     
+                                </div>                             
                                 
                             </div>                                        	
                         </div>

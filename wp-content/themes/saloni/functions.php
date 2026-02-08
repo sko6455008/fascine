@@ -65,6 +65,7 @@ function saloni_scripts()
     // Google Fonts
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css?family=Yeseva+One|Caveat:400,700|Poppins&display=swap', array(), null);
     wp_enqueue_style('google-fonts-lobster', 'https://fonts.googleapis.com/css2?family=Lobster&display=swap', array(), null);
+    wp_enqueue_style('google-fonts-custom', 'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Sans+JP:wght@300;700&display=swap', array(), null);
 
     // Scripts
     wp_enqueue_script('jquery');
@@ -297,7 +298,8 @@ function saloni_excerpt_more($more)
 add_filter('excerpt_more', 'saloni_excerpt_more');
 
 // タイトルプレイスホルダーのカスタマイズ
-function saloni_change_title_placeholder($title, $post) {
+function saloni_change_title_placeholder($title, $post)
+{
     if ($post->post_type === 'gallery') {
         $title = 'ギャラリー名を入力';
     } elseif ($post->post_type === 'coupon') {
@@ -314,7 +316,8 @@ function saloni_change_title_placeholder($title, $post) {
 add_filter('enter_title_here', 'saloni_change_title_placeholder', 10, 2);
 
 // Intuitive Custom Post Order プラグインのサポート
-function saloni_enable_custom_post_order() {
+function saloni_enable_custom_post_order()
+{
     add_post_type_support('gallery', 'page-attributes');
     add_post_type_support('coupon', 'page-attributes');
     add_post_type_support('qa', 'page-attributes');
@@ -322,10 +325,11 @@ function saloni_enable_custom_post_order() {
 add_action('init', 'saloni_enable_custom_post_order');
 
 // カスタム投稿タイプ: ギャラリー
-function saloni_register_gallery_post_type() {
+function saloni_register_gallery_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'ギャラリー',
+        'label' => 'ギャラリー',
         'labels' => array(
             'name' => 'ギャラリー',
             'singular_name' => 'ギャラリー',
@@ -333,7 +337,7 @@ function saloni_register_gallery_post_type() {
             'add_new_item' => '新規ギャラリーを追加',
             'edit_item' => 'ギャラリーを編集',
         ),
-        'supports' => array('title', 'thumbnail','page-attributes'),
+        'supports' => array('title', 'thumbnail', 'page-attributes'),
         'menu_icon' => 'dashicons-format-gallery',
         'has_archive' => true,
         'rewrite' => array('slug' => 'gallery'),
@@ -345,10 +349,11 @@ function saloni_register_gallery_post_type() {
 add_action('init', 'saloni_register_gallery_post_type');
 
 // カスタム投稿タイプ: サブカテゴリー
-function saloni_register_course_post_type() {
+function saloni_register_course_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'サブカテゴリー',
+        'label' => 'サブカテゴリー',
         'labels' => array(
             'name' => 'サブカテゴリー',
             'singular_name' => 'サブカテゴリー',
@@ -368,9 +373,10 @@ function saloni_register_course_post_type() {
 add_action('init', 'saloni_register_course_post_type');
 
 // サブカテゴリーを取得する関数
-function saloni_get_course_choices($main_category) {
+function saloni_get_course_choices($main_category)
+{
     $choices = array();
-   
+
     $courses = get_posts(array(
         'post_type' => 'course',
         'posts_per_page' => -1,
@@ -385,25 +391,27 @@ function saloni_get_course_choices($main_category) {
         'orderby' => 'menu_order',
         'order' => 'ASC'
     ));
-   
+
     foreach ($courses as $course) {
         $course_name = get_field('course_name', $course->ID);
         $course_slug = get_field('course_slug', $course->ID);
         $choices[$course_slug] = $course_name;
     }
-   
+
     return $choices;
 }
 
 // サブカテゴリー名を取得する関数
-function saloni_get_sub_category_name($main_category, $sub_category) {
+function saloni_get_sub_category_name($main_category, $sub_category)
+{
     $choices = saloni_get_course_choices($main_category);
     return isset($choices[$sub_category]) ? $choices[$sub_category] : $sub_category;
 }
 
 // サブカテゴリー表示名を取得
-function saloni_get_sub_category_display_name_by_value($main_category, $sub_category) {
-     if ($sub_category === 'list') {
+function saloni_get_sub_category_display_name_by_value($main_category, $sub_category)
+{
+    if ($sub_category === 'list') {
         return '一覧';
     }
 
@@ -413,7 +421,7 @@ function saloni_get_sub_category_display_name_by_value($main_category, $sub_cate
     if ($temp_filters) {
         $wp_filter['pre_get_posts'] = null;
     }
-    
+
     $all_courses = get_posts(array(
         'post_type' => 'course',
         'posts_per_page' => -1,
@@ -427,16 +435,16 @@ function saloni_get_sub_category_display_name_by_value($main_category, $sub_cate
             )
         )
     ));
-    
+
     // フィルターを復元
     if ($temp_filters) {
         $wp_filter['pre_get_posts'] = $temp_filters;
     }
-    
+
     foreach ($all_courses as $course) {
         $course_name = get_field('course_name', $course->ID);
         $course_slug = get_field('course_slug', $course->ID);
-        
+
         // 配列の場合は最初の要素を取得
         if (is_array($course_name)) {
             $course_name = !empty($course_name) ? $course_name[0] : '';
@@ -444,7 +452,7 @@ function saloni_get_sub_category_display_name_by_value($main_category, $sub_cate
         if (is_array($course_slug)) {
             $course_slug = !empty($course_slug) ? $course_slug[0] : '';
         }
-        
+
         if ($course_slug === $sub_category) {
             return $course_name;
         }
@@ -452,7 +460,8 @@ function saloni_get_sub_category_display_name_by_value($main_category, $sub_cate
 }
 
 // メインカテゴリー名を取得する関数
-function saloni_get_main_category_name($main_category) {
+function saloni_get_main_category_name($main_category)
+{
     $categories = array(
         'hand' => 'Hand Design',
         'foot' => 'Foot Design',
@@ -464,10 +473,11 @@ function saloni_get_main_category_name($main_category) {
 
 
 // カスタム投稿タイプ: クーポン
-function saloni_register_coupon_post_type() {
+function saloni_register_coupon_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'クーポン',
+        'label' => 'クーポン',
         'labels' => array(
             'name' => 'クーポン',
             'singular_name' => 'クーポン',
@@ -486,10 +496,11 @@ add_action('init', 'saloni_register_coupon_post_type');
 
 
 // カスタム投稿タイプ: ネイリスト
-function saloni_register_nailist_post_type() {
+function saloni_register_nailist_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'ネイリスト',
+        'label' => 'ネイリスト',
         'labels' => array(
             'name' => 'ネイリスト',
             'singular_name' => 'ネイリスト',
@@ -508,9 +519,10 @@ function saloni_register_nailist_post_type() {
 add_action('init', 'saloni_register_nailist_post_type');
 
 // ネイリストの選択肢を動的に生成する関数
-function saloni_get_nailist_choices() {
+function saloni_get_nailist_choices()
+{
     $choices = array();
-   
+
     $nailists = get_posts(array(
         'post_type' => 'nailist',
         'posts_per_page' => -1,
@@ -518,20 +530,21 @@ function saloni_get_nailist_choices() {
         'orderby' => 'menu_order',
         'order' => 'ASC'
     ));
-   
+
     foreach ($nailists as $nailist) {
         $nailist_name = get_field('nailist_name', $nailist->ID);
         $roman_slug = get_field('nailist_slug', $nailist->ID);
         $choices[$roman_slug] = $nailist_name;
     }
-   
+
     return $choices;
 }
 
 // クーポン登録用のネイリスト選択肢を取得（「一覧」を除外）
-function saloni_get_nailist_choices_for_registration() {
+function saloni_get_nailist_choices_for_registration()
+{
     $choices = array();
-   
+
     $nailists = get_posts(array(
         'post_type' => 'nailist',
         'posts_per_page' => -1,
@@ -539,25 +552,26 @@ function saloni_get_nailist_choices_for_registration() {
         'orderby' => 'menu_order',
         'order' => 'ASC'
     ));
-   
+
     foreach ($nailists as $nailist) {
         $nailist_name = get_field('nailist_name', $nailist->ID);
         $roman_slug = get_field('nailist_slug', $nailist->ID);
-        
+
         // 「一覧」は除外
         if ($roman_slug !== 'list') {
             $choices[$roman_slug] = $nailist_name;
         }
     }
-   
+
     return $choices;
 }
 
 // カスタム投稿タイプ: バナー
-function saloni_register_banner_post_type() {
+function saloni_register_banner_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'バナー',
+        'label' => 'バナー',
         'labels' => array(
             'name' => 'バナー',
             'singular_name' => 'バナー',
@@ -577,7 +591,8 @@ function saloni_register_banner_post_type() {
 add_action('init', 'saloni_register_banner_post_type');
 
 // バナーの取得用関数
-function saloni_get_banner_posts() {
+function saloni_get_banner_posts()
+{
     $args = array(
         'post_type' => 'banner',
         'posts_per_page' => -1,
@@ -589,10 +604,11 @@ function saloni_get_banner_posts() {
 }
 
 // カスタム投稿タイプ: Q&A
-function saloni_register_qa_post_type() {
+function saloni_register_qa_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'Q&A',
+        'label' => 'Q&A',
         'labels' => array(
             'name' => 'Q&A',
             'singular_name' => 'Q&A',
@@ -613,10 +629,11 @@ function saloni_register_qa_post_type() {
 add_action('init', 'saloni_register_qa_post_type');
 
 // カスタム投稿タイプ: ホーム画像
-function saloni_register_home_image_post_type() {
+function saloni_register_home_image_post_type()
+{
     $args = array(
         'public' => true,
-        'label'  => 'ホーム画像',
+        'label' => 'ホーム画像',
         'labels' => array(
             'name' => 'ホーム画像',
             'singular_name' => 'ホーム画像',
@@ -637,29 +654,31 @@ function saloni_register_home_image_post_type() {
 add_action('init', 'saloni_register_home_image_post_type');
 
 // ホーム画像の登録を1つに制限
-function saloni_limit_home_image_posts() {
+function saloni_limit_home_image_posts()
+{
     global $typenow, $pagenow;
 
-    if($typenow === 'home' && $pagenow === 'post-new.php') {
+    if ($typenow === 'home' && $pagenow === 'post-new.php') {
         $existing_posts = get_posts(array(
             'post_type' => 'home',
             'posts_per_page' => 1,
             'post_status' => array('publish', 'draft', 'pending'),
         ));
-       
-        if(!empty($existing_posts)) {
-           wp_die(
+
+        if (!empty($existing_posts)) {
+            wp_die(
                 'ホーム画像は既に登録されています。新しい画像を登録するには、既存のホーム画像を編集または削除してください。',
                 'ホーム画像の制限',
                 array('back_link' => true)
-           );
+            );
         }
     }
 }
 add_action('admin_init', 'saloni_limit_home_image_posts');
 
 // ホーム画像を取得する関数
-function saloni_get_home_image() {
+function saloni_get_home_image()
+{
     $home_images = get_posts(array(
         'post_type' => 'home',
         'post_status' => 'publish',
@@ -667,7 +686,7 @@ function saloni_get_home_image() {
         'orderby' => 'date',
         'order' => 'DESC',
     ));
-   
+
     if (!empty($home_images)) {
         return $home_images[0];
     }
@@ -675,13 +694,14 @@ function saloni_get_home_image() {
 }
 
 // カスタム投稿タイプ: 工程表
-function saloni_register_process_chart_post_type() {
+function saloni_register_process_chart_post_type()
+{
     $args = array(
         'public' => false, // 公開表示しない
         'publicly_queryable' => false, // 公開クエリ不可
         'show_ui' => true, // 管理画面に表示
         'show_in_menu' => true, // メニューに表示
-        'label'  => '工程表',
+        'label' => '工程表',
         'labels' => array(
             'name' => '工程表',
             'singular_name' => '工程表',
@@ -705,7 +725,8 @@ function saloni_register_process_chart_post_type() {
 add_action('init', 'saloni_register_process_chart_post_type');
 
 // ACFフィールドの登録
-function saloni_register_acf_fields() {
+function saloni_register_acf_fields()
+{
     if (function_exists('acf_add_local_field_group')) {
         // ギャラリー用フィールド
         acf_add_local_field_group(array(
@@ -988,7 +1009,7 @@ function saloni_register_acf_fields() {
             'active' => true,
             'description' => '',
         ));
-       
+
         // クーポン用フィールド
         acf_add_local_field_group(array(
             'key' => 'group_coupon',
@@ -1019,7 +1040,7 @@ function saloni_register_acf_fields() {
                     'name' => 'coupon_description',
                     'type' => 'textarea',
                     'required' => 1,
-                     'instructions' => '例: お色変更無料',
+                    'instructions' => '例: お色変更無料',
                 ),
                 array(
                     'key' => 'field_coupon_display_top',
@@ -1115,11 +1136,12 @@ function saloni_register_acf_fields() {
 }
 
 // ACFフィールドの選択肢を動的に更新
-function saloni_load_gallery_sub_category_choices($field) {
+function saloni_load_gallery_sub_category_choices($field)
+{
     if ($field['name'] === 'gallery_sub_category') {
         // 現在選択されているメインカテゴリーを取得
         $main_category = '';
-       
+
         // 編集画面の場合
         if (isset($_GET['post']) && $_GET['post']) {
             $main_category = get_field('gallery_main_category', $_GET['post']);
@@ -1143,7 +1165,8 @@ function saloni_load_gallery_sub_category_choices($field) {
 add_filter('acf/load_field/name=gallery_sub_category', 'saloni_load_gallery_sub_category_choices');
 
 // ACFフィールドの選択肢を動的に更新
-function saloni_load_nailist_field_choices($field) {
+function saloni_load_nailist_field_choices($field)
+{
     if ($field['name'] === 'coupon_nailist') {
         $field['choices'] = saloni_get_nailist_choices();
     }
@@ -1152,7 +1175,8 @@ function saloni_load_nailist_field_choices($field) {
 add_filter('acf/load_field/name=coupon_nailist', 'saloni_load_nailist_field_choices');
 
 // nailist_slug バリデーション（半角英字小文字のみ）
-function saloni_validate_nailist_slug($valid, $value, $field, $input) {
+function saloni_validate_nailist_slug($valid, $value, $field, $input)
+{
     if ($valid !== true) {
         return $valid;
     }
@@ -1166,17 +1190,18 @@ function saloni_validate_nailist_slug($valid, $value, $field, $input) {
 }
 add_filter('acf/validate_value/key=field_nailist_slug', 'saloni_validate_nailist_slug', 10, 4);
 
-function saloni_get_nailist_display_name_by_value($value) {
+function saloni_get_nailist_display_name_by_value($value)
+{
     // 配列の場合は最初の要素を使用（チェックボックスで単一選択の場合）
     if (is_array($value)) {
         $value = !empty($value) ? $value[0] : '';
     }
-    
+
     // 空の値の場合は空文字列を返す（管理画面で空白表示）
     if (empty($value)) {
         return '';
     }
-    
+
     // choices（ローマ字スラッグ or post_name キー）に存在すればその表示名を返す
     $choices = saloni_get_nailist_choices();
     if (isset($choices[$value])) {
@@ -1186,17 +1211,18 @@ function saloni_get_nailist_display_name_by_value($value) {
 }
 
 // ネイリスト保存時にタイトルを同期
-function saloni_auto_generate_nailist_slug($post_id) {
+function saloni_auto_generate_nailist_slug($post_id)
+{
     if (get_post_type($post_id) !== 'nailist') {
         return;
     }
-   
+
     // 無限ループを防ぐ
     remove_action('save_post', 'saloni_auto_generate_nailist_slug');
-   
+
     $nailist_name = get_field('nailist_name', $post_id);
     $nailist_slug = get_field('nailist_slug', $post_id);
-   
+
     if (!empty($nailist_name)) {
         wp_update_post(array(
             'ID' => $post_id,
@@ -1204,18 +1230,20 @@ function saloni_auto_generate_nailist_slug($post_id) {
             'post_name' => $nailist_slug,
         ));
     }
-   
+
     // アクションを再度追加
     add_action('save_post', 'saloni_auto_generate_nailist_slug');
 }
 add_action('save_post', 'saloni_auto_generate_nailist_slug');
 
 // ネイリスト削除時、割り当て済みクーポンからネイリストの値を削除
-function saloni_remove_nailist_from_coupons_on_delete($post_id) {
-    if (get_post_type($post_id) !== 'nailist') return;
+function saloni_remove_nailist_from_coupons_on_delete($post_id)
+{
+    if (get_post_type($post_id) !== 'nailist')
+        return;
     $post = get_post($post_id);
     $slug = $post ? $post->post_name : '';
-    
+
     $query = new WP_Query(array(
         'post_type' => 'coupon',
         'posts_per_page' => -1,
@@ -1224,7 +1252,7 @@ function saloni_remove_nailist_from_coupons_on_delete($post_id) {
             'relation' => 'OR',
             array(
                 'key' => 'coupon_nailist',
-                'value' => (string)$post_id,
+                'value' => (string) $post_id,
                 'compare' => 'LIKE'
             ),
             array(
@@ -1235,20 +1263,20 @@ function saloni_remove_nailist_from_coupons_on_delete($post_id) {
         ),
         'fields' => 'ids'
     ));
-    
+
     if ($query->have_posts()) {
         foreach ($query->posts as $coupon_id) {
             $current_nailists = get_field('coupon_nailist', $coupon_id);
-            
+
             if (is_array($current_nailists)) {
                 // 配列から該当するネイリストを削除
                 $updated_nailists = array();
                 foreach ($current_nailists as $nailist_value) {
-                    if ($nailist_value !== (string)$post_id && $nailist_value !== $slug) {
+                    if ($nailist_value !== (string) $post_id && $nailist_value !== $slug) {
                         $updated_nailists[] = $nailist_value;
                     }
                 }
-                
+
                 // 更新されたネイリストリストを保存
                 if (empty($updated_nailists)) {
                     // ネイリストが空になった場合は空の配列を保存
@@ -1258,7 +1286,7 @@ function saloni_remove_nailist_from_coupons_on_delete($post_id) {
                 }
             } else {
                 // 単一値の場合
-                if ($current_nailists === (string)$post_id || $current_nailists === $slug) {
+                if ($current_nailists === (string) $post_id || $current_nailists === $slug) {
                     update_field('coupon_nailist', array(), $coupon_id);
                 }
             }
@@ -1269,14 +1297,17 @@ add_action('before_delete_post', 'saloni_remove_nailist_from_coupons_on_delete')
 add_action('trashed_post', 'saloni_remove_nailist_from_coupons_on_delete');
 
 // サブカテゴリー削除時、紐づいているギャラリーのサブカテゴリーフィールドを空にして非表示にする
-function saloni_clear_galleries_on_subcategory_delete($post_id) {
-    if (get_post_type($post_id) !== 'course') return;
-    
+function saloni_clear_galleries_on_subcategory_delete($post_id)
+{
+    if (get_post_type($post_id) !== 'course')
+        return;
+
     $main_category = get_field('course_main_category', $post_id);
     $course_slug = get_field('course_slug', $post_id);
-    
-    if (!$main_category || !$course_slug) return;
-    
+
+    if (!$main_category || !$course_slug)
+        return;
+
     // 該当するサブカテゴリーを使用しているギャラリーを検索
     $galleries = get_posts(array(
         'post_type' => 'gallery',
@@ -1296,7 +1327,7 @@ function saloni_clear_galleries_on_subcategory_delete($post_id) {
             )
         )
     ));
-    
+
     // ギャラリーのサブカテゴリーフィールドを空にする（表示設定は変更しない）
     foreach ($galleries as $gallery) {
         // サブカテゴリーフィールドを空にする
@@ -1307,35 +1338,42 @@ add_action('before_delete_post', 'saloni_clear_galleries_on_subcategory_delete')
 add_action('trashed_post', 'saloni_clear_galleries_on_subcategory_delete');
 
 // 新規投稿の作成日時を保存
-function saloni_save_creation_date($post_id, $post, $update) {
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    
+function saloni_save_creation_date($post_id, $post, $update)
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+
     // 更新の場合はスキップ
-    if ($update) return;
-    
+    if ($update)
+        return;
+
     // ギャラリーまたはクーポンの場合のみ処理
     $post_type = get_post_type($post_id);
-    if (!in_array($post_type, ['gallery', 'coupon'])) return;
-    
+    if (!in_array($post_type, ['gallery', 'coupon']))
+        return;
+
     // 現在の日時を保存（新規投稿時のみ）
     update_post_meta($post_id, '_creation_date', current_time('mysql'));
 }
 add_action('wp_insert_post', 'saloni_save_creation_date', 10, 3);
 
 // Newタグを表示するかどうかを判定する関数
-function saloni_should_show_new_tag($post_id) {
+function saloni_should_show_new_tag($post_id)
+{
     $creation_date = get_post_meta($post_id, '_creation_date', true);
-    if (empty($creation_date)) return false;
-    
+    if (empty($creation_date))
+        return false;
+
     $creation_timestamp = strtotime($creation_date);
     $current_timestamp = current_time('timestamp');
     $diff_in_days = ($current_timestamp - $creation_timestamp) / (60 * 60 * 24);
-    
+
     return $diff_in_days <= 30; // 30日以内ならtrue
 }
 
 // Newタグのクラスを取得する関数
-function saloni_get_new_tag_html() {
+function saloni_get_new_tag_html()
+{
     return '<div class="new-tag-wrapper"><span class="new-tag">New</span></div>';
 }
 
@@ -1351,7 +1389,8 @@ function saloni_blog_query_settings($query)
 add_action('pre_get_posts', 'saloni_blog_query_settings');
 
 // 既存の投稿に作成日時を設定する関数
-function saloni_set_creation_date_for_existing_posts() {
+function saloni_set_creation_date_for_existing_posts()
+{
     $args = array(
         'post_type' => array('gallery', 'coupon'),
         'posts_per_page' => -1,
@@ -1363,9 +1402,9 @@ function saloni_set_creation_date_for_existing_posts() {
             )
         )
     );
-    
+
     $query = new WP_Query($args);
-    
+
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
@@ -1380,7 +1419,8 @@ function saloni_set_creation_date_for_existing_posts() {
 add_action('after_switch_theme', 'saloni_set_creation_date_for_existing_posts');
 
 // デフォルトのクエリでカスタムオーダーを使用
-function saloni_set_default_gallery_order($query) {
+function saloni_set_default_gallery_order($query)
+{
     // 管理画面ではない場合のみ適用
     if (!is_admin() && $query->is_main_query()) {
         // ギャラリーのアーカイブページまたはカスタムクエリの場合
@@ -1403,10 +1443,11 @@ function saloni_set_default_gallery_order($query) {
 add_action('pre_get_posts', 'saloni_set_default_gallery_order');
 
 // 明示的な並び順指定がないときでも管理画面の投稿一覧でカスタムオーダーを適用
-function saloni_admin_gallery_order($query) {
+function saloni_admin_gallery_order($query)
+{
     if (is_admin() && $query->is_main_query()) {
         $post_type = $query->get('post_type');
-       
+
         if (in_array($post_type, array('gallery', 'coupon', 'banner', 'nailist'))) {
             if (!$query->get('orderby')) {
                 $query->set('orderby', 'menu_order');
@@ -1418,87 +1459,89 @@ function saloni_admin_gallery_order($query) {
 add_action('pre_get_posts', 'saloni_admin_gallery_order');
 
 // ギャラリーのメインカテゴリー,サブカテゴリー連動機能用JavaScript
-function saloni_gallery_category_script() {
-    if (get_post_type() !== 'gallery') return;
+function saloni_gallery_category_script()
+{
+    if (get_post_type() !== 'gallery')
+        return;
     ?>
-    <script>
-    jQuery(document).ready(function($) {
-        function updateSubCategories() {
-            const mainSelected = $('[name="acf[field_gallery_main_category]"]:checked').val();
-            const $subCategories = $('[name="acf[field_gallery_sub_category]"]');
-           
-            if (mainSelected) {
-                const currentlySelected = $subCategories.filter(':checked').val();
-               
-                // AJAXでサブカテゴリーを取得
-                $.ajax({
-                    url: ajaxurl,
-                    type: 'POST',
-                    data: {
-                        action: 'get_course_choices',
-                        main_type: mainSelected,
-                        nonce: '<?php echo wp_create_nonce("get_course_choices"); ?>'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // 既存の選択肢をクリア
-                            $subCategories.prop('checked', false);
-                           
-                            // サブカテゴリーの選択肢を完全に再構築
-                            const $subCategoryContainer = $subCategories.first().closest('.acf-field-radio');
-                            const $ul = $subCategoryContainer.find('ul.acf-radio-list');
-                            
-                            // 既存の選択肢をクリア
-                            $ul.empty();
-                            
-                            // 新しい選択肢を追加
-                            $.each(response.data, function(value, label) {
-                                const $li = $('<li>');
-                                const $label = $('<label>');
-                                const $input = $('<input>', {
-                                    type: 'radio',
-                                    name: 'acf[field_gallery_sub_category]',
-                                    value: value
-                                });
-                                
-                                $label.append($input);
-                                $label.append('<span>' + label + '</span>');
-                                $li.append($label);
-                                $ul.append($li);
-                            });
-                            
-                            // 更新されたサブカテゴリーの要素を再取得
-                            const $newSubCategories = $('[name="acf[field_gallery_sub_category]"]');
-                           
-                            // 以前選択されていたサブカテゴリーが利用可能な場合は選択を維持
-                            if (currentlySelected && $newSubCategories.filter('[value="' + currentlySelected + '"]').length > 0) {
-                                $newSubCategories.filter('[value="' + currentlySelected + '"]').prop('checked', true);
-                            } else {
-                                // 最初のサブカテゴリーを選択
-                                const firstVisible = $newSubCategories.first();
-                                if (firstVisible.length) {
-                                    firstVisible.prop('checked', true);
+        <script>
+            jQuery(document).ready(function ($) {
+                function updateSubCategories() {
+                    const mainSelected = $('[name="acf[field_gallery_main_category]"]:checked').val();
+                    const $subCategories = $('[name="acf[field_gallery_sub_category]"]');
+
+                    if (mainSelected) {
+                        const currentlySelected = $subCategories.filter(':checked').val();
+
+                        // AJAXでサブカテゴリーを取得
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: {
+                                action: 'get_course_choices',
+                                main_type: mainSelected,
+                                nonce: '<?php echo wp_create_nonce("get_course_choices"); ?>'
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    // 既存の選択肢をクリア
+                                    $subCategories.prop('checked', false);
+
+                                    // サブカテゴリーの選択肢を完全に再構築
+                                    const $subCategoryContainer = $subCategories.first().closest('.acf-field-radio');
+                                    const $ul = $subCategoryContainer.find('ul.acf-radio-list');
+
+                                    // 既存の選択肢をクリア
+                                    $ul.empty();
+
+                                    // 新しい選択肢を追加
+                                    $.each(response.data, function (value, label) {
+                                        const $li = $('<li>');
+                                        const $label = $('<label>');
+                                        const $input = $('<input>', {
+                                            type: 'radio',
+                                            name: 'acf[field_gallery_sub_category]',
+                                            value: value
+                                        });
+
+                                        $label.append($input);
+                                        $label.append('<span>' + label + '</span>');
+                                        $li.append($label);
+                                        $ul.append($li);
+                                    });
+
+                                    // 更新されたサブカテゴリーの要素を再取得
+                                    const $newSubCategories = $('[name="acf[field_gallery_sub_category]"]');
+
+                                    // 以前選択されていたサブカテゴリーが利用可能な場合は選択を維持
+                                    if (currentlySelected && $newSubCategories.filter('[value="' + currentlySelected + '"]').length > 0) {
+                                        $newSubCategories.filter('[value="' + currentlySelected + '"]').prop('checked', true);
+                                    } else {
+                                        // 最初のサブカテゴリーを選択
+                                        const firstVisible = $newSubCategories.first();
+                                        if (firstVisible.length) {
+                                            firstVisible.prop('checked', true);
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        });
+                    } else {
+                        // メインカテゴリーが選択されていない場合、サブカテゴリーをクリア
+                        const $subCategoryContainer = $subCategories.first().closest('.acf-field-radio');
+                        const $ul = $subCategoryContainer.find('ul.acf-radio-list');
+                        $ul.empty();
                     }
-                });
-            } else {
-                // メインカテゴリーが選択されていない場合、サブカテゴリーをクリア
-                const $subCategoryContainer = $subCategories.first().closest('.acf-field-radio');
-                const $ul = $subCategoryContainer.find('ul.acf-radio-list');
-                $ul.empty();
-            }
-        }
+                }
 
-        // メインカテゴリーの変更時にサブカテゴリーを更新
-        $('[name="acf[field_gallery_main_category]"]').on('change', updateSubCategories);
+                // メインカテゴリーの変更時にサブカテゴリーを更新
+                $('[name="acf[field_gallery_main_category]"]').on('change', updateSubCategories);
 
-        // 初期表示時にも実行
-        updateSubCategories();
-    });
-    </script>
-    <?php
+                // 初期表示時にも実行
+                updateSubCategories();
+            });
+        </script>
+        <?php
 }
 add_action('admin_footer-post.php', 'saloni_gallery_category_script');
 add_action('admin_footer-post-new.php', 'saloni_gallery_category_script');
@@ -1507,7 +1550,8 @@ add_action('admin_footer-post-new.php', 'saloni_gallery_category_script');
 # 管理画面一覧のカスタマイズ
 # -------------------------------
 // ギャラリー一覧のカラムをカスタマイズ
-function saloni_add_gallery_columns($columns) {
+function saloni_add_gallery_columns($columns)
+{
     $new_columns = array();
     foreach ($columns as $key => $value) {
         if ($key === 'title') {
@@ -1533,7 +1577,8 @@ function saloni_add_gallery_columns($columns) {
 add_filter('manage_gallery_posts_columns', 'saloni_add_gallery_columns');
 
 // ギャラリー一覧のカラム内容を表示
-function saloni_gallery_column_content($column_name, $post_id) {
+function saloni_gallery_column_content($column_name, $post_id)
+{
     if ($column_name === 'thumbnail') {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
@@ -1577,7 +1622,8 @@ function saloni_gallery_column_content($column_name, $post_id) {
 add_action('manage_gallery_posts_custom_column', 'saloni_gallery_column_content', 10, 2);
 
 // サブカテゴリー一覧のカラムをカスタマイズ
-function saloni_add_course_columns($columns) {
+function saloni_add_course_columns($columns)
+{
     unset($columns['title']);
     $new_columns = array();
     $new_columns['menu_order'] = '表示順';
@@ -1594,7 +1640,8 @@ function saloni_add_course_columns($columns) {
 add_filter('manage_course_posts_columns', 'saloni_add_course_columns');
 
 // サブカテゴリー一覧のカラム内容を表示
-function saloni_course_column_content($column_name, $post_id) {
+function saloni_course_column_content($column_name, $post_id)
+{
     if ($column_name === 'menu_order') {
         $post = get_post($post_id);
         echo $post->menu_order;
@@ -1616,7 +1663,8 @@ function saloni_course_column_content($column_name, $post_id) {
 add_action('manage_course_posts_custom_column', 'saloni_course_column_content', 10, 2);
 
 // クーポン一覧のカラムをカスタマイズ
-function saloni_add_coupon_columns($columns) {
+function saloni_add_coupon_columns($columns)
+{
     $new_columns = array();
     foreach ($columns as $key => $value) {
         if ($key === 'title') {
@@ -1641,7 +1689,8 @@ function saloni_add_coupon_columns($columns) {
 add_filter('manage_coupon_posts_columns', 'saloni_add_coupon_columns');
 
 // クーポン一覧のカラム内容を表示
-function saloni_coupon_column_content($column_name, $post_id) {
+function saloni_coupon_column_content($column_name, $post_id)
+{
     if ($column_name === 'thumbnail') {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
@@ -1672,7 +1721,8 @@ function saloni_coupon_column_content($column_name, $post_id) {
 add_action('manage_coupon_posts_custom_column', 'saloni_coupon_column_content', 10, 2);
 
 // ネイリスト一覧のカラムをカスタマイズ
-function saloni_add_nailist_columns($columns) {
+function saloni_add_nailist_columns($columns)
+{
     unset($columns['title']);
     $new_columns = array();
     $new_columns['menu_order'] = '表示順';
@@ -1688,7 +1738,8 @@ function saloni_add_nailist_columns($columns) {
 add_filter('manage_nailist_posts_columns', 'saloni_add_nailist_columns');
 
 // ネイリスト一覧のカラム内容を表示
-function saloni_nailist_column_content($column_name, $post_id) {
+function saloni_nailist_column_content($column_name, $post_id)
+{
     if ($column_name === 'menu_order') {
         $post = get_post($post_id);
         echo $post->menu_order;
@@ -1702,7 +1753,8 @@ add_action('manage_nailist_posts_custom_column', 'saloni_nailist_column_content'
 
 
 // バナー一覧のカラムをカスタマイズ
-function saloni_add_banner_columns($columns) {
+function saloni_add_banner_columns($columns)
+{
     $new_columns = array();
     $new_columns['thumbnail'] = '画像';
     $new_columns['title'] = 'バナー名';
@@ -1718,7 +1770,8 @@ function saloni_add_banner_columns($columns) {
 add_filter('manage_banner_posts_columns', 'saloni_add_banner_columns');
 
 // バナー一覧のカラム内容を表示
-function saloni_banner_column_content($column_name, $post_id) {
+function saloni_banner_column_content($column_name, $post_id)
+{
     if ($column_name === 'thumbnail') {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
@@ -1733,7 +1786,8 @@ function saloni_banner_column_content($column_name, $post_id) {
 add_action('manage_banner_posts_custom_column', 'saloni_banner_column_content', 10, 2);
 
 // Q&A一覧のカラムをカスタマイズ
-function saloni_add_qa_columns($columns) {
+function saloni_add_qa_columns($columns)
+{
     unset($columns['title']); // タイトルカラムを非表示
     $new_columns = array();
     $new_columns['type'] = '種別';
@@ -1749,7 +1803,8 @@ function saloni_add_qa_columns($columns) {
 add_filter('manage_qa_posts_columns', 'saloni_add_qa_columns');
 
 // Q&A一覧のカラム内容を表示
-function saloni_qa_column_content($column_name, $post_id) {
+function saloni_qa_column_content($column_name, $post_id)
+{
     if ($column_name === 'menu_order') {
         $post = get_post($post_id);
         echo $post->menu_order;
@@ -1770,7 +1825,8 @@ function saloni_qa_column_content($column_name, $post_id) {
 add_action('manage_qa_posts_custom_column', 'saloni_qa_column_content', 10, 2);
 
 // ホーム画像のカラムをカスタマイズ
-function saloni_add_home_columns($columns) {
+function saloni_add_home_columns($columns)
+{
     $new_columns = array();
     $new_columns['thumbnail'] = 'ホーム画像';
     $new_columns['title'] = '画像名';
@@ -1784,7 +1840,8 @@ function saloni_add_home_columns($columns) {
 add_filter('manage_home_posts_columns', 'saloni_add_home_columns');
 
 // ホーム画像のカラム内容を表示
-function saloni_home_column_content($column_name, $post_id) {
+function saloni_home_column_content($column_name, $post_id)
+{
     if ($column_name === 'thumbnail') {
         if (has_post_thumbnail($post_id)) {
             echo get_the_post_thumbnail($post_id, array(60, 60));
@@ -1794,7 +1851,8 @@ function saloni_home_column_content($column_name, $post_id) {
 add_action('manage_home_posts_custom_column', 'saloni_home_column_content', 10, 2);
 
 // 工程表一覧のカラムをカスタマイズ
-function saloni_add_process_chart_columns($columns) {
+function saloni_add_process_chart_columns($columns)
+{
     $new_columns = array();
     $new_columns['title'] = 'タイトル';
     $new_columns['process_image'] = '工程表の画像';
@@ -1809,7 +1867,8 @@ function saloni_add_process_chart_columns($columns) {
 add_filter('manage_process_chart_posts_columns', 'saloni_add_process_chart_columns');
 
 // 工程表一覧のカラム内容を表示
-function saloni_process_chart_column_content($column_name, $post_id) {
+function saloni_process_chart_column_content($column_name, $post_id)
+{
     if ($column_name === 'process_image') {
         $process_image = get_field('process_image', $post_id);
         if ($process_image) {
@@ -1820,7 +1879,7 @@ function saloni_process_chart_column_content($column_name, $post_id) {
             } elseif (is_array($process_image) && isset($process_image['id'])) {
                 $image_id = $process_image['id'];
             }
-            
+
             // 既存のthumbnailサイズを使用（新しい画像サイズを生成しない）
             if ($image_id) {
                 $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
@@ -1850,7 +1909,7 @@ function saloni_process_chart_column_content($column_name, $post_id) {
             } elseif (is_array($design_image) && isset($design_image['id'])) {
                 $image_id = $design_image['id'];
             }
-            
+
             // 既存のthumbnailサイズを使用（新しい画像サイズを生成しない）
             if ($image_id) {
                 $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
@@ -1875,49 +1934,56 @@ function saloni_process_chart_column_content($column_name, $post_id) {
 add_action('manage_process_chart_posts_custom_column', 'saloni_process_chart_column_content', 10, 2);
 
 // Q&Aの表示順列をソート可能にする
-function saloni_sortable_qa_columns($columns) {
+function saloni_sortable_qa_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-qa_sortable_columns', 'saloni_sortable_qa_columns');
 
 // クーポンの表示順列をソート可能にする
-function saloni_sortable_columns($columns) {
+function saloni_sortable_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-coupon_sortable_columns', 'saloni_sortable_columns');
 
 // ギャラリーの表示順列をソート可能にする
-function saloni_sortable_gallery_columns($columns) {
+function saloni_sortable_gallery_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-gallery_sortable_columns', 'saloni_sortable_gallery_columns');
 
 // サブカテゴリーの表示順列をソート可能にする
-function saloni_sortable_course_columns($columns) {
+function saloni_sortable_course_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-course_sortable_columns', 'saloni_sortable_course_columns');
 
 // バナーの表示順列をソート可能にする
-function saloni_sortable_banner_columns($columns) {
+function saloni_sortable_banner_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-banner_sortable_columns', 'saloni_sortable_banner_columns');
 
 // ネイリストの表示順列をソート可能にする
-function saloni_sortable_nailist_columns($columns) {
+function saloni_sortable_nailist_columns($columns)
+{
     $columns['menu_order'] = 'menu_order';
     return $columns;
 }
 add_filter('manage_edit-nailist_sortable_columns', 'saloni_sortable_nailist_columns');
 
 // 管理画面の一覧のスタイル調整
-function saloni_admin_columns_style() {
+function saloni_admin_columns_style()
+{
     echo '<style>
         .column-thumbnail { width: 80px; }
         .column-thumbnail img {
@@ -1960,27 +2026,28 @@ function saloni_admin_columns_style() {
 add_action('admin_head', 'saloni_admin_columns_style');
 
 // 管理画面カスタムオーダー用のスタイル
-function saloni_custom_order_admin_script() {
+function saloni_custom_order_admin_script()
+{
     global $post_type;
 
     // ギャラリー、クーポン、サブカテゴリー、バナー、ネイリストの一覧ページでのみ読み込み
     if (in_array($post_type, array('gallery', 'coupon', 'course', 'banner', 'nailist'))) {
         ?>
-        <script>
-        jQuery(document).ready(function($) {
-            // ドラッグ&ドロップの視覚的フィードバックを改善
-            $('.wp-list-table tbody').addClass('ui-sortable');
-           
-            // ソート後の処理を改善
-            $('.wp-list-table tbody').on('sortstop', function(event, ui) {
-                // ソート完了後に行の背景色をリセット
-                setTimeout(function() {
-                    $('.wp-list-table tbody tr').css('background-color', '');
-                }, 100);
-            });
-        });
-        </script>
-        <?php
+            <script>
+                jQuery(document).ready(function ($) {
+                    // ドラッグ&ドロップの視覚的フィードバックを改善
+                    $('.wp-list-table tbody').addClass('ui-sortable');
+
+                    // ソート後の処理を改善
+                    $('.wp-list-table tbody').on('sortstop', function (event, ui) {
+                        // ソート完了後に行の背景色をリセット
+                        setTimeout(function () {
+                            $('.wp-list-table tbody tr').css('background-color', '');
+                        }, 100);
+                    });
+                });
+            </script>
+            <?php
     }
 }
 add_action('admin_footer', 'saloni_custom_order_admin_script');
@@ -1989,7 +2056,8 @@ add_action('admin_footer', 'saloni_custom_order_admin_script');
 # バリデーション
 # -------------------------------
 // ACFプラグインが有効かチェック
-function saloni_check_acf() {
+function saloni_check_acf()
+{
     if (!function_exists('acf_add_local_field_group')) {
         add_action('admin_notices', 'saloni_acf_notice');
     } else {
@@ -2000,16 +2068,18 @@ function saloni_check_acf() {
 add_action('admin_init', 'saloni_check_acf');
 
 // ACF通知
-function saloni_acf_notice() {
+function saloni_acf_notice()
+{
     ?>
-    <div class="notice notice-warning is-dismissible">
-        <p><?php _e('saloniテーマは Advanced Custom Fields プラグインが必要です。インストールして有効化してください。', 'saloni'); ?></p>
-    </div>
-    <?php
+        <div class="notice notice-warning is-dismissible">
+            <p><?php _e('saloniテーマは Advanced Custom Fields プラグインが必要です。インストールして有効化してください。', 'saloni'); ?></p>
+        </div>
+        <?php
 }
 
 // 動的ネイリストナビゲーションを生成する関数
-function saloni_get_nailist_navigation($current_nailist = '') {
+function saloni_get_nailist_navigation($current_nailist = '')
+{
     $nailists = get_posts(array(
         'post_type' => 'nailist',
         'posts_per_page' => -1,
@@ -2017,9 +2087,9 @@ function saloni_get_nailist_navigation($current_nailist = '') {
         'orderby' => 'menu_order',
         'order' => 'ASC'
     ));
-   
+
     $navigation = array();
-   
+
     // 登録されたネイリストを追加（ローマ字スラッグ優先）
     foreach ($nailists as $nailist) {
         $nailist_name = get_field('nailist_name', $nailist->ID);
@@ -2033,12 +2103,13 @@ function saloni_get_nailist_navigation($current_nailist = '') {
             'active' => ($current_nailist === $slug)
         );
     }
-   
+
     return $navigation;
 }
 
 // リライトルール
-function saloni_add_gallery_rewrite_rules() {
+function saloni_add_gallery_rewrite_rules()
+{
     // HAND定額コース
     add_rewrite_rule(
         'gallery_hand_design/([^/]+)/page/([0-9]+)/?$',
@@ -2102,7 +2173,8 @@ function saloni_add_gallery_rewrite_rules() {
 add_action('init', 'saloni_add_gallery_rewrite_rules');
 
 // クエリ変数の追加
-function saloni_add_gallery_query_vars($vars) {
+function saloni_add_gallery_query_vars($vars)
+{
     $vars[] = 'gallery_main_category';
     $vars[] = 'gallery_sub_category';
     $vars[] = 'nailist';
@@ -2112,14 +2184,16 @@ function saloni_add_gallery_query_vars($vars) {
 add_filter('query_vars', 'saloni_add_gallery_query_vars');
 
 // リライトルールの更新
-function saloni_flush_gallery_rewrite_rules() {
+function saloni_flush_gallery_rewrite_rules()
+{
     saloni_add_gallery_rewrite_rules();
     flush_rewrite_rules();
 }
 register_activation_hook(__FILE__, 'saloni_flush_gallery_rewrite_rules');
 
 // 管理画面のギャラリー一覧にフィルターを追加
-function saloni_add_gallery_filters() {
+function saloni_add_gallery_filters()
+{
     global $typenow;
     if ($typenow === 'gallery') {
         // メインカテゴリーの選択肢
@@ -2150,7 +2224,7 @@ function saloni_add_gallery_filters() {
         // サブカテゴリーのドロップダウン
         echo '<select name="sub_category" id="sub-category-filter">';
         echo '<option value="">サブカテゴリーを選択</option>';
-        if($current_main){
+        if ($current_main) {
             $sub_categories = saloni_get_course_choices($current_main);
             foreach ($sub_categories as $value => $label) {
                 if ($current_main === 'guest' && $value === 'list') {
@@ -2180,9 +2254,10 @@ function saloni_add_gallery_filters() {
 add_action('restrict_manage_posts', 'saloni_add_gallery_filters');
 
 // ギャラリーのフィルター条件を適用
-function saloni_apply_gallery_filters($query) {
+function saloni_apply_gallery_filters($query)
+{
     global $pagenow, $typenow;
-   
+
     if ($pagenow === 'edit.php' && $typenow === 'gallery') {
         $meta_query = array('relation' => 'AND');
 
@@ -2212,7 +2287,8 @@ function saloni_apply_gallery_filters($query) {
 add_action('pre_get_posts', 'saloni_apply_gallery_filters');
 
 // 管理画面のクーポン一覧にフィルターを追加
-function saloni_add_coupon_filters() {
+function saloni_add_coupon_filters()
+{
     global $typenow;
     if ($typenow === 'coupon') {
         $choices = saloni_get_nailist_choices();
@@ -2221,8 +2297,9 @@ function saloni_add_coupon_filters() {
         echo '<option value="">ネイリストで絞り込み</option>';
         foreach ($choices as $value => $label) {
             // 「一覧」は絞り込みから除外
-            if ($value === 'list') continue;
-            
+            if ($value === 'list')
+                continue;
+
             printf(
                 '<option value="%s" %s>%s</option>',
                 esc_attr($value),
@@ -2236,7 +2313,8 @@ function saloni_add_coupon_filters() {
 add_action('restrict_manage_posts', 'saloni_add_coupon_filters');
 
 // 管理画面のサブカテゴリー一覧にフィルターを追加
-function saloni_add_course_filters() {
+function saloni_add_course_filters()
+{
     global $typenow;
     if ($typenow === 'course') {
         // メインカテゴリーの選択肢
@@ -2267,7 +2345,8 @@ function saloni_add_course_filters() {
 add_action('restrict_manage_posts', 'saloni_add_course_filters');
 
 // クーポンのフィルター条件を適用
-function saloni_apply_coupon_filters($query) {
+function saloni_apply_coupon_filters($query)
+{
     global $pagenow, $typenow;
     if ($pagenow === 'edit.php' && $typenow === 'coupon' && is_admin() && $query->is_main_query()) {
         if (!empty($_GET['coupon_nailist_filter'])) {
@@ -2293,7 +2372,8 @@ function saloni_apply_coupon_filters($query) {
 add_action('pre_get_posts', 'saloni_apply_coupon_filters');
 
 // サブカテゴリーのフィルター条件を適用
-function saloni_apply_course_filters($query) {
+function saloni_apply_course_filters($query)
+{
     global $pagenow, $typenow;
     if ($pagenow === 'edit.php' && $typenow === 'course' && is_admin() && $query->is_main_query()) {
         if (!empty($_GET['course_main_category_filter'])) {
@@ -2313,50 +2393,55 @@ function saloni_apply_course_filters($query) {
 add_action('pre_get_posts', 'saloni_apply_course_filters');
 
 // フィルターのスタイルを追加
-function saloni_admin_filters_style() {
+function saloni_admin_filters_style()
+{
     global $typenow;
     if ($typenow === 'gallery') {
         ?>
-        <style>
-            .tablenav select[name="main_category"],
-            .tablenav select[name="sub_category"] {
-                float: left;
-                margin: 0 8px 0 0;
-                padding: 0 24px 0 8px;
-                min-width: 200px;
-                height: 30px;
-                line-height: 30px;
-                font-size: 13px;
-                color: #2c3338;
-                border-color: #8c8f94;
-                border-radius: 3px;
-                background-color: #fff;
-                background-repeat: no-repeat;
-                background-position: right 5px center;
-                background-size: 16px 16px;
-            }
-            .tablenav select[name="main_category"]:focus,
-            .tablenav select[name="sub_category"]:focus {
-                border-color: #2271b1;
-                box-shadow: 0 0 0 1px #2271b1;
-                outline: 2px solid transparent;
-            }
-            .tablenav select[name="main_category"]:hover,
-            .tablenav select[name="sub_category"]:hover {
-                border-color: #2271b1;
-            }
-            .tablenav select[name="main_category"] option,
-            .tablenav select[name="sub_category"] option {
-                padding: 4px 8px;
-            }
-        </style>
-        <?php
+            <style>
+                .tablenav select[name="main_category"],
+                .tablenav select[name="sub_category"] {
+                    float: left;
+                    margin: 0 8px 0 0;
+                    padding: 0 24px 0 8px;
+                    min-width: 200px;
+                    height: 30px;
+                    line-height: 30px;
+                    font-size: 13px;
+                    color: #2c3338;
+                    border-color: #8c8f94;
+                    border-radius: 3px;
+                    background-color: #fff;
+                    background-repeat: no-repeat;
+                    background-position: right 5px center;
+                    background-size: 16px 16px;
+                }
+
+                .tablenav select[name="main_category"]:focus,
+                .tablenav select[name="sub_category"]:focus {
+                    border-color: #2271b1;
+                    box-shadow: 0 0 0 1px #2271b1;
+                    outline: 2px solid transparent;
+                }
+
+                .tablenav select[name="main_category"]:hover,
+                .tablenav select[name="sub_category"]:hover {
+                    border-color: #2271b1;
+                }
+
+                .tablenav select[name="main_category"] option,
+                .tablenav select[name="sub_category"] option {
+                    padding: 4px 8px;
+                }
+            </style>
+            <?php
     }
 }
 add_action('admin_head', 'saloni_admin_filters_style');
 
 // トップページのギャラリー表示制御
-function saloni_get_top_gallery_posts($limit = 9) {
+function saloni_get_top_gallery_posts($limit = 9)
+{
     $args = array(
         'post_type' => 'gallery',
         'posts_per_page' => $limit,
@@ -2377,16 +2462,17 @@ function saloni_get_top_gallery_posts($limit = 9) {
 }
 
 // ギャラリーページのギャラリー表示制御
-function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', $posts_per_page = 20, $paged = 1) {
+function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', $posts_per_page = 20, $paged = 1)
+{
     $meta_query = array('relation' => 'AND');
-   
+
     // 表示設定の条件
     $meta_query[] = array(
         'key' => 'gallery_display_gallery',
         'value' => '1',
         'compare' => '='
     );
-   
+
     // メインカテゴリーの条件
     if (!empty($main_category)) {
         $meta_query[] = array(
@@ -2395,7 +2481,7 @@ function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', 
             'compare' => '='
         );
     }
-   
+
     // サブカテゴリーの条件（サブカテゴリーがbridalの場合はセットしない)
     if (!empty($sub_category) && $sub_category !== 'bridal') {
         // GuestギャラリーでAllが選択された場合は特別な処理
@@ -2403,10 +2489,10 @@ function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', 
             // GuestギャラリーのAll以外のサブカテゴリーを取得
             $guest_sub_categories = saloni_get_course_choices('guest');
             $guest_slugs = array_keys($guest_sub_categories);
-            
+
             // 空のサブカテゴリーも含める
             $guest_slugs[] = '';
-            
+
             // 一覧以外のサブカテゴリーの条件を作成（一覧も含める）
             $sub_category_conditions = array();
             foreach ($guest_slugs as $slug) {
@@ -2416,14 +2502,14 @@ function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', 
                     'compare' => '='
                 );
             }
-            
+
             if (!empty($sub_category_conditions)) {
                 $or_condition = array('relation' => 'OR');
                 foreach ($sub_category_conditions as $condition) {
                     $or_condition[] = $condition;
                 }
                 $meta_query[] = $or_condition;
-                
+
             }
         } else {
             $meta_query[] = array(
@@ -2442,7 +2528,7 @@ function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', 
             'compare' => '='
         );
     }
-   
+
     $args = array(
         'post_type' => 'gallery',
         'posts_per_page' => $posts_per_page,
@@ -2453,13 +2539,14 @@ function saloni_get_gallery_page_posts($main_category = '', $sub_category = '', 
             'date' => 'DESC'
         )
     );
-    
-   
+
+
     return new WP_Query($args);
 }
 
 // トップページのクーポン表示制御
-function saloni_get_top_coupon_posts($limit = 12) {
+function saloni_get_top_coupon_posts($limit = 12)
+{
     $args = array(
         'post_type' => 'coupon',
         'posts_per_page' => $limit,
@@ -2480,29 +2567,30 @@ function saloni_get_top_coupon_posts($limit = 12) {
 }
 
 // クーポンページのクーポン表示制御
-function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist = '') {
+function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist = '')
+{
     $meta_query = array('relation' => 'AND');
-   
+
     // 表示設定の条件
     $meta_query[] = array(
         'key' => 'coupon_display_coupon',
         'value' => '1',
         'compare' => '='
     );
-   
+
     if (!empty($nailist)) {
         // 「一覧」が選択された場合は特別な処理
         if ($nailist === 'list') {
             // 空のネイリストも含めてすべてのクーポンを表示
             $nailist_conditions = array();
-            
+
             // 既存のネイリストを取得
             $nailist_posts = get_posts(array(
                 'post_type' => 'nailist',
                 'posts_per_page' => -1,
                 'post_status' => 'publish'
             ));
-            
+
             foreach ($nailist_posts as $nailist_post) {
                 $nailist_conditions[] = array(
                     'key' => 'coupon_nailist',
@@ -2510,7 +2598,7 @@ function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist 
                     'compare' => 'LIKE'
                 );
             }
-            
+
             // 空のネイリストも含める（空文字列と空配列の両方）
             $nailist_conditions[] = array(
                 'key' => 'coupon_nailist',
@@ -2522,7 +2610,7 @@ function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist 
                 'value' => array(),
                 'compare' => '='
             );
-            
+
             if (!empty($nailist_conditions)) {
                 $or_condition = array('relation' => 'OR');
                 foreach ($nailist_conditions as $condition) {
@@ -2539,7 +2627,7 @@ function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist 
             );
         }
     }
-   
+
     $args = array(
         'post_type' => 'coupon',
         'posts_per_page' => $posts_per_page,
@@ -2554,30 +2642,32 @@ function saloni_get_coupon_page_posts($posts_per_page = 9, $paged = 1, $nailist 
 }
 
 // クーポンのネイリストチェックボックスで単一選択機能を実装
-function saloni_coupon_nailist_single_select_script() {
+function saloni_coupon_nailist_single_select_script()
+{
     ?>
-    <script type="text/javascript">
-    jQuery(document).ready(function($) {
-        // クーポン編集画面でのみ実行
-        if ($('body').hasClass('post-type-coupon')) {
-            $('input[name="acf[field_coupon_nailist][]"]').on('change', function() {
-                var $this = $(this);
-                var $allCheckboxes = $('input[name="acf[field_coupon_nailist][]"]');
-                
-                if ($this.is(':checked')) {
-                    // 他のチェックボックスをすべて外す
-                    $allCheckboxes.not($this).prop('checked', false);
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                // クーポン編集画面でのみ実行
+                if ($('body').hasClass('post-type-coupon')) {
+                    $('input[name="acf[field_coupon_nailist][]"]').on('change', function () {
+                        var $this = $(this);
+                        var $allCheckboxes = $('input[name="acf[field_coupon_nailist][]"]');
+
+                        if ($this.is(':checked')) {
+                            // 他のチェックボックスをすべて外す
+                            $allCheckboxes.not($this).prop('checked', false);
+                        }
+                    });
                 }
             });
-        }
-    });
-    </script>
-    <?php
+        </script>
+        <?php
 }
 add_action('admin_footer', 'saloni_coupon_nailist_single_select_script');
 
 // ACFフィールドの選択肢を動的に更新
-function saloni_update_coupon_nailist_choices($field) {
+function saloni_update_coupon_nailist_choices($field)
+{
     if ($field['name'] === 'coupon_nailist') {
         $field['choices'] = saloni_get_nailist_choices_for_registration();
     }
@@ -2587,95 +2677,104 @@ add_filter('acf/load_field/name=coupon_nailist', 'saloni_update_coupon_nailist_c
 add_filter('acf/load_field/key=field_coupon_nailist', 'saloni_update_coupon_nailist_choices');
 
 // クイック編集フィールドの追加
-function saloni_add_quick_edit_fields($column_name, $post_type) {
-    if (!in_array($post_type, ['gallery', 'coupon']) || $column_name !== 'display_settings') return;
-   
+function saloni_add_quick_edit_fields($column_name, $post_type)
+{
+    if (!in_array($post_type, ['gallery', 'coupon']) || $column_name !== 'display_settings')
+        return;
+
     $post_type_label = $post_type === 'gallery' ? 'ギャラリー' : 'クーポン';
     $field_name = $post_type . '_display_settings';
     ?>
-    <fieldset class="inline-edit-col-display">
-        <div class="inline-edit-col">
-            <label class="alignleft">
-                <span class="title">表示設定</span>
-                <span class="input-text-wrap">
-                    <select name="<?php echo esc_attr($field_name); ?>">
-                        <option value="both">両方に表示</option>
-                        <option value="top">トップページのみ</option>
-                        <option value="<?php echo esc_attr($post_type); ?>"><?php echo esc_html($post_type_label); ?>ページのみ</option>
-                        <option value="none">両方非表示</option>
-                    </select>
-                </span>
-            </label>
-        </div>
-    </fieldset>
-    <?php
+        <fieldset class="inline-edit-col-display">
+            <div class="inline-edit-col">
+                <label class="alignleft">
+                    <span class="title">表示設定</span>
+                    <span class="input-text-wrap">
+                        <select name="<?php echo esc_attr($field_name); ?>">
+                            <option value="both">両方に表示</option>
+                            <option value="top">トップページのみ</option>
+                            <option value="<?php echo esc_attr($post_type); ?>">
+                                <?php echo esc_html($post_type_label); ?>ページのみ</option>
+                            <option value="none">両方非表示</option>
+                        </select>
+                    </span>
+                </label>
+            </div>
+        </fieldset>
+        <?php
 }
 add_action('quick_edit_custom_box', 'saloni_add_quick_edit_fields', 10, 2);
 
 // クイック編集用のJavaScript
-function saloni_quick_edit_script() {
+function saloni_quick_edit_script()
+{
     global $post_type;
-    if (!in_array($post_type, ['gallery', 'coupon'])) return;
-   
+    if (!in_array($post_type, ['gallery', 'coupon']))
+        return;
+
     $post_type_label = $post_type === 'gallery' ? 'ギャラリー' : 'クーポン';
     $field_name = $post_type . '_display_settings';
     ?>
-    <script>
-    jQuery(document).ready(function($) {
-        var $wp_inline_edit = inlineEditPost.edit;
-       
-        inlineEditPost.edit = function(id) {
-            $wp_inline_edit.apply(this, arguments);
-           
-            var post_id = 0;
-            if (typeof(id) == 'object') {
-                post_id = parseInt(this.getId(id));
-            }
-           
-            if (post_id > 0) {
-                var $post_row = $('#post-' + post_id);
-                var $edit_row = $('#edit-' + post_id);
-               
-                // 表示設定の値を取得
-                var display_text = $post_row.find('.column-display_settings').text();
-                var display_top = display_text.indexOf('トップページ') !== -1;
-                var display_page = display_text.indexOf('<?php echo esc_js($post_type_label); ?>ページ') !== -1;
-               
-                // 表示設定の選択値を設定
-                var display_value = 'both';
-                if (display_top && !display_page) {
-                    display_value = 'top';
-                } else if (!display_top && display_page) {
-                    display_value = '<?php echo esc_js($post_type); ?>';
-                } else if (!display_top && !display_page) {
-                    display_value = 'none';
-                }
-               
-                $edit_row.find('select[name="<?php echo esc_js($field_name); ?>"]').val(display_value);
-            }
-        };
-    });
-    </script>
-    <?php
+        <script>
+            jQuery(document).ready(function ($) {
+                var $wp_inline_edit = inlineEditPost.edit;
+
+                inlineEditPost.edit = function (id) {
+                    $wp_inline_edit.apply(this, arguments);
+
+                    var post_id = 0;
+                    if (typeof (id) == 'object') {
+                        post_id = parseInt(this.getId(id));
+                    }
+
+                    if (post_id > 0) {
+                        var $post_row = $('#post-' + post_id);
+                        var $edit_row = $('#edit-' + post_id);
+
+                        // 表示設定の値を取得
+                        var display_text = $post_row.find('.column-display_settings').text();
+                        var display_top = display_text.indexOf('トップページ') !== -1;
+                        var display_page = display_text.indexOf('<?php echo esc_js($post_type_label); ?>ページ') !== -1;
+
+                        // 表示設定の選択値を設定
+                        var display_value = 'both';
+                        if (display_top && !display_page) {
+                            display_value = 'top';
+                        } else if (!display_top && display_page) {
+                            display_value = '<?php echo esc_js($post_type); ?>';
+                        } else if (!display_top && !display_page) {
+                            display_value = 'none';
+                        }
+
+                        $edit_row.find('select[name="<?php echo esc_js($field_name); ?>"]').val(display_value);
+                    }
+                };
+            });
+        </script>
+        <?php
 }
 add_action('admin_footer-edit.php', 'saloni_quick_edit_script');
 
 // クイック編集の保存処理
-function saloni_save_quick_edit($post_id) {
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    if (!current_user_can('edit_post', $post_id)) return;
-   
+function saloni_save_quick_edit($post_id)
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (!current_user_can('edit_post', $post_id))
+        return;
+
     $post_type = get_post_type($post_id);
-    if (!in_array($post_type, ['gallery', 'coupon'])) return;
+    if (!in_array($post_type, ['gallery', 'coupon']))
+        return;
 
     $field_name = $post_type . '_display_settings';
     if (isset($_POST[$field_name])) {
         $display_settings = $_POST[$field_name];
-       
+
         // トップページ表示設定
         $display_top = ($display_settings === 'both' || $display_settings === 'top') ? '1' : '0';
         update_field($post_type . '_display_top', $display_top, $post_id);
-       
+
         // ページ表示設定
         $display_page = ($display_settings === 'both' || $display_settings === $post_type) ? '1' : '0';
         update_field($post_type . '_display_' . $post_type, $display_page, $post_id);
@@ -2684,39 +2783,46 @@ function saloni_save_quick_edit($post_id) {
 add_action('save_post', 'saloni_save_quick_edit');
 
 // クイック編集のスタイル調整
-function saloni_quick_edit_style() {
+function saloni_quick_edit_style()
+{
     global $post_type;
-    if (!in_array($post_type, ['gallery', 'coupon'])) return;
+    if (!in_array($post_type, ['gallery', 'coupon']))
+        return;
     ?>
-    <style>
-        .inline-edit-col-left .inline-edit-col,
-        .inline-edit-col-display .inline-edit-col {
-            margin: 0 0 0 10px;
-        }
-        .inline-edit-col-left .inline-edit-col select,
-        .inline-edit-col-display .inline-edit-col select {
-            width: 100%;
-            max-width: 200px;
-        }
-        /* 順序,ステータスフィールドとスラッグ,日付,パスワードフィールド非表示 */
-        .inline-edit-col-right,
-        .inline-edit-col-left .inline-edit-col fieldset,
-        .inline-edit-col-left .inline-edit-col div {
-            display: none;
-        }
-    </style>
-    <?php
+        <style>
+            .inline-edit-col-left .inline-edit-col,
+            .inline-edit-col-display .inline-edit-col {
+                margin: 0 0 0 10px;
+            }
+
+            .inline-edit-col-left .inline-edit-col select,
+            .inline-edit-col-display .inline-edit-col select {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            /* 順序,ステータスフィールドとスラッグ,日付,パスワードフィールド非表示 */
+            .inline-edit-col-right,
+            .inline-edit-col-left .inline-edit-col fieldset,
+            .inline-edit-col-left .inline-edit-col div {
+                display: none;
+            }
+        </style>
+        <?php
 }
 add_action('admin_head', 'saloni_quick_edit_style');
 
 // ギャラリー、クーポン、サブカテゴリー登録時にmenu_orderの自動設定
-function saloni_auto_set_menu_order($data, $postarr) {
+function saloni_auto_set_menu_order($data, $postarr)
+{
     if (!in_array($data['post_type'], array('gallery', 'coupon', 'course', 'banner', 'nailist'))) {
         return $data;
     }
 
-    if ($data['post_status'] !== 'auto-draft' &&
-        (!isset($postarr['menu_order']) || $postarr['menu_order'] == 0)) {
+    if (
+        $data['post_status'] !== 'auto-draft' &&
+        (!isset($postarr['menu_order']) || $postarr['menu_order'] == 0)
+    ) {
 
         global $wpdb;
         $min_order = $wpdb->get_var($wpdb->prepare(
@@ -2726,13 +2832,14 @@ function saloni_auto_set_menu_order($data, $postarr) {
 
         $data['menu_order'] = max(0, intval($min_order));
     }
-   
+
     return $data;
 }
 add_filter('wp_insert_post_data', 'saloni_auto_set_menu_order', 10, 2);
 
 // 新規登録、更新時の表示順フィールド削除
-function saloni_hide_menu_order_field() {
+function saloni_hide_menu_order_field()
+{
     global $post_type;
     if (in_array($post_type, array('gallery', 'coupon', 'course', 'banner', 'nailist'))) {
         echo '<style>
@@ -2746,79 +2853,81 @@ function saloni_hide_menu_order_field() {
 add_action('admin_head', 'saloni_hide_menu_order_field');
 
 // 管理画面のギャラリー一覧でメインカテゴリーを選択時サブカテゴリーを動的に更新する処理
-function saloni_admin_filters_script() {
+function saloni_admin_filters_script()
+{
     global $typenow;
     if ($typenow === 'gallery') {
         $current_main = isset($_GET['main_category']) ? $_GET['main_category'] : '';
         $current_sub = isset($_GET['sub_category']) ? $_GET['sub_category'] : '';
         ?>
-        <script>
-        jQuery(document).ready(function($) {
-            var currentMain = '<?php echo esc_js($current_main); ?>';
-            var currentSub = '<?php echo esc_js($current_sub); ?>';
-            
-            function updateSubCategories(mainCategory, selectedValue) {
-                var $subCategorySelect = $('#sub-category-filter');
-                
-                if (mainCategory) {
-                    $.ajax({
-                        url: ajaxurl,
-                        type: 'POST',
-                        data: {
-                            action: 'get_course_choices',
-                            main_type: mainCategory,
-                            nonce: '<?php echo wp_create_nonce("get_course_choices"); ?>'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $subCategorySelect.html('<option value="">サブカテゴリーを選択</option>');
-                                $.each(response.data, function(slug, name) {
-                                    // Guestギャラリーの場合は「list」を除外
-                                    if (mainCategory === 'guest' && slug === 'list') {
-                                        return;
+            <script>
+                jQuery(document).ready(function ($) {
+                    var currentMain = '<?php echo esc_js($current_main); ?>';
+                    var currentSub = '<?php echo esc_js($current_sub); ?>';
+
+                    function updateSubCategories(mainCategory, selectedValue) {
+                        var $subCategorySelect = $('#sub-category-filter');
+
+                        if (mainCategory) {
+                            $.ajax({
+                                url: ajaxurl,
+                                type: 'POST',
+                                data: {
+                                    action: 'get_course_choices',
+                                    main_type: mainCategory,
+                                    nonce: '<?php echo wp_create_nonce("get_course_choices"); ?>'
+                                },
+                                success: function (response) {
+                                    if (response.success) {
+                                        $subCategorySelect.html('<option value="">サブカテゴリーを選択</option>');
+                                        $.each(response.data, function (slug, name) {
+                                            // Guestギャラリーの場合は「list」を除外
+                                            if (mainCategory === 'guest' && slug === 'list') {
+                                                return;
+                                            }
+                                            var selected = (selectedValue === slug) ? ' selected' : '';
+                                            $subCategorySelect.append('<option value="' + slug + '"' + selected + '>' + name + '</option>');
+                                        });
+                                        $subCategorySelect.prop('disabled', false);
                                     }
-                                    var selected = (selectedValue === slug) ? ' selected' : '';
-                                    $subCategorySelect.append('<option value="' + slug + '"' + selected + '>' + name + '</option>');
-                                });
-                                $subCategorySelect.prop('disabled', false);
-                            }
+                                }
+                            });
+                        } else {
+                            $subCategorySelect.html('<option value="">サブカテゴリーを選択</option>').prop('disabled', true);
                         }
+                    }
+
+                    // メインカテゴリー変更時の処理
+                    $('#main-category-filter').on('change', function () {
+                        var mainCategory = $(this).val();
+                        updateSubCategories(mainCategory, '');
                     });
-                } else {
-                    $subCategorySelect.html('<option value="">サブカテゴリーを選択</option>').prop('disabled', true);
-                }
-            }
 
-            // メインカテゴリー変更時の処理
-            $('#main-category-filter').on('change', function() {
-                var mainCategory = $(this).val();
-                updateSubCategories(mainCategory, '');
-            });
-
-            // 初期表示時の処理
-            if (currentMain) {
-                updateSubCategories(currentMain, currentSub);
-            }
-        });
-        </script>
-        <?php
+                    // 初期表示時の処理
+                    if (currentMain) {
+                        updateSubCategories(currentMain, currentSub);
+                    }
+                });
+            </script>
+            <?php
     }
 }
 add_action('admin_footer-edit.php', 'saloni_admin_filters_script');
 
 // サブカテゴリーのスラッグ更新時にギャラリーも自動更新
-function saloni_update_gallery_sub_categories_on_course_slug_change($post_id) {
+function saloni_update_gallery_sub_categories_on_course_slug_change($post_id)
+{
     if (get_post_type($post_id) !== 'course') {
         return;
     }
-    
+
     // 無限ループを防ぐ
     remove_action('save_post', 'saloni_update_gallery_sub_categories_on_course_slug_change');
-    
+
     $old_slug = get_post_meta($post_id, '_old_course_slug', true);
     $new_slug = get_field('course_slug', $post_id);
     $main_category = get_field('course_main_category', $post_id);
-    
+
     // スラッグが変更された場合のみ処理
     if ($old_slug && $old_slug !== $new_slug && $main_category) {
         // 古いスラッグを使用しているギャラリーを検索
@@ -2840,34 +2949,36 @@ function saloni_update_gallery_sub_categories_on_course_slug_change($post_id) {
                 )
             )
         ));
-        
+
         // ギャラリーのサブカテゴリーを新しいスラッグに更新
         foreach ($galleries as $gallery) {
             update_field('gallery_sub_category', $new_slug, $gallery->ID);
         }
     }
-    
+
     // 新しいスラッグを保存
     update_post_meta($post_id, '_old_course_slug', $new_slug);
-    
+
     // アクションを再度追加
     add_action('save_post', 'saloni_update_gallery_sub_categories_on_course_slug_change');
 }
 add_action('save_post', 'saloni_update_gallery_sub_categories_on_course_slug_change');
 
 // AJAXハンドラー
-function saloni_ajax_get_course_choices() {
+function saloni_ajax_get_course_choices()
+{
     check_ajax_referer('get_course_choices', 'nonce');
-   
+
     $main_type = sanitize_text_field($_POST['main_type']);
     $sub_categories = saloni_get_course_choices($main_type);
-   
+
     wp_send_json_success($sub_categories);
 }
 add_action('wp_ajax_get_course_choices', 'saloni_ajax_get_course_choices');
 
 // パーマリンク構造を強制的に /blog/%postname%/ に変更
-function saloni_update_permalink_structure() {
+function saloni_update_permalink_structure()
+{
     if (get_option('permalink_structure') !== '/blog/%postname%/') {
         global $wp_rewrite;
         $wp_rewrite->set_permalink_structure('/blog/%postname%/');

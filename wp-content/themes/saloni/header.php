@@ -76,7 +76,7 @@
                                 <a href="<?php echo esc_url(home_url('/access/')); ?>"
                                     class="header-action-btn contact-btn">
                                     <i class="fas fa-envelope"></i>
-                                    <span><?php esc_html_e('お問い合わせ', 'saloni'); ?></span>
+                                    <span><?php esc_html_e('予約する', 'saloni'); ?></span>
                                 </a>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                             'menu_class' => 'nav navbar-nav',
                             'container' => false,
                             'walker' => new Saloni_Walker_Nav_Menu(),
-                            'fallback_cb' => function() {
+                            'fallback_cb' => function () {
                                 echo '<ul class="nav navbar-nav">';
                                 echo '<li><a href="' . esc_url(admin_url('nav-menus.php')) . '">メニューを設定してください</a></li>';
                                 echo '</ul>';
