@@ -73,6 +73,7 @@ $theme_uri = get_template_directory_uri();
         margin-bottom: 10px;
         opacity: 0;
         animation: fadeInUp 1.2s ease-out 0.3s forwards;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .first-view-title {
@@ -80,7 +81,7 @@ $theme_uri = get_template_directory_uri();
         font-size: 72px;
         font-weight: 400;
         color: #fff;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
         margin-bottom: 20px;
         opacity: 0;
         animation: fadeInUp 1.2s ease-out 0.8s forwards;
