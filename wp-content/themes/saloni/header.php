@@ -27,7 +27,7 @@
     <div class="page-wraper">
 
         <!-- HEADER START -->
-        <header class="site-header header-style-1 mobile-sider-drawer-menu header-fullwidth">
+        <header class="site-header header-style-1 mobile-sider-drawer-menu header-fullwidth header-transparent">
 
             <div class="sticky-header main-bar-wraper navbar-expand-lg">
                 <div class="main-bar">
@@ -55,7 +55,11 @@
                                         <?php if (has_custom_logo()): ?>
                                             <?php the_custom_logo(); ?>
                                         <?php else: ?>
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/logo-dark.png"
+                                            <img class="logo-dark"
+                                                src="<?php echo get_template_directory_uri(); ?>/images/logo-dark.png"
+                                                alt="<?php bloginfo('name'); ?>">
+                                            <img class="logo-light"
+                                                src="<?php echo get_template_directory_uri(); ?>/images/logo-light.png"
                                                 alt="<?php bloginfo('name'); ?>">
                                         <?php endif; ?>
                                     </a>

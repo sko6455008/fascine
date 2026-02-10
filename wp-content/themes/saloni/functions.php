@@ -58,9 +58,6 @@ function saloni_scripts()
     wp_enqueue_style('saloni-main', $theme_uri . '/css/style.css', array(), '1.0.0');
     wp_enqueue_style('saloni-custom', $theme_uri . '/css/custom.css', array('saloni-main'), '1.0.0');
 
-    // Revolution Slider CSS
-    wp_enqueue_style('revolution-settings', $theme_uri . '/plugins/revolution/revolution/css/settings.css', array(), '5.4.0');
-    wp_enqueue_style('revolution-navigation', $theme_uri . '/plugins/revolution/revolution/css/navigation.css', array(), '5.4.0');
 
     // Google Fonts
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css?family=Yeseva+One|Caveat:400,700|Poppins&display=swap', array(), null);
@@ -83,13 +80,7 @@ function saloni_scripts()
     wp_enqueue_script('saloni-custom', $theme_uri . '/js/custom.js', array('jquery'), '1.0.0', true);
     wp_enqueue_script('saloni-custom-header', $theme_uri . '/js/custom-header.js', array('jquery'), '1.0.0', true);
 
-    // Revolution Slider Scripts (only on front page)
-    if (is_front_page() || is_page_template('page-templates/page-home.php')) {
-        wp_enqueue_script('themepunch-tools', $theme_uri . '/plugins/revolution/revolution/js/jquery.themepunch.tools.min.js', array('jquery'), '5.4.0', true);
-        wp_enqueue_script('themepunch-revolution', $theme_uri . '/plugins/revolution/revolution/js/jquery.themepunch.revolution.min.js', array('jquery', 'themepunch-tools'), '5.4.0', true);
-        wp_enqueue_script('revolution-plugin', $theme_uri . '/plugins/revolution/revolution/js/extensions/revolution-plugin.js', array('themepunch-revolution'), '5.4.0', true);
-        wp_enqueue_script('rev-script', $theme_uri . '/js/rev-script-2.js', array('revolution-plugin'), '1.0.0', true);
-    }
+
 }
 add_action('wp_enqueue_scripts', 'saloni_scripts');
 
@@ -2694,7 +2685,8 @@ function saloni_add_quick_edit_fields($column_name, $post_type)
                             <option value="both">両方に表示</option>
                             <option value="top">トップページのみ</option>
                             <option value="<?php echo esc_attr($post_type); ?>">
-                                <?php echo esc_html($post_type_label); ?>ページのみ</option>
+                                <?php echo esc_html($post_type_label); ?>ページのみ
+                            </option>
                             <option value="none">両方非表示</option>
                         </select>
                     </span>

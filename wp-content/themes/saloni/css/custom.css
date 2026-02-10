@@ -48,13 +48,25 @@ YOU CAN WRIGHT CUSTOME CSS
 }
 
 @keyframes loader-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes loader-fade {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 body.loading {
@@ -92,31 +104,65 @@ body.loading {
     }
 }
 
-/* Fix Revolution Slider mobile background image display */
-@media (max-width: 778px) {
-    .rev_slider_wrapper.fullscreen-container,
-    .rev_slider.fullscreenbanner {
-        min-height: 100vh !important;
-        height: 100vh !important;
-    }
-    
-    .rev_slider .rev-slidebg,
-    .rev_slider li .rev-slidebg {
-        background-size: cover !important;
-        background-position: center center !important;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
-    
-    .rev_slider li {
-        background-size: cover !important;
-    }
-    
-    #welcome_wrapper .tp-bgimg {
-        background-size: cover !important;
-        background-position: center center !important;
-    }
+/* ----------------------------------------------------------------
+   Header Transparent Styles (video first view)
+-----------------------------------------------------------------*/
+
+/* Default: show dark logo, hide light logo */
+.logo-light {
+    display: none;
+}
+
+/* Header transparent: white hamburger bars */
+.header-transparent .hamburger-always-visible .icon-bar {
+    background-color: #fff;
+}
+
+.header-transparent .hamburger-always-visible:hover .icon-bar {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Header transparent: white Instagram icon + text */
+.header-transparent .instagram-btn {
+    color: #fff;
+}
+
+.header-transparent .instagram-btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Header transparent: show light logo, hide dark logo */
+.header-transparent .logo-dark {
+    display: none;
+}
+
+.header-transparent .logo-light {
+    display: block;
+}
+
+/* When sticky header activates (color-fill), revert to default */
+.header-transparent .is-fixed.color-fill .hamburger-always-visible .icon-bar {
+    background-color: #333;
+}
+
+.header-transparent .is-fixed.color-fill .hamburger-always-visible:hover .icon-bar {
+    background-color: #c9a86c;
+}
+
+.header-transparent .is-fixed.color-fill .instagram-btn {
+    color: #333;
+}
+
+.header-transparent .is-fixed.color-fill .instagram-btn:hover {
+    color: #c9a86c;
+}
+
+.header-transparent .is-fixed.color-fill .logo-dark {
+    display: block;
+}
+
+.header-transparent .is-fixed.color-fill .logo-light {
+    display: none;
 }
 
 /* Footer Copyright Center */

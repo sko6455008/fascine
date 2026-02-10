@@ -15151,10 +15151,11 @@ textarea.form-control2 {
 	height: 100%;
 	width: 100%;
 	z-index: -1;
-	background-image: url(../images/background/nail.png);
-	background-size: auto;
+	background-image: url(../images/background/menu.webp);
+	background-size: cover;
 	background-repeat: no-repeat;
-	background-position: top left;
+	background-position: center;
+	opacity: 0.4;
 }
 
 @media only screen and (max-width:991px) {
