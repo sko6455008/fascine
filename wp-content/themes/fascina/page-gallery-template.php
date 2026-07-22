@@ -120,6 +120,7 @@ $sub_category_name = fascina_get_sub_category_name($main_category, $sub_category
                     endwhile;
                     $gallery_query->rewind_posts();
                     $index = 0;
+                    $display_index = 0;
                     while ($gallery_query->have_posts()): $gallery_query->the_post();
                         $img = esc_url($gallery_items[$index]['img']);
                         $title = esc_html($gallery_items[$index]['title']);
@@ -133,7 +134,7 @@ $sub_category_name = fascina_get_sub_category_name($main_category, $sub_category
                                             src="<?php echo $img; ?>"
                                             alt="<?php echo $title; ?>"
                                             class="gallery-modal-trigger"
-                                            data-index="<?php echo $index; ?>"
+                                            data-index="<?php echo $display_index; ?>"
                                             data-title="<?php echo $title; ?>"
                                             data-desc="<?php echo $desc; ?>"
                                             data-img="<?php echo $img; ?>"
@@ -142,6 +143,7 @@ $sub_category_name = fascina_get_sub_category_name($main_category, $sub_category
                                             <?php echo fascina_get_new_tag_html(); ?>
                                         <?php endif; ?>
                                     </div>
+                                    <?php $display_index++; ?>
                                 <?php endif; ?>
                                 <div class="gallery-caption">
                                     <h2 class="gallery-title"><?php echo $title; ?></h2>
@@ -149,7 +151,7 @@ $sub_category_name = fascina_get_sub_category_name($main_category, $sub_category
                                 </div>
                             </div>
                         </div>
-                <?php $index++; endwhile; ?>         
+                <?php $index++; endwhile; ?>
             </div>
         </div>
 
