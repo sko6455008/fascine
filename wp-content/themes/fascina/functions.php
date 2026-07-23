@@ -1050,7 +1050,8 @@ add_filter('manage_gallery_posts_columns', 'fascina_add_gallery_columns');
 function fascina_gallery_column_content($column_name, $post_id) {
     if ($column_name === 'thumbnail') {
         if (has_post_thumbnail($post_id)) {
-            echo get_the_post_thumbnail($post_id, array(60, 60));
+            // 拡大表示時にぼやけないよう大きめのサイズで出力(表示サイズはCSSで60pxに調整)
+            echo get_the_post_thumbnail($post_id, 'medium_large');
         }
     } elseif ($column_name === 'menu_order') {
         $post = get_post($post_id);
@@ -1398,6 +1399,17 @@ function fascina_admin_columns_style() {
             width: 60px;
             height: 60px;
             object-fit: cover;
+        }
+        /* ギャラリー一覧のみ:画像ホバーで拡大表示 */
+        .post-type-gallery .column-thumbnail img {
+            transition: transform 0.2s ease;
+        }
+        .post-type-gallery .column-thumbnail img:hover {
+            transform: scale(6);
+            transform-origin: left center;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
         }
         .column-menu_order {
             width: 100px;
