@@ -29,7 +29,7 @@
                             <i class="fab fa-instagram" style="color:#e64893; font-size:35px;"></i>
                         </a>
                     </div>
-                    <a href="https://lin.ee/GOjVh5W" target="_blank" class="inquiry-link">
+                    <a href="https://lin.ee/6OdFUsr" target="_blank" class="inquiry-link">
                         問い合わせ
                     </a>
                     <a href="https://071f0f.b-merit.jp/pJ3MHW/web" target="_blank" class="reservation-link">
@@ -52,7 +52,7 @@
         ?>
 
         <div class="menu-sns">
-            <a href="https://lin.ee/GOjVh5W" target="_blank">
+            <a href="https://lin.ee/6OdFUsr" target="_blank">
                 <i class="fab fa-line" style="color:#e64893; font-size:40px;"></i>
             </a>
             <a href="https://www.instagram.com/fascinanailsalon/" target="_blank">
