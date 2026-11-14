@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WordPress Sites Sync
  * Description: FascinaとTwelorのカスタム投稿タイプとメディアを双方向リアルタイム同期するプラグイン
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Custom
  * 
  * 設定: wp-config.phpに以下を定義してください
@@ -43,6 +43,7 @@ function wps_sync_init() {
     add_action('edit_attachment', 'wps_sync_media', 10, 1);
     add_action('delete_attachment', 'wps_sync_delete_media', 10, 1);
     add_action('wps_sync_retry', 'wps_sync_retry', 10, 2);
+    add_action('admin_notices', 'wps_sync_admin_notice');
     
     // タームの同期フック
     add_action('created_term', 'wps_sync_term', 10, 3);
@@ -127,6 +128,24 @@ function wps_sync_clear_retry($object_id, $type) {
     delete_post_meta($object_id, '_sync_retry_attempt');
 }
 
+/** ローカル保存の成功と、相手サイトへの同期完了を区別して表示する。 */
+function wps_sync_admin_notice() {
+    global $pagenow;
+    if ($pagenow !== 'post.php' || empty($_GET['post'])) {
+        return;
+    }
+    $post_id = absint($_GET['post']);
+    $post = get_post($post_id);
+    if (!$post || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    $type = $post->post_type === 'attachment' ? 'media' : 'post';
+    if (($type === 'media' || in_array($post->post_type, WPS_SYNC_POST_TYPES, true)) &&
+        wp_next_scheduled('wps_sync_retry', array($post_id, $type))) {
+        echo '<div class="notice notice-warning"><p>' . esc_html('このサイトへの保存は完了していますが、相手サイトへの同期はまだ完了していません。自動で再試行します。画像が欠けたままの場合は、同期設定や通信エラーを確認してください。') . '</p></div>';
+    }
+}
+
 /** 保存済みの古いペイロードではなく、最新の投稿・画像を再送する。 */
 function wps_sync_retry($object_id, $type) {
     $post = get_post($object_id);
@@ -180,14 +199,23 @@ function wps_sync_ensure_remote_media($attachment_id) {
 /**
  * リモートサイトにHTTPリクエストを送信
  */
-function wps_sync_remote_request($endpoint, $method = 'POST', $data = array()) {
+function wps_sync_remote_request($endpoint, $method = 'POST', $data = array(), $file_path = null) {
     $url = trailingslashit(SYNC_SITE_URL) . 'wp-json/sync/v1/' . ltrim($endpoint, '/');
 
     // Application Passwordのスペースを削除（WordPressのApplication Passwordはスペースを含む形式で表示されるが、使用時はスペースを削除する必要がある）
     $auth_pass = str_replace(' ', '', SYNC_AUTH_PASS);
 
     $body = null;
-    if (!empty($data)) {
+    $content_type = 'application/json';
+    if ($file_path !== null) {
+        $multipart = wps_sync_build_media_request($data, $file_path);
+        if (is_wp_error($multipart)) {
+            error_log('WPS Sync Error: ' . $multipart->get_error_message());
+            return false;
+        }
+        $body = $multipart['body'];
+        $content_type = $multipart['content_type'];
+    } elseif (!empty($data)) {
         $body = json_encode($data);
         // メディア画像などの大きなペイロードでjson_encodeが失敗すると、
         // 本文が空のまま送信され、受信側で「Missing required fields」となって
@@ -198,14 +226,14 @@ function wps_sync_remote_request($endpoint, $method = 'POST', $data = array()) {
         }
     }
 
-    // メディア同期は画像本体(base64)を含み転送に時間がかかるため、タイムアウトを長めに取る
+    // メディア同期はファイル本体を含むため、タイムアウトを長めに取る。
     $is_media = (strpos(ltrim($endpoint, '/'), 'media') === 0);
 
     $args = array(
         'method' => $method,
         'timeout' => $is_media ? 60 : 30,
         'headers' => array(
-            'Content-Type' => 'application/json',
+            'Content-Type' => $content_type,
             'Authorization' => 'Basic ' . base64_encode(SYNC_AUTH_USER . ':' . $auth_pass),
         ),
     );
@@ -258,6 +286,33 @@ function wps_sync_remote_request($endpoint, $method = 'POST', $data = array()) {
     }
 
     return false;
+}
+
+/** 画像はBase64の長い文字列ではなく、通常のファイルとして転送する。 */
+function wps_sync_build_media_request($data, $file_path) {
+    $file = file_get_contents($file_path);
+    if ($file === false || $file === '') {
+        return new WP_Error('invalid_media_file', 'Cannot read a non-empty media file');
+    }
+    $data['file_sha256'] = hash('sha256', $file);
+    $metadata = wp_json_encode($data);
+    if ($metadata === false) {
+        return new WP_Error('invalid_media_metadata', 'Cannot encode media metadata');
+    }
+    do {
+        $boundary = 'wps-sync-' . wp_generate_password(32, false, false);
+    } while (strpos($file, $boundary) !== false || strpos($metadata, $boundary) !== false);
+
+    // 日本語の実ファイル名はJSON内で保持し、MIMEヘッダーにはASCIIだけを使用。
+    $extension = preg_replace('/[^a-zA-Z0-9]/', '', pathinfo($data['file_name'], PATHINFO_EXTENSION));
+    $filename = 'upload.' . ($extension ?: 'bin');
+    $body = '--' . $boundary . "\r\n" .
+        "Content-Disposition: form-data; name=\"metadata\"\r\n\r\n" . $metadata . "\r\n" .
+        '--' . $boundary . "\r\n" .
+        'Content-Disposition: form-data; name="file"; filename="' . $filename . '"' . "\r\n" .
+        'Content-Type: ' . sanitize_mime_type($data['mime_type']) . "\r\n\r\n" .
+        $file . "\r\n--" . $boundary . "--\r\n";
+    return array('content_type' => 'multipart/form-data; boundary=' . $boundary, 'body' => $body);
 }
 
 /**
@@ -436,7 +491,7 @@ function wps_sync_media($attachment_id) {
         
         if ($media_data) {
             // リモートサイトに送信
-            $result = wps_sync_remote_request('media', 'POST', $media_data);
+            $result = wps_sync_remote_request('media', 'POST', $media_data, get_attached_file($attachment_id));
             $success = is_array($result) && !empty($result['success']) && (int) ($result['attachment_id'] ?? 0) === (int) $attachment_id;
         }
     } catch (Throwable $e) {
@@ -465,12 +520,6 @@ function wps_sync_get_media_data($attachment_id) {
         return false;
     }
     
-    // ファイルデータを読み込む
-    $file_data = file_get_contents($file_path);
-    if ($file_data === false) {
-        return false;
-    }
-    
     // メディア情報を取得
     $attachment_meta = wp_get_attachment_metadata($attachment_id);
     $mime_type = get_post_mime_type($attachment_id);
@@ -484,7 +533,6 @@ function wps_sync_get_media_data($attachment_id) {
         'post_date_gmt' => $attachment->post_date_gmt,
         'mime_type' => $mime_type,
         'file_name' => basename($file_path),
-        'file_data' => base64_encode($file_data),
         'attachment_meta' => $attachment_meta,
     );
     
@@ -928,14 +976,37 @@ function wps_sync_rest_media_status($request) {
  * REST API: メディアの作成・更新
  */
 function wps_sync_rest_media($request) {
-    $data = $request->get_json_params();
+    $file_data = null;
+    if ($request->is_json_content_type()) {
+        // 両サイトの更新途中でも、旧版からのJSON転送を受信できる。
+        $data = $request->get_json_params();
+        if (!isset($data['file_data']) || !is_string($data['file_data'])) {
+            return new WP_Error('invalid_data', 'Missing media payload', array('status' => 400));
+        }
+    } else {
+        $params = $request->get_body_params();
+        $data = isset($params['metadata']) && is_string($params['metadata']) ? json_decode($params['metadata'], true) : null;
+        $files = $request->get_file_params();
+        $file = $files['file'] ?? array();
+        if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
+            empty($file['tmp_name']) || !is_string($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+            return new WP_Error('invalid_media_upload', 'Missing or incomplete uploaded file', array('status' => 400));
+        }
+        $file_data = file_get_contents($file['tmp_name']);
+        if (!is_string($file_data) || $file_data === '' || !is_array($data) ||
+            empty($data['file_sha256']) || !is_string($data['file_sha256']) ||
+            !hash_equals($data['file_sha256'], hash('sha256', $file_data))) {
+            return new WP_Error('invalid_media_upload', 'Media checksum does not match', array('status' => 400));
+        }
+    }
     
-    if (!isset($data['id']) || !isset($data['file_data']) || !isset($data['file_name']) || !isset($data['mime_type'])) {
+    if (!is_array($data) || !isset($data['id'], $data['file_name'], $data['mime_type']) ||
+        !is_string($data['file_name']) || !is_string($data['mime_type'])) {
         return new WP_Error('invalid_data', 'Missing required fields', array('status' => 400));
     }
     
     $attachment_id = intval($data['id']);
-    if ($attachment_id < 1 || !is_string($data['file_data'])) {
+    if ($attachment_id < 1) {
         return new WP_Error('invalid_data', 'Invalid media data', array('status' => 400));
     }
     
@@ -951,7 +1022,7 @@ function wps_sync_rest_media($request) {
     // 同期フラグをセット
     wps_sync_set_syncing($attachment_id, true);
     try {
-        $response = wps_sync_receive_media($data);
+        $response = wps_sync_receive_media($data, $file_data);
         if (!is_wp_error($response)) {
             wps_sync_clear_retry($attachment_id, 'media');
         }
@@ -961,14 +1032,16 @@ function wps_sync_rest_media($request) {
     }
 }
 
-function wps_sync_receive_media($data) {
+function wps_sync_receive_media($data, $file_data = null) {
     $attachment_id = (int) $data['id'];
     
     require_once(ABSPATH . 'wp-admin/includes/file.php');
     require_once(ABSPATH . 'wp-admin/includes/media.php');
     require_once(ABSPATH . 'wp-admin/includes/image.php');
     
-    $file_data = base64_decode($data['file_data'], true);
+    if ($file_data === null) {
+        $file_data = base64_decode($data['file_data'], true);
+    }
     if ($file_data === false || $file_data === '') {
         return new WP_Error('invalid_media_data', 'Invalid or empty media payload', array('status' => 400));
     }

@@ -49,7 +49,11 @@ require ABSPATH . 'wp-settings.php';
 $http_handler = null;
 $requests = array();
 add_filter('pre_http_request', function ($pre, $args, $url) use (&$http_handler, &$requests) {
-    $requests[] = array($args['method'], $url, isset($args['body']) ? json_decode($args['body'], true) : null);
+    $data = isset($args['body']) ? json_decode($args['body'], true) : null;
+    if (isset($args['body']) && preg_match('/name="metadata"\r\n\r\n(.*?)\r\n--/s', $args['body'], $match)) {
+        $data = json_decode($match[1], true);
+    }
+    $requests[] = array($args['method'], $url, $data, $args);
     return $http_handler ? $http_handler($args, $url) : new WP_Error('test_network_blocked', 'No test HTTP handler');
 }, 10, 3);
 add_filter('pre_wp_mail', '__return_true');
@@ -78,6 +82,7 @@ function sync_response($body, $status = 200) {
     return array('response' => array('code' => $status, 'message' => ''), 'body' => wp_json_encode($body), 'headers' => array());
 }
 
+$http_server = null;
 try {
     $image = imagecreatetruecolor(640, 480);
     imagefill($image, 0, 0, imagecolorallocate($image, 180, 120, 150));
@@ -85,6 +90,9 @@ try {
     imagepng($image);
     $png = ob_get_clean();
     imagedestroy($image);
+    if (getenv('WPS_SYNC_TEST_IMAGE')) {
+        $png = file_get_contents(getenv('WPS_SYNC_TEST_IMAGE'));
+    }
     $media = array(
         'id' => 12449, 'post_title' => 'FOOT test', 'file_name' => 'FOOTベージュマグネットワンカラーHK.png',
         'mime_type' => 'image/png', 'file_data' => base64_encode($png),
@@ -133,6 +141,64 @@ try {
     $result = wps_sync_rest_media(sync_request(array_replace($media, array('id' => 12470))));
     check_sync(is_wp_error($result) && $result->get_error_code() === 'id_conflict' && get_post_type(12470) === 'gallery', 'Media ID collision cannot overwrite a gallery');
 
+    // Exercise actual PHP multipart parsing and is_uploaded_file(), not a mocked file array.
+    $config = array();
+    foreach (array('ABSPATH', 'DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_CHARSET', 'DB_COLLATE',
+        'WP_CONTENT_DIR', 'WP_CONTENT_URL', 'WP_SITEURL', 'WP_HOME', 'WP_INSTALLING', 'DISABLE_WP_CRON',
+        'SYNC_SITE_URL', 'SYNC_AUTH_USER', 'SYNC_AUTH_PASS', 'WP_TEMP_DIR') as $name) {
+        $config[$name] = constant($name);
+    }
+    file_put_contents($runtime . '/http-config.json', wp_json_encode($config));
+    $socket = stream_socket_server('tcp://127.0.0.1:0');
+    $address = stream_socket_get_name($socket, false);
+    fclose($socket);
+    $command = array(PHP_BINARY, '-d', 'extension_dir=' . ini_get('extension_dir'));
+    foreach (array('mysqli', 'gd', 'fileinfo', 'mbstring') as $extension) {
+        $command[] = '-d';
+        $command[] = 'extension=' . $extension;
+    }
+    $command = array_merge($command, array('-S', $address, __DIR__ . '/fixtures/media-router.php'));
+    $http_server = proc_open($command, array(0 => array('pipe', 'r'),
+        1 => array('file', $runtime . '/http.log', 'a'), 2 => array('file', $runtime . '/http.log', 'a')),
+        $pipes, $root, array_merge(getenv(), array('WPS_SYNC_TEST_CONFIG' => $runtime . '/http-config.json')),
+        array('bypass_shell' => true, 'create_new_console' => false));
+    check_sync(is_resource($http_server), 'Loopback multipart test server starts');
+    fclose($pipes[0]);
+    for ($i = 0; $i < 100; $i++) {
+        $probe = @stream_socket_client('tcp://' . $address, $errno, $errstr, 0.1);
+        if ($probe) { fclose($probe); break; }
+        usleep(50000);
+    }
+    check_sync($i < 100, 'Loopback multipart test server accepts connections');
+    $http_handler = function ($args) use ($address) {
+        $headers = array();
+        foreach ($args['headers'] as $name => $value) { $headers[] = $name . ': ' . $value; }
+        $context = stream_context_create(array('http' => array('method' => 'POST',
+            'header' => implode("\r\n", $headers), 'content' => $args['body'], 'ignore_errors' => true)));
+        $body = file_get_contents('http://' . $address . '/sync/v1/media', false, $context);
+        preg_match('/\s(\d{3})\s/', $http_response_header[0], $status);
+        return array('response' => array('code' => (int) $status[1]), 'body' => $body, 'headers' => array());
+    };
+    $multipart_media = array_replace(wps_sync_get_media_data(12449), array('id' => 12480));
+    $result = wps_sync_remote_request('media', 'POST', $multipart_media, $first_file);
+    check_sync(is_array($result) && $result['attachment_id'] === 12480, 'Binary multipart request imports through the real WordPress REST route');
+    clean_post_cache(12480);
+    $multipart_file = get_attached_file(12480);
+    check_sync(wps_sync_media_is_ready(12480) && hash_file('sha256', $multipart_file) === hash('sha256', $png), 'Multipart preserves every image byte and generates display metadata');
+    check_sync(str_starts_with(basename($multipart_file), 'FOOTベージュマグネットワンカラーHK'), 'Multipart preserves the Japanese filename');
+    check_sync(get_the_title(12480) === $media['post_title'] && get_post_meta(12480, '_wp_attachment_image_alt', true) === 'Test alt', 'Multipart preserves title and attachment metadata');
+    $result = wps_sync_remote_request('media', 'POST', $multipart_media, $first_file);
+    check_sync(is_array($result) && get_attached_file(12480) === $multipart_file, 'Multipart retry reuses the existing attachment');
+    $multipart = wps_sync_build_media_request($multipart_media, $first_file);
+    $corrupt = $http_handler(array('headers' => array('Content-Type' => $multipart['content_type'],
+        'Authorization' => 'Basic ' . base64_encode(SYNC_AUTH_USER . ':' . SYNC_AUTH_PASS)),
+        'body' => str_replace(hash('sha256', $png), str_repeat('0', 64), $multipart['body'])));
+    check_sync($corrupt['response']['code'] === 400 && hash_file('sha256', $multipart_file) === hash('sha256', $png), 'Corrupted multipart transfer is rejected without changing the existing image');
+    $spoofed = new WP_REST_Request('POST');
+    $spoofed->set_body_params(array('metadata' => wp_json_encode($multipart_media)));
+    $spoofed->set_file_params(array('file' => array('error' => UPLOAD_ERR_OK, 'tmp_name' => $first_file)));
+    check_sync(is_wp_error(wps_sync_rest_media($spoofed)), 'Only actual PHP-uploaded temporary files are accepted');
+
     // Reproduce the original failure: source has media, receiver lacks it.
     $requests = array();
     $http_handler = function ($args, $url) {
@@ -146,6 +212,8 @@ try {
     };
     check_sync(wps_sync_post(12470, get_post(12470), true), 'Re-saving a gallery sends its missing image before sending the post');
     check_sync(array_column($requests, 0) === array('GET', 'POST', 'POST') && str_ends_with($requests[1][1], '/media') && str_ends_with($requests[2][1], '/post'), 'Transfer order is media check, image, then gallery');
+    check_sync(str_starts_with($requests[1][3]['headers']['Content-Type'], 'multipart/form-data;') &&
+        !isset($requests[1][2]['file_data']) && strpos($requests[1][3]['body'], $png) !== false, 'Gallery recovery sends binary media instead of Base64 JSON');
     foreach ($requests as $request) {
         foreach (($request[2]['meta'] ?? array()) as $key => $value) {
             check_sync(!str_starts_with($key, '_sync_'), 'Outbound payload excludes internal state: ' . $key);
@@ -166,6 +234,19 @@ try {
     check_sync($post_retry && wp_next_scheduled('wps_sync_retry', array(12449, 'media')), 'Failed media and gallery are both queued for delayed retry');
     wps_sync_schedule_retry(12470, 'post');
     check_sync(wp_next_scheduled('wps_sync_retry', array(12470, 'post')) === $post_retry, 'Repeated failures do not duplicate or postpone a pending retry');
+    $requests = array();
+    $http_handler = function ($args) {
+        return $args['method'] === 'GET'
+            ? sync_response(array('success' => true, 'attachment_id' => 12449, 'ready' => false))
+            : array('response' => array('code' => 403), 'body' => '', 'headers' => array());
+    };
+    check_sync(!wps_sync_post(12470, get_post(12470), true) && count($requests) === 2 &&
+        wp_next_scheduled('wps_sync_retry', array(12449, 'media')), 'An empty HTTP 403 keeps the repair queued and does not send the gallery');
+    $pagenow = 'post.php';
+    $_GET['post'] = 12470;
+    ob_start();
+    wps_sync_admin_notice();
+    check_sync(strpos(ob_get_clean(), '同期はまだ完了していません') !== false, 'Pending sync is visible in the editor instead of looking like complete success');
 
     $requests = array();
     $http_handler = function ($args, $url) {
@@ -181,6 +262,10 @@ try {
     do_action('wps_sync_retry', 12470, 'post');
     check_sync($requests[1][2]['post_title'] === 'Latest title' && count($requests) === 2, 'Cron retries the latest post and skips re-uploading a healthy image');
     check_sync(!wp_next_scheduled('wps_sync_retry', array(12470, 'post')), 'Successful Cron retry clears the scheduled job');
+    ob_start();
+    wps_sync_admin_notice();
+    check_sync(ob_get_clean() === '', 'The pending warning disappears after confirmed sync success');
+    unset($_GET['post']);
 
     $media_retry = wp_next_scheduled('wps_sync_retry', array(12449, 'media'));
     $http_handler = function () { return sync_response(array('success' => true, 'attachment_id' => 999)); };
@@ -231,6 +316,10 @@ try {
     fwrite(STDERR, $error . "\n");
     $failed = true;
 } finally {
+    if (is_resource($http_server)) {
+        proc_terminate($http_server);
+        proc_close($http_server);
+    }
     $connection->query('DROP DATABASE ' . $database);
     $connection->close();
 }
