@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WordPress Sites Sync
  * Description: FascinaとTwelorのカスタム投稿タイプとメディアを双方向リアルタイム同期するプラグイン
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Custom
  * 
  * 設定: wp-config.phpに以下を定義してください
@@ -42,6 +42,7 @@ function wps_sync_init() {
     add_action('add_attachment', 'wps_sync_media', 10, 1);
     add_action('edit_attachment', 'wps_sync_media', 10, 1);
     add_action('delete_attachment', 'wps_sync_delete_media', 10, 1);
+    add_action('wps_sync_retry', 'wps_sync_retry', 10, 2);
     
     // タームの同期フック
     add_action('created_term', 'wps_sync_term', 10, 3);
@@ -58,11 +59,19 @@ add_action('init', 'wps_sync_init', 1);
  */
 function wps_sync_is_syncing($object_id = null, $type = 'post') {
     if ($object_id) {
-        if ($type === 'term') {
-            return get_term_meta($object_id, '_sync_in_progress', true) === '1';
-        } else {
-            return get_post_meta($object_id, '_sync_in_progress', true) === '1';
+        $meta_type = $type === 'term' ? 'term' : 'post';
+        if (get_metadata($meta_type, $object_id, '_sync_in_progress', true) !== '1') {
+            return false;
         }
+        $started = (int) get_metadata($meta_type, $object_id, '_sync_started_at', true);
+        if (!$started) {
+            // 旧版が残したフラグも、確認してから10分で失効させる。
+            update_metadata($meta_type, $object_id, '_sync_started_at', time());
+        } elseif ($started < time() - 10 * MINUTE_IN_SECONDS) {
+            wps_sync_set_syncing($object_id, false, $type);
+            return false;
+        }
+        return true;
     }
     return defined('WPS_SYNC_IN_PROGRESS') && WPS_SYNC_IN_PROGRESS;
 }
@@ -71,7 +80,9 @@ function wps_sync_is_syncing($object_id = null, $type = 'post') {
  * 無限ループ防止: 同期フラグをセット
  */
 function wps_sync_set_syncing($object_id, $value = true, $type = 'post') {
+    $meta_type = $type === 'term' ? 'term' : 'post';
     if ($value) {
+        update_metadata($meta_type, $object_id, '_sync_started_at', time());
         if ($type === 'term') {
             update_term_meta($object_id, '_sync_in_progress', '1');
         } else {
@@ -81,12 +92,89 @@ function wps_sync_set_syncing($object_id, $value = true, $type = 'post') {
             define('WPS_SYNC_IN_PROGRESS', true);
         }
     } else {
+        delete_metadata($meta_type, $object_id, '_sync_started_at');
         if ($type === 'term') {
             delete_term_meta($object_id, '_sync_in_progress');
         } else {
             delete_post_meta($object_id, '_sync_in_progress');
         }
     }
+}
+
+/** ロック・再送状態はサイト固有なので、相手にコピーしない。 */
+function wps_sync_is_internal_meta($key) {
+    return strpos($key, '_sync_') === 0 || strpos($key, '_edit_') === 0;
+}
+
+/** 送信前に再送を予約する。PHPが途中終了しても次回のWP-Cronで再試行できる。 */
+function wps_sync_schedule_retry($object_id, $type) {
+    $args = array((int) $object_id, $type);
+    if (wp_next_scheduled('wps_sync_retry', $args)) {
+        return;
+    }
+    $attempt = min(4, (int) get_post_meta($object_id, '_sync_retry_attempt', true));
+    $delays = array(60, 300, 900, 3600, 3600);
+    $scheduled = wp_schedule_single_event(time() + $delays[$attempt], 'wps_sync_retry', $args, true);
+    if (is_wp_error($scheduled) || !$scheduled) {
+        error_log('WPS Sync Error: Failed to schedule retry for ' . $type . ' ID ' . $object_id);
+        return;
+    }
+    update_post_meta($object_id, '_sync_retry_attempt', min(4, $attempt + 1));
+}
+
+function wps_sync_clear_retry($object_id, $type) {
+    wp_clear_scheduled_hook('wps_sync_retry', array((int) $object_id, $type));
+    delete_post_meta($object_id, '_sync_retry_attempt');
+}
+
+/** 保存済みの古いペイロードではなく、最新の投稿・画像を再送する。 */
+function wps_sync_retry($object_id, $type) {
+    $post = get_post($object_id);
+    if (!$post || $post->post_status === 'trash' ||
+        ($type === 'media' ? $post->post_type !== 'attachment' : !in_array($post->post_type, WPS_SYNC_POST_TYPES, true))) {
+        wps_sync_clear_retry($object_id, $type);
+        return;
+    }
+    if (wps_sync_is_syncing($object_id)) {
+        wps_sync_schedule_retry($object_id, $type);
+        return;
+    }
+    if ($type === 'media') {
+        wps_sync_media($object_id);
+    } else {
+        wps_sync_post($object_id, $post, true);
+    }
+}
+
+/** DBの添付情報だけでなく、実ファイルと表示に使うサイズも確認する。 */
+function wps_sync_media_is_ready($attachment_id) {
+    $attachment = get_post($attachment_id);
+    $file = get_attached_file($attachment_id);
+    if (!$attachment || $attachment->post_type !== 'attachment' || !$file || !is_file($file) || !filesize($file)) {
+        return false;
+    }
+    if (wp_attachment_is_image($attachment_id)) {
+        $meta = wp_get_attachment_metadata($attachment_id);
+        if (empty($meta['width']) || empty($meta['height'])) {
+            return false;
+        }
+        foreach (array('thumbnail', 'large') as $size) {
+            $image = image_get_intermediate_size($attachment_id, $size);
+            if ($image && !is_file(dirname($file) . '/' . $image['file'])) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+/** 投稿の送信前に欠落したアイキャッチ画像を補完する。 */
+function wps_sync_ensure_remote_media($attachment_id) {
+    $status = wps_sync_remote_request('media/' . (int) $attachment_id, 'GET');
+    if (!is_array($status) || empty($status['success']) || (int) ($status['attachment_id'] ?? 0) !== (int) $attachment_id) {
+        return false;
+    }
+    return !empty($status['ready']) || wps_sync_media($attachment_id);
 }
 
 /**
@@ -127,7 +215,7 @@ function wps_sync_remote_request($endpoint, $method = 'POST', $data = array()) {
     }
 
     // 一時的な接続エラー・タイムアウト・5xxで画像同期が取りこぼされるのを防ぐため、数回までリトライする。
-    // 受信側はID指定のupsert（import_id / ID指定の作成・更新）で冪等なため、再送は安全。
+    // 同じ画像の再送では既存ファイルを再利用する。
     $max_attempts = 2;
 
     for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
@@ -156,7 +244,7 @@ function wps_sync_remote_request($endpoint, $method = 'POST', $data = array()) {
         }
 
         // HTTP 400エラーで「Already syncing」の場合、リモート側の同期フラグが残っている可能性がある
-        // この場合は、リモート側でタイムアウト処理により自動的に解除される
+        // 即時再送ではなく、WP-Cronの遅延再送でロックの解放を待つ。
         if ($response_code === 400) {
             $response_data = json_decode($response_body, true);
             if (isset($response_data['code']) && $response_data['code'] === 'syncing') {
@@ -196,6 +284,8 @@ function wps_sync_post($post_id, $post, $update) {
         return;
     }
     
+    wps_sync_schedule_retry($post_id, 'post');
+    $success = false;
     // 同期フラグをセット
     wps_sync_set_syncing($post_id, true);
     
@@ -204,15 +294,23 @@ function wps_sync_post($post_id, $post, $update) {
         $post_data = wps_sync_get_post_data($post_id);
         
         if ($post_data) {
+            if (!empty($post_data['thumbnail_id']) && !wps_sync_ensure_remote_media($post_data['thumbnail_id'])) {
+                return false;
+            }
             // リモートサイトに送信
             $result = wps_sync_remote_request('post', 'POST', $post_data);
+            $success = is_array($result) && !empty($result['success']) && (int) ($result['post_id'] ?? 0) === (int) $post_id;
         }
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         error_log('WPS Sync Exception: ' . $e->getMessage() . ' | Post ID: ' . $post_id);
     } finally {
         // エラーが発生しても必ず同期フラグを解除
         wps_sync_set_syncing($post_id, false);
+        if ($success) {
+            wps_sync_clear_retry($post_id, 'post');
+        }
     }
+    return $success;
 }
 
 /**
@@ -251,7 +349,7 @@ function wps_sync_get_post_data($post_id) {
     $data['meta'] = array();
     foreach ($meta_data as $key => $values) {
         // 同期用の内部メタは除外
-        if ($key === '_sync_in_progress' || strpos($key, '_edit_') === 0) {
+        if (wps_sync_is_internal_meta($key)) {
             continue;
         }
         // 配列の場合は最初の要素、単一値の場合はそのまま
@@ -283,6 +381,7 @@ function wps_sync_get_post_data($post_id) {
  * 投稿の削除を同期
  */
 function wps_sync_delete_post($post_id) {
+    wps_sync_clear_retry($post_id, 'post');
     // 無限ループ防止
     if (wps_sync_is_syncing($post_id)) {
         return;
@@ -318,14 +417,16 @@ function wps_sync_delete_post($post_id) {
 function wps_sync_media($attachment_id) {
     // 無限ループ防止
     if (wps_sync_is_syncing($attachment_id)) {
-        return;
+        return false;
     }
     
     $attachment = get_post($attachment_id);
     if (!$attachment || $attachment->post_type !== 'attachment') {
-        return;
+        return false;
     }
     
+    wps_sync_schedule_retry($attachment_id, 'media');
+    $success = false;
     // 同期フラグをセット
     wps_sync_set_syncing($attachment_id, true);
     
@@ -335,14 +436,19 @@ function wps_sync_media($attachment_id) {
         
         if ($media_data) {
             // リモートサイトに送信
-            wps_sync_remote_request('media', 'POST', $media_data);
+            $result = wps_sync_remote_request('media', 'POST', $media_data);
+            $success = is_array($result) && !empty($result['success']) && (int) ($result['attachment_id'] ?? 0) === (int) $attachment_id;
         }
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         error_log('WPS Sync Exception: ' . $e->getMessage() . ' | Attachment ID: ' . $attachment_id);
     } finally {
         // エラーが発生しても必ず同期フラグを解除
         wps_sync_set_syncing($attachment_id, false);
+        if ($success) {
+            wps_sync_clear_retry($attachment_id, 'media');
+        }
     }
+    return $success;
 }
 
 /**
@@ -386,7 +492,7 @@ function wps_sync_get_media_data($attachment_id) {
     $meta_data = get_post_meta($attachment_id);
     $data['meta'] = array();
     foreach ($meta_data as $key => $values) {
-        if ($key === '_sync_in_progress' || strpos($key, '_edit_') === 0) {
+        if (wps_sync_is_internal_meta($key)) {
             continue;
         }
         $data['meta'][$key] = is_array($values) && count($values) === 1 ? $values[0] : $values;
@@ -399,6 +505,7 @@ function wps_sync_get_media_data($attachment_id) {
  * メディアの削除を同期
  */
 function wps_sync_delete_media($attachment_id) {
+    wps_sync_clear_retry($attachment_id, 'media');
     // 無限ループ防止
     if (wps_sync_is_syncing($attachment_id)) {
         return;
@@ -471,7 +578,7 @@ function wps_sync_get_term_data($term_id, $taxonomy) {
     $meta_data = get_term_meta($term_id);
     $data['meta'] = array();
     foreach ($meta_data as $key => $values) {
-        if ($key === '_sync_in_progress') {
+        if (wps_sync_is_internal_meta($key)) {
             continue;
         }
         $data['meta'][$key] = is_array($values) && count($values) === 1 ? $values[0] : $values;
@@ -531,6 +638,12 @@ function wps_sync_register_rest_routes() {
     register_rest_route('sync/v1', '/media', array(
         'methods' => 'POST',
         'callback' => 'wps_sync_rest_media',
+        'permission_callback' => 'wps_sync_rest_permission_check',
+    ));
+
+    register_rest_route('sync/v1', '/media/(?P<id>\d+)', array(
+        'methods' => 'GET',
+        'callback' => 'wps_sync_rest_media_status',
         'permission_callback' => 'wps_sync_rest_permission_check',
     ));
     
@@ -644,7 +757,7 @@ function wps_sync_rest_post($request) {
     $post_type = sanitize_text_field($data['post_type']);
     
     // 同期対象の投稿タイプかチェック
-    if (!in_array($post_type, WPS_SYNC_POST_TYPES)) {
+    if ($post_id < 1 || !in_array($post_type, WPS_SYNC_POST_TYPES)) {
         return new WP_Error('invalid_post_type', 'Invalid post type', array('status' => 400));
     }
     
@@ -652,9 +765,33 @@ function wps_sync_rest_post($request) {
     if (wps_sync_is_syncing($post_id)) {
         return new WP_Error('syncing', 'Already syncing', array('status' => 400));
     }
+
+    $existing = get_post($post_id);
+    if ($existing && $existing->post_type !== $post_type) {
+        return new WP_Error('id_conflict', 'ID belongs to another post type', array('status' => 409));
+    }
+    $thumb_id = (int) ($data['thumbnail_id'] ?? ($data['meta']['_thumbnail_id'] ?? 0));
+    if ($thumb_id && (!wp_attachment_is_image($thumb_id) || !wps_sync_media_is_ready($thumb_id))) {
+        // 既存の投稿・画像を壊さずに再送を要求する。
+        return new WP_Error('missing_thumbnail', 'Thumbnail media must be synced first', array('status' => 409));
+    }
     
     // 同期フラグをセット
     wps_sync_set_syncing($post_id, true);
+    try {
+        $response = wps_sync_receive_post($data);
+        if (!is_wp_error($response)) {
+            wps_sync_clear_retry($post_id, 'post');
+        }
+        return $response;
+    } finally {
+        wps_sync_set_syncing($post_id, false);
+    }
+}
+
+function wps_sync_receive_post($data) {
+    $post_id = (int) $data['id'];
+    $post_type = sanitize_text_field($data['post_type']);
     
     // 既存の投稿があるかチェック
     $existing_post = get_post($post_id);
@@ -678,20 +815,15 @@ function wps_sync_rest_post($request) {
         $post_data['ID'] = $post_id;
         $result = wp_update_post($post_data, true);
     } else {
-        // 新規作成（ID指定）
-        // AUTO_INCREMENTを調整
-        global $wpdb;
-        $next_id = $post_id + 1;
-        $wpdb->query($wpdb->prepare(
-            "ALTER TABLE {$wpdb->posts} AUTO_INCREMENT = %d",
-            $next_id
-        ));
+        // import_idで指定できるため、テーブル全体の採番変更は不要。
         $result = wp_insert_post($post_data, true);
     }
     
     if (is_wp_error($result)) {
-        wps_sync_set_syncing($post_id, false);
         return $result;
+    }
+    if ((int) $result !== $post_id) {
+        return new WP_Error('id_conflict', 'Imported post ID does not match', array('status' => 409));
     }
     
     $final_post_id = $result;
@@ -701,14 +833,16 @@ function wps_sync_rest_post($request) {
         // 既存のメタデータを削除（同期用の内部メタを除く）
         $existing_meta = get_post_meta($final_post_id);
         foreach ($existing_meta as $key => $values) {
-            if ($key !== '_sync_in_progress' && strpos($key, '_edit_') !== 0) {
+            if (!wps_sync_is_internal_meta($key)) {
                 delete_post_meta($final_post_id, $key);
             }
         }
         
         // 新しいメタデータを追加
         foreach ($data['meta'] as $key => $value) {
-            update_post_meta($final_post_id, sanitize_key($key), $value);
+            if (!wps_sync_is_internal_meta($key)) {
+                update_post_meta($final_post_id, sanitize_key($key), $value);
+            }
         }
     }
     
@@ -722,10 +856,11 @@ function wps_sync_rest_post($request) {
     // アイキャッチ画像を設定
     if (isset($data['thumbnail_id'])) {
         $thumb_id = intval($data['thumbnail_id']);
-        if ($thumb_id && get_post($thumb_id)) {
+        if ($thumb_id) {
             set_post_thumbnail($final_post_id, $thumb_id);
-        } else {
-            error_log('WPS Sync Warning: thumbnail attachment not found on receiver. Post ID: ' . $final_post_id . ', Thumbnail ID: ' . $thumb_id);
+            if ((int) get_post_thumbnail_id($final_post_id) !== $thumb_id) {
+                return new WP_Error('thumbnail_error', 'Failed to set thumbnail', array('status' => 500));
+            }
         }
     }
     
@@ -738,9 +873,6 @@ function wps_sync_rest_post($request) {
             }
         }
     }
-    
-    // 同期フラグを解除
-    wps_sync_set_syncing($post_id, false);
     
     return new WP_REST_Response(array(
         'success' => true,
@@ -774,6 +906,25 @@ function wps_sync_rest_delete_post($request) {
 }
 
 /**
+ * REST API: メディアの存在確認（ファイル本体も確認）
+ */
+function wps_sync_rest_media_status($request) {
+    $attachment_id = (int) $request->get_param('id');
+    $attachment = get_post($attachment_id);
+    if ($attachment && $attachment->post_type !== 'attachment') {
+        return new WP_Error('id_conflict', 'ID belongs to another post type', array('status' => 409));
+    }
+    if (wps_sync_is_syncing($attachment_id)) {
+        return new WP_Error('syncing', 'Already syncing', array('status' => 400));
+    }
+    return new WP_REST_Response(array(
+        'success' => true,
+        'attachment_id' => $attachment_id,
+        'ready' => wps_sync_media_is_ready($attachment_id),
+    ), 200);
+}
+
+/**
  * REST API: メディアの作成・更新
  */
 function wps_sync_rest_media($request) {
@@ -784,50 +935,71 @@ function wps_sync_rest_media($request) {
     }
     
     $attachment_id = intval($data['id']);
+    if ($attachment_id < 1 || !is_string($data['file_data'])) {
+        return new WP_Error('invalid_data', 'Invalid media data', array('status' => 400));
+    }
     
     // 無限ループ防止
     if (wps_sync_is_syncing($attachment_id)) {
         return new WP_Error('syncing', 'Already syncing', array('status' => 400));
     }
+    $existing = get_post($attachment_id);
+    if ($existing && $existing->post_type !== 'attachment') {
+        return new WP_Error('id_conflict', 'ID belongs to another post type', array('status' => 409));
+    }
     
     // 同期フラグをセット
     wps_sync_set_syncing($attachment_id, true);
+    try {
+        $response = wps_sync_receive_media($data);
+        if (!is_wp_error($response)) {
+            wps_sync_clear_retry($attachment_id, 'media');
+        }
+        return $response;
+    } finally {
+        wps_sync_set_syncing($attachment_id, false);
+    }
+}
+
+function wps_sync_receive_media($data) {
+    $attachment_id = (int) $data['id'];
     
     require_once(ABSPATH . 'wp-admin/includes/file.php');
     require_once(ABSPATH . 'wp-admin/includes/media.php');
     require_once(ABSPATH . 'wp-admin/includes/image.php');
     
-    // 一時ファイルを作成
-    $tmp = wp_tempnam('wps-media-');
-    if (!$tmp) {
-        wps_sync_set_syncing($attachment_id, false);
-        return new WP_Error('temp_file_error', 'Failed to create temp file', array('status' => 500));
-    }
-    
-    // ファイルデータを書き込む
-    // strictモードでデコードし、転送中に欠落・破損したペイロードを検知する。
-    // 壊れた・空のデータで添付ファイルを作ると「画像が添付されない」状態になるため、
-    // ここで明確にエラーを返して中断する。
     $file_data = base64_decode($data['file_data'], true);
-    if ($file_data === false || $file_data === '' || file_put_contents($tmp, $file_data) === false) {
-        @unlink($tmp);
-        wps_sync_set_syncing($attachment_id, false);
-        error_log('WPS Sync Error: invalid or empty media payload for attachment ID ' . $attachment_id);
-        return new WP_Error('invalid_media_data', 'Failed to decode or write media file data', array('status' => 400));
+    if ($file_data === false || $file_data === '') {
+        return new WP_Error('invalid_media_data', 'Invalid or empty media payload', array('status' => 400));
     }
-
-    // ファイルをアップロード
-    $file_array = array(
-        'name' => sanitize_file_name($data['file_name']),
-        'tmp_name' => $tmp,
-    );
-    
-    $upload = wp_handle_sideload($file_array, array('test_form' => false));
-    
-    if (isset($upload['error'])) {
-        @unlink($tmp);
-        wps_sync_set_syncing($attachment_id, false);
-        return new WP_Error('upload_error', $upload['error'], array('status' => 500));
+    $old_file = get_attached_file($attachment_id);
+    $same_file = $old_file && is_file($old_file) && hash_file('sha256', $old_file) === hash('sha256', $file_data);
+    $was_ready = $same_file && wps_sync_media_is_ready($attachment_id);
+    if ($same_file) {
+        // 応答だけが途絶えた後の再送でも、連番ファイルを作らない。
+        $upload = array('file' => $old_file);
+    } else {
+        $tmp = wp_tempnam('wps-media-');
+        if (!$tmp) {
+            return new WP_Error('temp_file_error', 'Failed to create temp file', array('status' => 500));
+        }
+        try {
+            if (file_put_contents($tmp, $file_data) !== strlen($file_data)) {
+                return new WP_Error('write_error', 'Failed to write complete media file', array('status' => 500));
+            }
+            $file_array = array(
+                'name' => sanitize_file_name($data['file_name']),
+                'tmp_name' => $tmp,
+            );
+            $upload = wp_handle_sideload($file_array, array('test_form' => false), $data['post_date'] ?? null);
+        } finally {
+            if (is_file($tmp)) {
+                @unlink($tmp);
+            }
+        }
+        if (isset($upload['error'])) {
+            return new WP_Error('upload_error', $upload['error'], array('status' => 500));
+        }
     }
     
     // 既存のメディアがあるかチェック
@@ -844,30 +1016,23 @@ function wps_sync_rest_media($request) {
     );
     
     if ($existing_attachment) {
-        // 更新: 古いファイルを削除
-        $old_file = get_attached_file($attachment_id);
-        if ($old_file && file_exists($old_file)) {
-            @unlink($old_file);
-        }
+        // 新しいファイルの保存が確認できるまで古いファイルを残す。
         $attachment_data['ID'] = $attachment_id;
         $result = wp_update_post($attachment_data, true);
-        update_attached_file($attachment_id, $upload['file']);
     } else {
         // 新規作成（ID指定）
-        global $wpdb;
-        $next_id = $attachment_id + 1;
-        $wpdb->query($wpdb->prepare(
-            "ALTER TABLE {$wpdb->posts} AUTO_INCREMENT = %d",
-            $next_id
-        ));
         $attachment_data['import_id'] = $attachment_id;
-        $result = wp_insert_attachment($attachment_data, $upload['file']);
+        $result = wp_insert_attachment($attachment_data, $upload['file'], 0, true);
     }
     
     if (is_wp_error($result)) {
-        @unlink($upload['file']);
-        wps_sync_set_syncing($attachment_id, false);
+        if (!$same_file) {
+            @unlink($upload['file']);
+        }
         return $result;
+    }
+    if ((int) $result !== $attachment_id) {
+        return new WP_Error('id_conflict', 'Imported media ID does not match', array('status' => 409));
     }
     
     $final_attachment_id = $result;
@@ -900,34 +1065,37 @@ function wps_sync_rest_media($request) {
         // 既存のメタデータを削除（_wp_attachment_metadata・_wp_attached_file・_sync_in_progressを除外）
         $existing_meta = get_post_meta($final_attachment_id);
         foreach ($existing_meta as $key => $values) {
-            if ($key !== '_sync_in_progress' && 
+            if (!wps_sync_is_internal_meta($key) &&
                 $key !== '_wp_attachment_metadata' && 
-                $key !== '_wp_attached_file' &&
-                strpos($key, '_edit_') !== 0) {
+                $key !== '_wp_attached_file') {
                 delete_post_meta($final_attachment_id, $key);
             }
         }
         
         // 新しいメタデータを追加（_wp_attachment_metadata と _wp_attached_file を除外）
         foreach ($data['meta'] as $key => $value) {
-            if ($key !== '_wp_attachment_metadata' && $key !== '_wp_attached_file') {
+            if (!wps_sync_is_internal_meta($key) && $key !== '_wp_attachment_metadata' && $key !== '_wp_attached_file') {
                 update_post_meta($final_attachment_id, sanitize_key($key), $value);
             }
         }
     }
     
-    // メタデータを必ずローカルで再生成する
+    // 新規・変更・欠落時のメタデータはローカルで再生成する。
     // （送信側のサムネイル参照は受信側ディスクに存在しないため使用しない）
-    $attach_data = wp_generate_attachment_metadata($final_attachment_id, $upload['file']);
-    if (!empty($attach_data)) {
-        wp_update_attachment_metadata($final_attachment_id, $attach_data);
+    if (!$was_ready) {
+        // 旧メタデータのサイズ参照を成功判定に使わない。
+        delete_post_meta($final_attachment_id, '_wp_attachment_metadata');
+        $attach_data = wp_generate_attachment_metadata($final_attachment_id, $upload['file']);
+        if (!empty($attach_data)) {
+            wp_update_attachment_metadata($final_attachment_id, $attach_data);
+        }
     }
-    if (empty($attach_data) || empty($attach_data['sizes'])) {
-        error_log('WPS Sync Warning: Failed to generate attachment subsizes for attachment ID ' . $final_attachment_id . ' (file: ' . $upload['file'] . ')');
+    if (!wps_sync_media_is_ready($final_attachment_id)) {
+        return new WP_Error('media_not_ready', 'Media file or metadata is incomplete', array('status' => 500));
     }
-    
-    // 同期フラグを解除
-    wps_sync_set_syncing($attachment_id, false);
+    if (!$same_file && $old_file && is_file($old_file) && $old_file !== get_attached_file($final_attachment_id)) {
+        @unlink($old_file);
+    }
     
     return new WP_REST_Response(array(
         'success' => true,
@@ -1089,14 +1257,16 @@ function wps_sync_rest_term($request) {
         // 既存のメタデータを削除
         $existing_meta = get_term_meta($final_term_id);
         foreach ($existing_meta as $key => $values) {
-            if ($key !== '_sync_in_progress') {
+            if (!wps_sync_is_internal_meta($key)) {
                 delete_term_meta($final_term_id, $key);
             }
         }
         
         // 新しいメタデータを追加
         foreach ($data['meta'] as $key => $value) {
-            update_term_meta($final_term_id, sanitize_key($key), $value);
+            if (!wps_sync_is_internal_meta($key)) {
+                update_term_meta($final_term_id, sanitize_key($key), $value);
+            }
         }
     }
     
